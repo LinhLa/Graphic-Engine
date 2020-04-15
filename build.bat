@@ -1,6 +1,6 @@
 @echo off
 SET CONFIG="Debug|Win32"
-SET SOLUTION_DIR="G:\Development\SDL Game engine\SDL Engine\SDL Game Engine.sln"
+SET SOLUTION_DIR="G:\Development\SDL Game engine\SDLApp\SDL Game Engine.sln"
 
 IF EXIST "out.txt" (
 	break > out.txt
