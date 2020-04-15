@@ -27,7 +27,6 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -35,7 +34,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -67,9 +65,9 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Platform)\$(Configuration)\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Platform)\$(Configuration)\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
@@ -83,18 +81,6 @@
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <EnableManagedIncrementalBuild>false</EnableManagedIncrementalBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -167,7 +153,7 @@
       </HeaderFileName>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>external\include;$(SDL_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;LOAD_BMP;LOAD_GIF;LOAD_JPG;LOAD_JPG_DYNAMIC="libjpeg-9.dll";LOAD_LBM;LOAD_PCX;LOAD_PNG;LOAD_PNG_DYNAMIC="libpng16-16.dll";LOAD_PNM;LOAD_SVG;LOAD_TGA;LOAD_TIF;LOAD_TIF_DYNAMIC="libtiff-5.dll";LOAD_WEBP;LOAD_WEBP_DYNAMIC="libwebp-7.dll";LOAD_XPM;LOAD_XV;PNG_USE_DLL;ZLIB_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -179,7 +165,6 @@
     <Link>
       <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake />
   </ItemDefinitionGroup>
@@ -194,7 +179,7 @@
       </HeaderFileName>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>external\include;$(SDL_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>external\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;LOAD_BMP;LOAD_GIF;LOAD_JPG;LOAD_JPG_DYNAMIC="libjpeg-9.dll";LOAD_LBM;LOAD_PCX;LOAD_PNG;LOAD_PNG_DYNAMIC="libpng16-16.dll";LOAD_PNM;LOAD_SVG;LOAD_TGA;LOAD_TIF;LOAD_TIF_DYNAMIC="libtiff-5.dll";LOAD_WEBP;LOAD_WEBP_DYNAMIC="libwebp-7.dll";LOAD_XPM;LOAD_XV;PNG_USE_DLL;ZLIB_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -206,7 +191,6 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>SDL2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Bscmake />
   </ItemDefinitionGroup>
@@ -365,6 +349,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SDL_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SDL2-2.0.10\VisualC\SDL\SDL.vcxproj">
+      <Project>{81ce8daf-ebb2-4761-8e45-b71abcca8c68}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
