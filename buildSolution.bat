@@ -1,5 +1,5 @@
 @echo off
-SET solution="G:\Development\SDL Game engine\SDLApp\SDL Game Engine.sln" 
+SET solution=".\SDL Game Engine.sln" 
 devenv %solution% /build Debug
 
 

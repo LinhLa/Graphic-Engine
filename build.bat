@@ -1,9 +1,9 @@
 @echo off
 SET CONFIG="Debug|Win32"
-SET SOLUTION_DIR="G:\Development\SDL Game engine\SDLApp\SDL Game Engine.sln"
+SET SOLUTION_DIR=".\SDL Game Engine.sln"
 
-IF EXIST "out.txt" (
-	break > out.txt
+IF EXIST "buildlog.txt" (
+	break > buildlog.txt
 )
 
 for /F "tokens=*" %%A in (projectlist) do (
@@ -11,4 +11,4 @@ for /F "tokens=*" %%A in (projectlist) do (
 		ECHO build "%%A"
 		devenv %SOLUTION_DIR% /build Debug /project "%%A" /projectconfig %CONFIG%
 	)
-) >> out.txt
+) >> buildlog.txt
