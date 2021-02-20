@@ -1,0 +1,49 @@
+#pragma once
+#ifndef BASE_DEFINE
+#define BASE_DEFINE
+#include <cstdint>
+#include <utility>
+#include <message_struct.h>
+#include <error_info.h>
+
+#define DEFAULT_ASSETS_PATH			".\\Asset"
+#define CONFIG_FILE					".\\config.ini"
+
+enum SERVICE_ID
+{
+	TEST_SERVICE_ID = 0,
+	MEMORY_TRACKER_SERVICE_ID,
+	SCENE_SERVICE_ID,
+	RENDER_SERVICE_ID,
+	CONFIG_SERVICE_ID,
+	FRAME_SERVICE_ID,
+	CONTENT_SERVICE_ID,
+	LOG_SERVICE_ID,
+	SERVICE_ID_MAX
+};
+
+enum MESSAGE_ID
+{
+	SERVICE_START = 0,
+
+	MEMORY_START = 0x00000100,
+	MEMORY_REPORT,
+	MEMORY_END,
+
+	TEST_START = 0x00000200,
+	TEST_MEMORY,
+
+	LOG_START = 0x00000300,
+	LOG_DATA_IN,
+
+	RENDER_START = 0x00000400,
+
+	TASK_START = 0x00000700,
+
+	CONTENT_START = 0x00000800,
+	CONFIG_UPDATE_LOG_LEVEL,
+
+	SERVICE_END,
+};
+
+#endif
