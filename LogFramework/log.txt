@@ -1,0 +1,24 @@
+[12/18/2019 11:35:11 PM] ERROR main.cpp (20) main: [IN] 
+[12/18/2019 11:35:11 PM] ERROR main.cpp (25) main: A loop with 3 iterations
+[12/18/2019 11:35:11 PM] ERROR main.cpp (28) main: the counter i = 0
+[12/18/2019 11:35:11 PM] ERROR main.cpp (28) main: the counter i = 1
+[12/18/2019 11:35:11 PM] ERROR main.cpp (28) main: the counter i = 2
+[12/18/2019 11:35:11 PM] ERROR main.cpp (35) main: [OUT] 
+[12/18/2019 11:38:55 PM] ERROR main.cpp (20) main: [IN] 
+[12/18/2019 11:38:55 PM] ERROR main.cpp (25) main: A loop with 3 iterations
+[12/18/2019 11:38:55 PM] ERROR main.cpp (28) main: the counter i = 0
+[12/18/2019 11:38:55 PM] ERROR main.cpp (28) main: the counter i = 1
+[12/18/2019 11:38:55 PM] ERROR main.cpp (28) main: the counter i = 2
+[12/18/2019 11:38:55 PM] ERROR main.cpp (35) main: [OUT] 
+[12/18/2019 11:41:20 PM] ERROR main.cpp (20) main: [IN] 
+[12/18/2019 11:41:20 PM] ERROR main.cpp (25) main: A loop with 3 iterations
+[12/18/2019 11:41:20 PM] ERROR main.cpp (28) main: the counter i = 0
+[12/18/2019 11:41:20 PM] ERROR main.cpp (28) main: the counter i = 1
+[12/18/2019 11:41:20 PM] ERROR main.cpp (28) main: the counter i = 2
+[12/18/2019 11:41:20 PM] ERROR main.cpp (35) main: [OUT] 
+[12/18/2019 11:41:42 PM] ERROR main.cpp (20) main: [IN] 
+[12/18/2019 11:42:20 PM] ERROR main.cpp (25) main: A loop with 3 iterations
+[12/18/2019 11:43:13 PM] ERROR main.cpp (28) main: the counter i = 0
+[12/18/2019 11:43:40 PM] ERROR main.cpp (28) main: the counter i = 1
+[12/18/2019 11:43:42 PM] ERROR main.cpp (28) main: the counter i = 2
+[12/18/2019 11:43:42 PM] ERROR main.cpp (35) main: [OUT] 
