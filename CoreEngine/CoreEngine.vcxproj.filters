@@ -1,0 +1,389 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include=".\Application.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include=".\UIFramework\Animation.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\Font.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\IEntity.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\Node2DImage.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\NodeButton2D.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\NodeText2D.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\NodeViewPort2D.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\OriginProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\Surface.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\UIFramework\Texture.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\UIObject.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\TextProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\EmptyNode.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\IPropertyMethod.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\IProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\AnimationKeyFrame.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\AnimationProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\AnimationTimeLine.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\TimeLinePlayback.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\UIHelper.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Library.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\ISignalMethod.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\KeyInputSignalMethod.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\deltatime.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\FrameService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include=".\LogService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include=".\MemoryTracker.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include=".\ContentService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Render.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="FpsTracking.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Configuration.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameRateCapping.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Scene.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\Timer.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include=".\ResourceAcquire.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\SignalDefine.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\UIObjectSignalMethod.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\TextureManipulator.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\RenderManipulator.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\RenderContext.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\LayoutProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\Player.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\PlayerButton.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\ProgressBar.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\Focus.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\IFocusComponent.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\FullSizeSymbol.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\Speaker.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\KeyMap.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\KeyMapDefine.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\KeyCommand.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\key.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\NativeFileDialog\nfd_common.c">
+      <Filter>Player\Native File Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\NativeFileDialog\nfd_win.cpp">
+      <Filter>Player\Native File Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\BackGround.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\TaskPoolInstance.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\TimeSlide.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\WindowRender.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include=".\inc\Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\Configuration.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\asset_define.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\Timer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\Render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\ResourceAcquire.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\Node2DImage.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\NodeButton2D.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\NodeText2D.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\Font.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\Animation.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\FpsTracking.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\FrameRateCapping.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\IEntity.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\Surface.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\Texture.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\UIObject.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include=".\UIFramework\inc\NodeViewPort2D.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\IPropertyMethod.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\TextProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\EmptyNode.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\IProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\OriginProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\PropertyDefine.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\AnimationKeyFrame.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\AnimationProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\AnimationTimeLine.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\UIHelper.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Library.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\ISignalMethod.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\KeyInputSignalMethod.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\SignalDefine.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\deltatime.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\UIObjectSignalMethod.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\TextureManipulator.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\RenderManipulator.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\RenderContext.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\LayoutProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\IPlayerComponent.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\PlayerButton.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\ProgressBar.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\Player.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\FrameService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\ContentService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\LogService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include=".\inc\MemoryTracker.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\Focus.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\IFocusComponent.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\FullSizeSymbol.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\KeyMap.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\KeyMapDefine.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\KeyCommand.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Key.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\BackGround.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\TaskPoolInstance.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\inc\TimeSlide.h">
+      <Filter>Header Files\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\WindowRender.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{c03c3dcb-771e-4819-836f-a37698891ce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UIFramework">
+      <UniqueIdentifier>{7d28078d-6474-4aa1-8836-4cd8c279c7aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UIFramework">
+      <UniqueIdentifier>{ab1b1800-16cb-4330-a80c-cd2d1d72ec08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{f0db6c44-fff1-4010-8c94-5946201c8b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Player">
+      <UniqueIdentifier>{32055dda-2d6a-4ef7-a3c6-49a39af8cb10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{89dc6dba-9463-4299-b328-9388a746ed2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Service">
+      <UniqueIdentifier>{e0b88ecf-6db8-42f7-b8d0-182e50913e11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Player\Native File Dialog">
+      <UniqueIdentifier>{dc98cc74-c243-41b2-bb5e-d2d6d38e589f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player\Native File Dialog">
+      <UniqueIdentifier>{a99f9ec8-b729-498e-b412-f84e2daabda9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

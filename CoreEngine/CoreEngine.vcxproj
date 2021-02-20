@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B159DED8-D85A-4779-859E-D1EA590AF118}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SDLApp</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>CoreEngine</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;OPENGL_RENDERINGWIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\Player\inc;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\include;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE);$(SDL_TTF);$(GLEW_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(BOOST_HOME)\stage\lib;$(SolutionDir)$(Platform)\$(Configuration)\;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;glew32d.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;OPENGL_RENDERING_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\Player\inc;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\include;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE);$(SDL_TTF);$(GLEW_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(BOOST_HOME)\stage\lib;$(SolutionDir)$(Platform)\$(Configuration)\;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;glew32d.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\MemoryManager;.\inc;..\LogFramework\inc;..\Common;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE);$(SDL_TTF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(BOOST_HOME)\stage\lib;$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>..\MemoryManager;.\inc;..\LogFramework\inc;..\Common;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE);$(SDL_TTF);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(BOOST_HOME)\stage\lib;$(SolutionDir)$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include=".\UIFramework\inc\Animation.h" />
+    <ClInclude Include=".\UIFramework\inc\Font.h" />
+    <ClInclude Include=".\inc\Configuration.h" />
+    <ClInclude Include=".\UIFramework\inc\UIObject.h" />
+    <ClInclude Include=".\UIFramework\inc\IEntity.h" />
+    <ClInclude Include=".\UIFramework\inc\Node2DImage.h" />
+    <ClInclude Include=".\UIFramework\inc\NodeButton2D.h" />
+    <ClInclude Include=".\UIFramework\inc\NodeText2D.h" />
+    <ClInclude Include=".\UIFramework\inc\NodeViewPort2D.h" />
+    <ClInclude Include=".\UIFramework\inc\Surface.h" />
+    <ClInclude Include=".\UIFramework\inc\Texture.h" />
+    <ClInclude Include=".\inc\Application.h" />
+    <ClInclude Include=".\inc\asset_define.h" />
+    <ClInclude Include=".\inc\ContentService.h" />
+    <ClInclude Include=".\inc\FrameService.h" />
+    <ClInclude Include=".\inc\LogService.h" />
+    <ClInclude Include=".\inc\MemoryTracker.h" />
+    <ClInclude Include=".\inc\Render.h" />
+    <ClInclude Include=".\inc\ResourceAcquire.h" />
+    <ClInclude Include=".\inc\Scene.h" />
+    <ClInclude Include=".\inc\Timer.h" />
+    <ClInclude Include="inc\FpsTracking.h" />
+    <ClInclude Include="inc\FrameRateCapping.h" />
+    <ClInclude Include="Player\inc\BackGround.h" />
+    <ClInclude Include="Player\inc\Focus.h" />
+    <ClInclude Include="Player\inc\IFocusComponent.h" />
+    <ClInclude Include="Player\inc\IPlayerComponent.h" />
+    <ClInclude Include="Player\inc\KeyMap.h" />
+    <ClInclude Include="Player\inc\Player.h" />
+    <ClInclude Include="Player\inc\PlayerButton.h" />
+    <ClInclude Include="Player\inc\FullSizeSymbol.h" />
+    <ClInclude Include="Player\inc\ProgressBar.h" />
+    <ClInclude Include="Player\inc\TimeSlide.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="UIFramework\inc\AnimationKeyFrame.h" />
+    <ClInclude Include="UIFramework\inc\AnimationProperty.h" />
+    <ClInclude Include="UIFramework\inc\AnimationTimeLine.h" />
+    <ClInclude Include="UIFramework\inc\deltatime.h" />
+    <ClInclude Include="UIFramework\inc\EmptyNode.h" />
+    <ClInclude Include="UIFramework\inc\IProperty.h" />
+    <ClInclude Include="UIFramework\inc\IPropertyMethod.h" />
+    <ClInclude Include="UIFramework\inc\ISignalMethod.h" />
+    <ClInclude Include="UIFramework\inc\Key.h" />
+    <ClInclude Include="UIFramework\inc\KeyCommand.h" />
+    <ClInclude Include="UIFramework\inc\KeyInputSignalMethod.h" />
+    <ClInclude Include="UIFramework\inc\KeyMapDefine.h" />
+    <ClInclude Include="UIFramework\inc\LayoutProperty.h" />
+    <ClInclude Include="UIFramework\inc\Library.h" />
+    <ClInclude Include="UIFramework\inc\OriginProperty.h" />
+    <ClInclude Include="UIFramework\inc\PropertyDefine.h" />
+    <ClInclude Include="UIFramework\inc\RenderContext.h" />
+    <ClInclude Include="UIFramework\inc\RenderManipulator.h" />
+    <ClInclude Include="UIFramework\inc\SignalDefine.h" />
+    <ClInclude Include="UIFramework\inc\TaskPoolInstance.h" />
+    <ClInclude Include="UIFramework\inc\TextProperty.h" />
+    <ClInclude Include="UIFramework\inc\TextureManipulator.h" />
+    <ClInclude Include="UIFramework\inc\UIHelper.h" />
+    <ClInclude Include="UIFramework\inc\UIObjectSignalMethod.h" />
+    <ClInclude Include="UIFramework\inc\WindowRender.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include=".\UIFramework\Animation.cpp" />
+    <ClCompile Include=".\UIFramework\Font.cpp" />
+    <ClCompile Include="Configuration.cpp" />
+    <ClCompile Include="FpsTracking.cpp" />
+    <ClCompile Include="FrameRateCapping.cpp" />
+    <ClCompile Include="Player\BackGround.cpp" />
+    <ClCompile Include="Player\Focus.cpp" />
+    <ClCompile Include="Player\IFocusComponent.cpp" />
+    <ClCompile Include="Player\KeyMap.cpp" />
+    <ClCompile Include="Player\NativeFileDialog\nfd_common.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Player\NativeFileDialog\nfd_win.cpp" />
+    <ClCompile Include="Player\Player.cpp" />
+    <ClCompile Include="Player\PlayerButton.cpp" />
+    <ClCompile Include="Player\FullSizeSymbol.cpp" />
+    <ClCompile Include="Player\ProgressBar.cpp" />
+    <ClCompile Include="Player\Speaker.cpp" />
+    <ClCompile Include="Player\TimeSlide.cpp" />
+    <ClCompile Include="UIFramework\AnimationKeyFrame.cpp" />
+    <ClCompile Include="UIFramework\AnimationProperty.cpp" />
+    <ClCompile Include="UIFramework\AnimationTimeLine.cpp" />
+    <ClCompile Include="UIFramework\deltatime.cpp" />
+    <ClCompile Include="UIFramework\EmptyNode.cpp" />
+    <ClCompile Include="UIFramework\IProperty.cpp" />
+    <ClCompile Include="UIFramework\IPropertyMethod.cpp" />
+    <ClCompile Include="UIFramework\ISignalMethod.cpp" />
+    <ClCompile Include="UIFramework\key.cpp" />
+    <ClCompile Include="UIFramework\KeyCommand.cpp" />
+    <ClCompile Include="UIFramework\KeyInputSignalMethod.cpp" />
+    <ClCompile Include="UIFramework\KeyMapDefine.cpp" />
+    <ClCompile Include="UIFramework\LayoutProperty.cpp" />
+    <ClCompile Include="UIFramework\Library.cpp" />
+    <ClCompile Include="UIFramework\OriginProperty.cpp" />
+    <ClCompile Include="UIFramework\RenderContext.cpp" />
+    <ClCompile Include="UIFramework\RenderManipulator.cpp" />
+    <ClCompile Include="UIFramework\SignalDefine.cpp" />
+    <ClCompile Include="UIFramework\TaskPoolInstance.cpp" />
+    <ClCompile Include="UIFramework\TextProperty.cpp" />
+    <ClCompile Include="UIFramework\TextureManipulator.cpp" />
+    <ClCompile Include="UIFramework\TimeLinePlayback.cpp" />
+    <ClCompile Include="UIFramework\UIHelper.cpp" />
+    <ClCompile Include="UIFramework\UIObject.cpp" />
+    <ClCompile Include=".\UIFramework\IEntity.cpp" />
+    <ClCompile Include=".\UIFramework\Node2DImage.cpp" />
+    <ClCompile Include=".\UIFramework\NodeButton2D.cpp" />
+    <ClCompile Include=".\UIFramework\NodeText2D.cpp" />
+    <ClCompile Include=".\UIFramework\NodeViewPort2D.cpp" />
+    <ClCompile Include=".\UIFramework\Surface.cpp" />
+    <ClCompile Include=".\UIFramework\Texture.cpp" />
+    <ClCompile Include=".\Application.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include=".\ContentService.cpp" />
+    <ClCompile Include=".\FrameService.cpp" />
+    <ClCompile Include=".\LogService.cpp" />
+    <ClCompile Include=".\MemoryTracker.cpp" />
+    <ClCompile Include=".\Render.cpp" />
+    <ClCompile Include=".\ResourceAcquire.cpp" />
+    <ClCompile Include=".\Scene.cpp" />
+    <ClCompile Include=".\Timer.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UIFramework\UIObjectSignalMethod.cpp" />
+    <ClCompile Include="UIFramework\WindowRender.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
