@@ -49,3 +49,47 @@ IPropertyPtr Library::getProperty(const std::string& property_name)
 	}
 	return nullptr;
 }
+
+void Library::addShader(const std::string& name, ShaderPtr pShader)
+{
+	if (pShader)
+	{
+		m_shaderTable[name] = pShader;
+	}
+}
+
+ShaderPtr Library::getShader(const std::string& shader_name)
+{
+	auto itr_result = m_shaderTable.find(shader_name);
+	if (itr_result != m_shaderTable.end())
+	{
+		return itr_result->second;
+	}
+	else
+	{
+		LOG_DEBUG("Shader not found [%s]", shader_name.c_str());
+	}
+	return nullptr;
+}
+
+void Library::addShaderProgram(const std::string& name, ShaderProgramPtr pProgramShader)
+{
+	if (pProgramShader)
+	{
+		m_shaderProgramTable[name] = pProgramShader;
+	}
+}
+
+ShaderProgramPtr Library::getShaderProgram(const std::string& program_name)
+{
+	auto itr_result = m_shaderProgramTable.find(program_name);
+	if (itr_result != m_shaderProgramTable.end())
+	{
+		return itr_result->second;
+	}
+	else
+	{
+		LOG_DEBUG("Shader not found [%s]", program_name.c_str());
+	}
+	return nullptr;
+}

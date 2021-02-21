@@ -39,7 +39,7 @@ Render::~Render(){}
 bool Render::initWindow(const char* title, int xpos, int ypos, const int& width, const int& height, int flags)
 {
 	//<Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER ) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		SDL_Log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		_ASSERT(false);
@@ -51,11 +51,11 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, Configuration::GetInstance()->minor_version);
     SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE ); //  Should be used in conjunction with the SDL_GL_CONTEXT_MAJOR_VERSION and SDL_GL_CONTEXT_MINOR_VERSION attributes
 
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, Configuration::GetInstance()->r_size);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, Configuration::GetInstance()->g_size);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, Configuration::GetInstance()->b_size);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, Configuration::GetInstance()->depth_size);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, Configuration::GetInstance()->double_buffer);
+	//SDL_GL_SetAttribute(SDL_GL_RED_SIZE, Configuration::GetInstance()->r_size);
+	//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, Configuration::GetInstance()->g_size);
+	//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, Configuration::GetInstance()->b_size);
+	//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, Configuration::GetInstance()->depth_size);
+	//SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, Configuration::GetInstance()->double_buffer);
 #else
 	//<Initialize SDL IMG
 	if (IMG_Init(IMG_INIT_PNG) < 0)
@@ -96,7 +96,7 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	//Use Vsync
 	if (SDL_GL_SetSwapInterval(1) < 0)
 	{
-		printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+		SDL_Log("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
 #else
 	//<Get window render

@@ -203,6 +203,7 @@
     <ClInclude Include="UIFramework\inc\AnimationTimeLine.h" />
     <ClInclude Include="UIFramework\inc\deltatime.h" />
     <ClInclude Include="UIFramework\inc\EmptyNode.h" />
+    <ClInclude Include="UIFramework\inc\GLInfoLog.h" />
     <ClInclude Include="UIFramework\inc\IProperty.h" />
     <ClInclude Include="UIFramework\inc\IPropertyMethod.h" />
     <ClInclude Include="UIFramework\inc\ISignalMethod.h" />
@@ -216,6 +217,8 @@
     <ClInclude Include="UIFramework\inc\PropertyDefine.h" />
     <ClInclude Include="UIFramework\inc\RenderContext.h" />
     <ClInclude Include="UIFramework\inc\RenderManipulator.h" />
+    <ClInclude Include="UIFramework\inc\Shader.h" />
+    <ClInclude Include="UIFramework\inc\ShaderProgram.h" />
     <ClInclude Include="UIFramework\inc\SignalDefine.h" />
     <ClInclude Include="UIFramework\inc\TaskPoolInstance.h" />
     <ClInclude Include="UIFramework\inc\TextProperty.h" />
@@ -250,6 +253,7 @@
     <ClCompile Include="UIFramework\AnimationTimeLine.cpp" />
     <ClCompile Include="UIFramework\deltatime.cpp" />
     <ClCompile Include="UIFramework\EmptyNode.cpp" />
+    <ClCompile Include="UIFramework\GLInfoLog.cpp" />
     <ClCompile Include="UIFramework\IProperty.cpp" />
     <ClCompile Include="UIFramework\IPropertyMethod.cpp" />
     <ClCompile Include="UIFramework\ISignalMethod.cpp" />
@@ -262,6 +266,8 @@
     <ClCompile Include="UIFramework\OriginProperty.cpp" />
     <ClCompile Include="UIFramework\RenderContext.cpp" />
     <ClCompile Include="UIFramework\RenderManipulator.cpp" />
+    <ClCompile Include="UIFramework\Shader.cpp" />
+    <ClCompile Include="UIFramework\ShaderProgram.cpp" />
     <ClCompile Include="UIFramework\SignalDefine.cpp" />
     <ClCompile Include="UIFramework\TaskPoolInstance.cpp" />
     <ClCompile Include="UIFramework\TextProperty.cpp" />

@@ -3,21 +3,20 @@
 #include <gl\glew.h>
 #include <SDL_opengl.h>
 #include <gl\glu.h>
-#include <map>
-class ShaderProgram
+#include "Shader.h"
+#include "creator.h"
+
+class ShaderProgram final: public creator<ShaderProgram>
 {
 private:
-	uint32_t m_ProgramID  = 0;
-	std::map<uint32_t, const char*> m_shaderMap;
+	std::string m_name;
+	uint32_t 	m_ProgramID  = 0;
+	ShaderProgram(const std::string&);
 protected:
-	ShaderProgram();
+	friend class creator<ShaderProgram>;
 	~ShaderProgram();
-	void ShaderSource(GLuint shader,
-	 	GLsizei count,
-	 	const GLchar * const *string,
-	 	const GLint *length);
-	void CompileShader();
-	void AttachShader();
+	void AttachShader(ShaderPtr);
 	void LinkProgram();
-
 };
+
+typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;

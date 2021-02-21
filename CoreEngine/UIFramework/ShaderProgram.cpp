@@ -2,32 +2,21 @@
 #include "stdafx.h"
 #include "ShaderProgram.h"
 
-ShaderProgram::ShaderProgram()
+ShaderProgram::ShaderProgram(const std::string& name):m_name(name)
 {
 	m_ProgramID = glCreateProgram();
 }
 
-ShaderProgram::~ShaderProgram(){}
-
-void ShaderProgram::ShaderSource(GLuint shader,	GLsizei count, const GLchar * const * shaderSource, const GLint *length, GLenum shaderType)
+ShaderProgram::~ShaderProgram()
 {
-	GLuint iShader = glCreateShader(shaderType);
-	glShaderSource(iShader, count, &shaderSource, length);
+	glDeleteProgram(m_ProgramID);
 }
 
-void ShaderProgram::CompileShader()
+void ShaderProgram::AttachShader(ShaderPtr pShader)
 {
-	for(auto &shader : m_shaderMap)
+	if (pShader)
 	{
-		glCompileShader(shader.first);
-	}
-}
-
-void ShaderProgram::AttachShader()
-{
-	for(auto &shader : m_shaderMap)
-	{
-		glAttachShader(m_ProgramID, shader.first);
+		glAttachShader(m_ProgramID, pShader->GetShaderId());
 	}
 }
 

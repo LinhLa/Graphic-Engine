@@ -4,9 +4,9 @@
 #include <gl\glew.h>
 #include <SDL_opengl.h>
 #include <gl\glu.h>
-GLInfoLog::GLInfoLog()
+GLInfoLog::GLInfoLog(uint32_t shader_id)
 {
-	glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+	glGetShaderInfoLog(shader_id, 512, NULL, m_infoLog);
 }
 GLInfoLog::~GLInfoLog(){}
 

@@ -8,6 +8,7 @@ public:
 	char app_name[14];
 	char data_file[256];
 	char asset_path[256];
+	char shader_path[256];
 	char font_path[256];
 
 	uint64_t pool_size;

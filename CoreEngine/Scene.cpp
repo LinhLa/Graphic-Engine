@@ -20,6 +20,9 @@
 #include "LayoutProperty.h"
 #include "TextProperty.h"
 
+#include "Shader.h"
+#include "ShaderProgram.h"
+
 #define INIT 	int32_t(0x01)
 #define RENDER 	int32_t(0x02)
 #define ROOT 	"root"
@@ -79,6 +82,13 @@
 #define PROPERTY_LOWER			"lower"
 
 #define STATE_MANAGER 			"state_manager"
+
+#define SHADER_PROGRAM_LIST		"ShaderProgram_list"
+#define VEX_SHADER_LIST			"VertexShader_list"
+#define FRAG_SHADER_LIST		"FragmentShader_list"
+
+#define SHADER_NAME				"name"
+#define SHADER_SOURCE			"source"
 
 #define DOUBLE2INT(X) int(rint(X))
 #define DOUBLE2UINT8(X) uint8_t(rint(X))
@@ -216,6 +226,65 @@ void Scene::LoadResource()
 				break;
 		}
 		Library::GetInstance()->addProperty(name, pProperty);
+	}
+
+	//<get fragment shader list
+	picojson::array o_fragment_list = json_value.get(FRAG_SHADER_LIST).get<picojson::array>();
+	for (picojson::array::iterator iter = o_fragment_list.begin(); iter != o_fragment_list.end(); ++iter)
+	{
+		std::string shader_name = iter->get(SHADER_NAME).get<std::string>();
+		std::string shader_source = Configuration::GetInstance()->shader_path + iter->get(SHADER_SOURCE).get<std::string>();
+		auto pShader = Shader::create(shader_name, GL_FRAGMENT_SHADER);
+
+		//<Open shader source file
+		std::ifstream inShaderStream(shader_source.c_str());
+
+		//<Validate ifstream
+		_ASSERT(inShaderStream);
+
+		//<Read to string
+		std::string inShaderString((std::istreambuf_iterator<char>(inShaderStream)), std::istreambuf_iterator<char>());
+
+		//<Attach source
+		GLint len = static_cast<GLint>(inShaderString.length());
+		const char* const pChar = inShaderString.c_str();
+		pShader->ShaderSource(1, &pChar, &len);
+
+		//<Compile shader
+		pShader->CompileShader();
+
+		//<Add to library
+		Library::GetInstance()->addShader(shader_name, pShader);
+	}
+
+	//<get vertex shader list
+	picojson::array o_vertex_list = json_value.get(VEX_SHADER_LIST).get<picojson::array>();
+	for (picojson::array::iterator iter = o_vertex_list.begin(); iter != o_vertex_list.end(); ++iter)
+	{
+		std::string shader_name = iter->get(SHADER_NAME).get<std::string>();
+		std::string shader_source = Configuration::GetInstance()->shader_path + iter->get(SHADER_SOURCE).get<std::string>();
+
+		auto pShader = Shader::create(shader_name, GL_VERTEX_SHADER);
+
+		//<Open shader source file
+		std::ifstream inShaderStream(shader_source.c_str());
+
+		//<Validate ifstream
+		_ASSERT(inShaderStream);
+
+		//<Read to string
+		std::string inShaderString((std::istreambuf_iterator<char>(inShaderStream)), std::istreambuf_iterator<char>());
+
+		//<Attach source
+		GLint len = static_cast<GLint>(inShaderString.length());
+		const char* const pChar = inShaderString.c_str();
+		pShader->ShaderSource(1, &pChar, &len);
+
+		//<Compile shader
+		pShader->CompileShader();
+
+		//<Add to library
+		Library::GetInstance()->addShader(shader_name, pShader);
 	}
 
 	//<get texture list

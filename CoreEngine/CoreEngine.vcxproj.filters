@@ -178,6 +178,15 @@
     <ClCompile Include="UIFramework\WindowRender.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
+    <ClCompile Include="UIFramework\Shader.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\ShaderProgram.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLInfoLog.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -354,6 +363,15 @@
       <Filter>Header Files\Player</Filter>
     </ClInclude>
     <ClInclude Include="UIFramework\inc\WindowRender.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Shader.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\ShaderProgram.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLInfoLog.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
   </ItemGroup>
