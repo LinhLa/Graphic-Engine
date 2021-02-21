@@ -5,6 +5,27 @@
 		"logo": "logo.png",
 		"release_date": "12122020"
 	},
+	"ShaderProgram_list":
+	[
+		{
+			"name":"Triangle",
+			"shader":["TriangleVex", "TriangleFrag"]
+		}
+	],
+	"VertexShader_list":
+	[
+		{
+			"name":"TriangleVex",
+			"source":"TriangleVex.glsl"
+		}
+	],
+	"FragmentShader_list":
+	[
+		{
+			"name":"TriangleFrag",
+			"source":"TriangleFrag.glsl"
+		}
+	],
 	"property_list":
 	[
 		{
