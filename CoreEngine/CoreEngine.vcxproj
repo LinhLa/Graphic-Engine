@@ -22,33 +22,33 @@
     <ProjectGuid>{B159DED8-D85A-4779-859E-D1EA590AF118}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SDLApp</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>CoreEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -95,13 +95,17 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;OPENGL_RENDERINGWIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\Player\inc;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\include;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE);$(SDL_TTF);$(GLEW_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(BOOST_HOME)\stage\lib;$(SolutionDir)$(Platform)\$(Configuration)\;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;glew32d.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;$(BOOST_HOME)\stage\lib;
+$(GLEW_HOME)\lib\Release\Win32;
+$(SDL_HOME)\lib\x86;
+$(SDL_TTF)\lib\x86;
+$(SDL_IMAGE)\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;glew32.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -117,7 +121,12 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(BOOST_HOME)\stage\lib;$(SolutionDir)$(Platform)\$(Configuration)\;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Platform)\$(Configuration)\;$(BOOST_HOME)\stage\lib;
+$(GLEW_HOME)\lib\Release\x64;
+$(SDL_HOME)\lib\x64
+$(SDL_TTF)\lib\x64
+;$(SDL_IMAGE)\lib\x64
+</AdditionalLibraryDirectories>
       <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;glew32d.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>

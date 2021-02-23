@@ -18,7 +18,7 @@
 #include <iomanip>
 #include <stdarg.h>
 #include <thread>
-#include "ThreadModel.h"
+//#include "ThreadModel.h"
 #define MAX_LOG_BUFFER_DEFAULT size_t(256)
 
 #define __OUTPUT2STREAM__ //push output stream define macro before log.h
@@ -50,7 +50,7 @@
 
 std::string CurrentTime();
 
-enum TLogLevel:uint8_t { FATAL = 0, ERROR, WARN, INFO, DEBUG, TRACE, ALL, OFF };
+enum TLogLevel:uint8_t { FATAL = 0, LERROR, WARN, INFO, DEBUG, TRACE, ALL, OFF, };
 
 template <typename OutputDevice>
 class Log
@@ -161,7 +161,7 @@ typedef Log<Output2Socket> LogObject;
 #endif
 
 #define LOG_FATAL(format, ...)	LogObject().Print(FATAL,"%s :" format, __FUNCTION__, __VA_ARGS__)
-#define LOG_ERROR(format, ...)	LogObject().Print(ERROR, "%s :" format, __FUNCTION__, __VA_ARGS__)
+#define LOG_ERROR(format, ...)	LogObject().Print(LERROR, "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_WARN(format, ...)	LogObject().Print(WARN , "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_INFO(format, ...)	LogObject().Print(INFO , "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_DEBUG(format, ...) 	LogObject().Print(DEBUG, "%s :" format, __FUNCTION__, __VA_ARGS__)

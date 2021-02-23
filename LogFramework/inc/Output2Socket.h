@@ -1,8 +1,6 @@
 #pragma once
 #include <cstdio>
 #include <iostream>
-
-
 class Output2Socket
 {
 public:

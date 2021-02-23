@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include <file_guard.h>
-#include <inipp.h>
+#include "..\Common\inc\file_guard.h"
 #include "inc\Output2File.h"
 
 

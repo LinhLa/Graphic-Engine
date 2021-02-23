@@ -2,7 +2,7 @@
 #include "RenderManipulator.h"
 #include "TextureManipulator.h"
 #include "UIHelper.h"
-
+#include <stdexcept>
 #define IS_VALID_RECT(rect)		(0 != rect.x && 0 != rect.y && 0 != rect.h && 0 != rect.w)
 
 RenderClipManipulator::RenderClipManipulator(SDL_Renderer* pRenderer, const SDL_Rect& target):m_clip_target(target), m_pRenderer(pRenderer)
