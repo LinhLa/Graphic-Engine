@@ -12,7 +12,7 @@ private:
 	std::string m_name;
 	uint32_t 	m_ProgramID  = 0;
 	ShaderProgram(const std::string&);
-protected:
+public:
 	friend class creator<ShaderProgram>;
 	~ShaderProgram();
 	void AttachShader(ShaderPtr);

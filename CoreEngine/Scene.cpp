@@ -89,6 +89,7 @@
 
 #define SHADER_NAME				"name"
 #define SHADER_SOURCE			"source"
+#define SHADER					"shader"
 
 #define DOUBLE2INT(X) int(rint(X))
 #define DOUBLE2UINT8(X) uint8_t(rint(X))
@@ -285,6 +286,30 @@ void Scene::LoadResource()
 
 		//<Add to library
 		Library::GetInstance()->addShader(shader_name, pShader);
+	}
+
+	//<get shader program list
+	picojson::array o_shaderProgram_list = json_value.get(SHADER_PROGRAM_LIST).get<picojson::array>();
+	for (picojson::array::iterator iter = o_shaderProgram_list.begin(); iter != o_shaderProgram_list.end(); ++iter)
+	{
+		std::string program_name = iter->get(SHADER_NAME).get<std::string>();
+		auto pShaderProgram = ShaderProgram::create(program_name);
+
+		picojson::array shader_list = iter->get(SHADER).get<picojson::array>();
+
+		//<get shader name list
+		for (picojson::value item : shader_list)
+		{
+			std::string shader_name = item.get<std::string>();
+			//<Attach shader to program
+			pShaderProgram->AttachShader(Library::GetInstance()->getShader(shader_name));
+		}
+
+		//<Link to program
+		pShaderProgram->LinkProgram();
+
+		//<Add to library
+		Library::GetInstance()->addShaderProgram(program_name, pShaderProgram);
 	}
 
 	//<get texture list
