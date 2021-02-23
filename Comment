@@ -1,0 +1,43 @@
+I recommend setting it to windows if you don't want console output, and console if you do want console output. 
+Note: if you do set it to windows, you have to define the entry point. 
+To do that go to Advanced under the Linker menu and set the Entry Point field to mainCRTStartup. This sets it so your program will use
+int main( int argc, char* args[] ) as your main.
+As the starting point for your program.
+
+
+OpenGL render pipeline in SDL2:
+
+//Initialize SDL
+SDL_Init( SDL_INIT_VIDEO )
+
+//Create window with flag SDL_WINDOW_OPENGL
+gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN );
+
+//Create context
+gContext = SDL_GL_CreateContext( gWindow );
+			
+
+//initialize OpenGL's internals with our own initGL function.
+initGL()
+	1. Create programe ID
+	2. Load Shader code and compile
+	3. Link Shader binary
+	4. Get the attribute from the shader program
+	5. Create the VBO and IBO
+	
+//Main loop - handle event
+ while( !quit )
+ {...}
+ 
+//Render
+render();
+	1. /* Clear context */
+		glClearColor(0,0,0,1);
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+	2.	/* <Extra drawing functions here> */
+	
+	3. /* Swap our buffer to display the current contents of buffer on screen */ 
+		SDL_GL_SwapWindow(window);
+		//if you are using a double-buffered display, then you must use SDL_GL_SwapBuffers() to swap the buffers and update the display.
+		SDL_GL_SwapWindow( gWindow );
