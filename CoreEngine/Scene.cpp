@@ -22,6 +22,8 @@
 
 #include "Shader.h"
 #include "ShaderProgram.h"
+#include "VertexData.h"
+#include "VertexAttribute.h"
 
 #define INIT 	int32_t(0x01)
 #define RENDER 	int32_t(0x02)
@@ -87,12 +89,18 @@
 #define VEX_SHADER_LIST			"VertexShader_list"
 #define FRAG_SHADER_LIST		"FragmentShader_list"
 
-#define SHADER_NAME				"name"
+#define NAME					"name"
 #define SHADER_SOURCE			"source"
 #define SHADER					"shader"
 
-#define DOUBLE2INT(X) int(rint(X))
-#define DOUBLE2UINT8(X) uint8_t(rint(X))
+#define VEX_DATA_LIST			"VertexData_list"
+#define VERTICES 				"vertices"
+#define INDICES					"indices"
+#define USAGE 					"usage"
+
+#define DOUBLE2INT(X)		int(rint(X))
+#define DOUBLE2UINT8(X)		uint8_t(rint(X))
+#define DOUBLE2UINT32(X)	uint32_t(rint(X))
 
 Scene::Scene()
 {
@@ -233,7 +241,7 @@ void Scene::LoadResource()
 	picojson::array o_fragment_list = json_value.get(FRAG_SHADER_LIST).get<picojson::array>();
 	for (picojson::array::iterator iter = o_fragment_list.begin(); iter != o_fragment_list.end(); ++iter)
 	{
-		std::string shader_name = iter->get(SHADER_NAME).get<std::string>();
+		std::string shader_name = iter->get(NAME).get<std::string>();
 		std::string shader_source = Configuration::GetInstance()->shader_path + iter->get(SHADER_SOURCE).get<std::string>();
 		auto pShader = Shader::create(shader_name, GL_FRAGMENT_SHADER);
 
@@ -247,12 +255,11 @@ void Scene::LoadResource()
 		std::string inShaderString((std::istreambuf_iterator<char>(inShaderStream)), std::istreambuf_iterator<char>());
 
 		//<Attach source
-		GLint len = static_cast<GLint>(inShaderString.length());
 		const char* const pChar = inShaderString.c_str();
-		pShader->ShaderSource(1, &pChar, &len);
+		pShader->setSource(1, &pChar, NULL);
 
 		//<Compile shader
-		pShader->CompileShader();
+		pShader->compile();
 
 		//<Add to library
 		Library::GetInstance()->addShader(shader_name, pShader);
@@ -262,7 +269,7 @@ void Scene::LoadResource()
 	picojson::array o_vertex_list = json_value.get(VEX_SHADER_LIST).get<picojson::array>();
 	for (picojson::array::iterator iter = o_vertex_list.begin(); iter != o_vertex_list.end(); ++iter)
 	{
-		std::string shader_name = iter->get(SHADER_NAME).get<std::string>();
+		std::string shader_name = iter->get(NAME).get<std::string>();
 		std::string shader_source = Configuration::GetInstance()->shader_path + iter->get(SHADER_SOURCE).get<std::string>();
 
 		auto pShader = Shader::create(shader_name, GL_VERTEX_SHADER);
@@ -277,12 +284,11 @@ void Scene::LoadResource()
 		std::string inShaderString((std::istreambuf_iterator<char>(inShaderStream)), std::istreambuf_iterator<char>());
 
 		//<Attach source
-		GLint len = static_cast<GLint>(inShaderString.length());
 		const char* const pChar = inShaderString.c_str();
-		pShader->ShaderSource(1, &pChar, &len);
+		pShader->setSource(1, &pChar, NULL);
 
 		//<Compile shader
-		pShader->CompileShader();
+		pShader->compile();
 
 		//<Add to library
 		Library::GetInstance()->addShader(shader_name, pShader);
@@ -292,7 +298,7 @@ void Scene::LoadResource()
 	picojson::array o_shaderProgram_list = json_value.get(SHADER_PROGRAM_LIST).get<picojson::array>();
 	for (picojson::array::iterator iter = o_shaderProgram_list.begin(); iter != o_shaderProgram_list.end(); ++iter)
 	{
-		std::string program_name = iter->get(SHADER_NAME).get<std::string>();
+		std::string program_name = iter->get(NAME).get<std::string>();
 		auto pShaderProgram = ShaderProgram::create(program_name);
 
 		picojson::array shader_list = iter->get(SHADER).get<picojson::array>();
@@ -302,14 +308,53 @@ void Scene::LoadResource()
 		{
 			std::string shader_name = item.get<std::string>();
 			//<Attach shader to program
-			pShaderProgram->AttachShader(Library::GetInstance()->getShader(shader_name));
+			pShaderProgram->attachShader(Library::GetInstance()->getShader(shader_name));
 		}
 
 		//<Link to program
-		pShaderProgram->LinkProgram();
+		pShaderProgram->linkProgram();
 
 		//<Add to library
 		Library::GetInstance()->addShaderProgram(program_name, pShaderProgram);
+
+		pShaderProgram->write();
+	}
+
+	//<get vertex data
+	picojson::array o_vertex_data_list = json_value.get(VEX_DATA_LIST).get<picojson::array>();
+	for (picojson::array::iterator iter = o_vertex_data_list.begin(); iter != o_vertex_data_list.end(); ++iter)
+	{
+		std::string name = iter->get(NAME).get<std::string>();
+		GLenum usage;
+		switch(std::stoi(iter->get(USAGE).get<std::string>()))
+		{
+			case 0:
+			usage = GL_STATIC_DRAW;
+			break;
+			case 1:
+			usage = GL_DYNAMIC_DRAW;
+			break;
+			default:
+			usage = GL_STATIC_DRAW;
+			break;
+		}
+		std::vector<float> vertices;
+		picojson::array o_vertices_list = iter->get(VERTICES).get<picojson::array>();
+		for (picojson::value item : o_vertices_list)
+		{
+			vertices.push_back(static_cast<float>(item.get<double>()));
+		}
+
+		std::vector<uint32_t> indices;
+		picojson::array o_indices_list = iter->get(INDICES).get<picojson::array>();
+		for (picojson::value item : o_indices_list)
+		{
+			indices.push_back(DOUBLE2UINT32(item.get<double>()));
+		}
+
+		auto pVertexData = VertexData::create(std::move(vertices), std::move(indices), usage);
+		//<Add to library
+		Library::GetInstance()->addVertexData(name, pVertexData);
 	}
 
 	//<get texture list

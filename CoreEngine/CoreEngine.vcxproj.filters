@@ -187,6 +187,18 @@
     <ClCompile Include="UIFramework\GLInfoLog.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
+    <ClCompile Include="UIFramework\VertexArrayObject.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\VertexAttribute.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\VertexBufferObject.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\VertexData.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -372,6 +384,18 @@
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
     <ClInclude Include="UIFramework\inc\GLInfoLog.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\VertexArrayObject.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\VertexAttribute.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\VertexBufferObject.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\VertexData.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
   </ItemGroup>

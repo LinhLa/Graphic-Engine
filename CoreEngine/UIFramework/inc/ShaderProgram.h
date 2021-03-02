@@ -15,8 +15,16 @@ private:
 public:
 	friend class creator<ShaderProgram>;
 	~ShaderProgram();
-	void AttachShader(ShaderPtr);
-	void LinkProgram();
+
+	void attachShader(ShaderPtr);
+	void linkProgram();
+	void useProgram();
+
+	void read();
+	void write();
+
+	uint32_t getID() const;
+	std::string getName() const;
 };
 
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;

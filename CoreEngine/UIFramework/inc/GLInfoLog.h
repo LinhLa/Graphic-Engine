@@ -1,12 +1,19 @@
 #pragma once
 #include <iostream>
-#include <cstdint>
+#include <gl\glew.h>
+#include <SDL_opengl.h>
+#include <gl\glu.h>
+
 class GLInfoLog
 {
 private:
-	char m_infoLog[512];
+	GLint		m_success = 0;
+	GLenum		m_type = 0;
+	GLuint		m_id = 0;
+	static char m_infoLog[512];
 public:
-	GLInfoLog(uint32_t);
+	GLInfoLog(GLuint id, GLenum type);
 	~GLInfoLog();
-	const char* GetInfoLog() const;
+	static const char* GetInfoLog();
+	bool CheckGLSuccess();
 };

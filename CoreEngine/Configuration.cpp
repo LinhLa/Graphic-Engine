@@ -15,6 +15,7 @@ Configuration::Configuration():pool_size(0), chunk_size(0), log_level(0), full_s
 	memset(asset_path, 0, sizeof(asset_path));
 	memset(font_path, 0, sizeof(font_path));
 	memset(shader_path, 0, sizeof(shader_path));
+	memset(shader_bin, 0, sizeof(shader_bin));
 }
 
 void Configuration::loadConfig(const char* file)
@@ -60,7 +61,11 @@ void Configuration::loadConfig(const char* file)
 
 	inipp::extract(ini.sections["Texture"]["shader_path"], str_return);
 	memcpy_s(shader_path, sizeof(shader_path), str_return.data(), str_return.size());
-	font_path[sizeof(shader_path) - 1] = 0;
+	shader_path[sizeof(shader_path) - 1] = 0;
+
+	inipp::extract(ini.sections["Texture"]["shader_bin"], str_return);
+	memcpy_s(shader_bin, sizeof(shader_bin), str_return.data(), str_return.size());
+	shader_bin[sizeof(shader_bin) - 1] = 0;
 
 	inipp::extract(ini.sections["Graphic"]["fps"], fps);
 
@@ -81,7 +86,8 @@ void Configuration::loadConfig(const char* file)
 	LOG_DEBUG("Asset path[%s]", asset_path);
 	LOG_DEBUG("Font path[%s]", font_path);
 	LOG_DEBUG("Shader path[%s]", shader_path);
-
+	LOG_DEBUG("Shader bin path[%s]", shader_bin);
+	
 	LOG_DEBUG("Frame rate[%d]", fps);
 
 	LOG_DEBUG("major_verion[%d]", major_verion);

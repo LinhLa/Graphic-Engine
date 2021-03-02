@@ -7,6 +7,11 @@
 Shader::Shader(const std::string& name, GLenum type):m_name(name), m_Type(type)
 {
 	m_ShaderID = glCreateShader(m_Type);
+	if (0 == m_ShaderID || GL_FALSE == glIsShader(m_ShaderID))
+	{
+	    LOG_DEBUG("Could not create Shader[%s]", name.c_str());
+	    _ASSERT(false);
+	}
 }
 
 Shader::~Shader()
@@ -14,29 +19,32 @@ Shader::~Shader()
 	glDeleteShader(m_ShaderID);
 }
 
-void Shader::ShaderSource(GLsizei count, const GLchar* const * shaderSource, const GLint *length)
+void Shader::setSource(GLsizei count, const GLchar* const * shaderSource, const GLint *length)
 {
 	glShaderSource(m_ShaderID, count, shaderSource, length);
 }
 
-void Shader::CompileShader()
+void Shader::compile()
 {
 	glCompileShader(m_ShaderID);
-	int32_t success;
-	glGetShaderiv(m_ShaderID, GL_COMPILE_STATUS, &success);
-    if (!success)
+    if (!GLInfoLog(m_ShaderID, GL_COMPILE_STATUS).CheckGLSuccess())
     {
-        LOG_DEBUG("Shader[%s] compilation failed: %s", m_name.c_str(), GLInfoLog(m_ShaderID).GetInfoLog());
+        LOG_DEBUG("Shader[%s] compilation failed: %s", m_name.c_str(), GLInfoLog::GetInfoLog());
         _ASSERT(false);
     }
 }
 
-uint32_t Shader::GetShaderId() const
+uint32_t Shader::getId() const
 {
 	return m_ShaderID;
 }
 
-GLenum Shader::Type() const
+std::string Shader::getName() const
+{
+	return m_name;
+}
+
+GLenum Shader::type() const
 {
 	return m_Type;
 }

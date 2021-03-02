@@ -234,6 +234,10 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\TextureManipulator.h" />
     <ClInclude Include="UIFramework\inc\UIHelper.h" />
     <ClInclude Include="UIFramework\inc\UIObjectSignalMethod.h" />
+    <ClInclude Include="UIFramework\inc\VertexArrayObject.h" />
+    <ClInclude Include="UIFramework\inc\VertexAttribute.h" />
+    <ClInclude Include="UIFramework\inc\VertexBufferObject.h" />
+    <ClInclude Include="UIFramework\inc\VertexData.h" />
     <ClInclude Include="UIFramework\inc\WindowRender.h" />
   </ItemGroup>
   <ItemGroup>
@@ -308,6 +312,10 @@ $(SDL_TTF)\lib\x64
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UIFramework\UIObjectSignalMethod.cpp" />
+    <ClCompile Include="UIFramework\VertexArrayObject.cpp" />
+    <ClCompile Include="UIFramework\VertexAttribute.cpp" />
+    <ClCompile Include="UIFramework\VertexBufferObject.cpp" />
+    <ClCompile Include="UIFramework\VertexData.cpp" />
     <ClCompile Include="UIFramework\WindowRender.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
