@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+#include <sstream>
 #include <chrono>
 #include <thread>
 #include <vector>
@@ -43,5 +45,14 @@ namespace util
 				std::this_thread::yield();
 			}
 		}
+	}
+
+	template<class T>
+	T ConvertToType(std::string& strVal)
+	{
+		std::stringstream sstream(strVal);
+		T value;
+		sstream >> value;
+		return value;
 	}
 }

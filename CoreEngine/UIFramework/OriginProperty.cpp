@@ -20,33 +20,35 @@ OriginProperty& OriginProperty::operator=(const OriginProperty& rhs)
 	SetClip(rhs.IsClip());
 	SetAngle(rhs.GetAngle());
 	SetCenterPoint(rhs.GetCenterPoint());
-	SetFlip(rhs.GetFlip());
 	SetBroadCastEvent(rhs.IsBroadCastEvent());
+	SetFlip(rhs.GetFlip());
 	return *this;
 }
 
 void OriginProperty::init()
 {
 	m_PropertyTable->AddProperty(VISIBLE, Property<bool>::create(VISIBLE));
-	m_PropertyTable->AddProperty(OPACITY, Property<uint8_t>::create(OPACITY));
 	m_PropertyTable->AddProperty(IS_CLIP, Property<bool>::create(IS_CLIP));
 	m_PropertyTable->AddProperty(ANGLE, Property<double>::create(ANGLE));
 
-	m_PropertyTable->AddProperty(CENTER_POINT, Property<SDL_Point>::create(CENTER_POINT));
-	m_PropertyTable->AddProperty(FLIP, Property<SDL_RendererFlip>::create(FLIP));
-
 	m_PropertyTable->AddProperty(IS_BROADCAST_EVENT, Property<bool>::create(IS_BROADCAST_EVENT));
-
-	m_PropertyTable->AddProperty(FORE_GROUND_COLOR, Property<SDL_Color>::create(FORE_GROUND_COLOR));
-	m_PropertyTable->AddProperty(BACK_GROUND_COLOR, Property<SDL_Color>::create(BACK_GROUND_COLOR));
 
 	//<Set default value
 	SetVisible(true);
-	SetOpacity(SDL_ALPHA_OPAQUE);
 	SetClip(false);
 	SetAngle(0.0);
-	SetFlip(SDL_RendererFlip::SDL_FLIP_NONE);
 	SetBroadCastEvent(false);
+
+	m_PropertyTable->AddProperty(OPACITY, Property<uint8_t>::create(OPACITY));
+	m_PropertyTable->AddProperty(CENTER_POINT, Property<SDL_Point>::create(CENTER_POINT));
+	m_PropertyTable->AddProperty(FLIP, Property<SDL_RendererFlip>::create(FLIP));
+
+	m_PropertyTable->AddProperty(FORE_GROUND_COLOR, Property<SDL_Color>::create(FORE_GROUND_COLOR));
+	m_PropertyTable->AddProperty(BACK_GROUND_COLOR, Property<SDL_Color>::create(BACK_GROUND_COLOR));
+	
+	m_PropertyTable->AddProperty(OPACITY, Property<uint8_t>::create(OPACITY));
+	SetOpacity(SDL_ALPHA_OPAQUE);
+	SetFlip(SDL_RendererFlip::SDL_FLIP_NONE);
 	SetForeGroundColor(SDL_Color{0,0,0,0});
 	SetBackGroundColor(SDL_Color{0,0,0,0});
 }
@@ -59,16 +61,6 @@ bool OriginProperty::isVisible() const
 void OriginProperty::SetVisible(bool value)
 {
 	m_PropertyTable->SetPropertyValue<bool>(VISIBLE, value);
-}
-
-uint8_t OriginProperty::GetOpacity() const
-{
-	return m_PropertyTable->GetPropertyValue<uint8_t>(OPACITY);
-}
-
-void OriginProperty::SetOpacity(uint8_t value)
-{
-	m_PropertyTable->SetPropertyValue<uint8_t>(OPACITY, value);
 }
 
 void OriginProperty::SetClip(bool isClip)
@@ -89,6 +81,26 @@ void OriginProperty::SetAngle(double angle)
 double OriginProperty::GetAngle() const
 {
 	return m_PropertyTable->GetPropertyValue<double>(ANGLE);
+}
+
+void OriginProperty::SetBroadCastEvent(bool flag)
+{
+	m_PropertyTable->SetPropertyValue<bool>(IS_BROADCAST_EVENT, flag);
+}
+
+bool OriginProperty::IsBroadCastEvent() const
+{
+	return m_PropertyTable->GetPropertyValue<bool>(IS_BROADCAST_EVENT);
+}
+
+uint8_t OriginProperty::GetOpacity() const
+{
+	return m_PropertyTable->GetPropertyValue<uint8_t>(OPACITY);
+}
+
+void OriginProperty::SetOpacity(uint8_t value)
+{
+	m_PropertyTable->SetPropertyValue<uint8_t>(OPACITY, value);
 }
 
 void OriginProperty::SetCenterPoint(int x, int y)
@@ -115,16 +127,6 @@ void OriginProperty::SetFlip(SDL_RendererFlip flip)
 SDL_RendererFlip OriginProperty::GetFlip() const
 {
 	return m_PropertyTable->GetPropertyValue<SDL_RendererFlip>(FLIP);
-}
-
-void OriginProperty::SetBroadCastEvent(bool flag)
-{
-	m_PropertyTable->SetPropertyValue<bool>(IS_BROADCAST_EVENT, flag);
-}
-
-bool OriginProperty::IsBroadCastEvent() const
-{
-	return m_PropertyTable->GetPropertyValue<bool>(IS_BROADCAST_EVENT);
 }
 
 void OriginProperty::SetForeGroundColor(SDL_Color color)

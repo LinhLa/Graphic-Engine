@@ -19,7 +19,7 @@
 #include <stdarg.h>
 #include <thread>
 //#include "ThreadModel.h"
-#define MAX_LOG_BUFFER_DEFAULT size_t(256)
+#define MAX_LOG_BUFFER_DEFAULT size_t(512)
 
 #define __OUTPUT2STREAM__ //push output stream define macro before log.h
 

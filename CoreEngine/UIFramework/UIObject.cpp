@@ -7,6 +7,7 @@
 
 #include "OriginProperty.h"
 #include "LayoutProperty.h"
+#include "GLProperty.h"
 
 #include "KeyInputSignalMethod.h"
 #include "UIObjectSignalMethod.h"
@@ -15,13 +16,18 @@
 #include "SignalDefine.h"
 
 #include "RenderManipulator.h"
-#include "UIHelper.h"
+#include "GLRenderManipulator.h"
 
+#include "UIHelper.h"
+#include "Library.h"
 
 using namespace UIHelper;
 
 UIObject::UIObject(std::string name) :m_name(name)
 {
+#ifdef OPENGL_RENDERING
+	AddPropertyMethodObj(GLProperty::create(dynamic_cast<PropertyTable*>(this)));
+#endif
 	AddPropertyMethodObj(OriginProperty::create(dynamic_cast<PropertyTable*>(this)));
 	AddPropertyMethodObj(LayoutProperty::create(dynamic_cast<PropertyTable*>(this)));
 
@@ -54,8 +60,13 @@ void UIObject::onDraw()
 	}
 
 	SDL_Rect parent_rect = LayoutMethod->GetLayoutInformation();
+#ifndef OPENGL_RENDERING
 	RenderClipManipulator clipManipulator(UIHelper::GetRenderer(), parent_rect);
+#else
+	GLRenderClipManipulator clipManipulator(parent_rect);
+#endif
 
+#if 0
 	//<Check clip area
 	if (OriginMethod->IsClip())
 	{
@@ -67,7 +78,7 @@ void UIObject::onDraw()
 		clipManipulator.SetRenderClipTarget();
 	}
 
-	//Check back ground color
+	//Check background color
 	if (IsPropertyExist(BACK_GROUND_COLOR))
 	{
 		SDL_Color color = OriginMethod->GetBackGroundColor();
@@ -83,7 +94,7 @@ void UIObject::onDraw()
 			drawer.FillRect(parent_rect);
 		}
 	}
-
+#endif
 	//<broadcast signal on draw
 	OnSignal(ON_DRAW_SIGNAL, VoidType{});
 
@@ -110,6 +121,7 @@ void UIObject::onKeyInputEvent(SDL_Event& arg)
 {
 	auto OriginMethod = this->GetPropertyMethodObj<OriginProperty>();
 	auto LayoutMethod = this->GetPropertyMethodObj<LayoutProperty>();
+#ifndef OPENGL_RENDERING
 	SDL_Rect display_rect = LayoutMethod->GetLayoutInformation();
 	UIHelper::MOUSE_STATE state = UIHelper::onMouseEvent(arg, display_rect);
 
@@ -176,6 +188,10 @@ void UIObject::onKeyInputEvent(SDL_Event& arg)
 			child->onKeyInputEvent(arg);
 		}
 	}
+#else
+
+
+#endif
 }
 
 std::string UIObject::getUrl() const

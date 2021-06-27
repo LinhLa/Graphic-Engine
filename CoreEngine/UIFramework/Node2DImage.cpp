@@ -14,6 +14,8 @@
 #include "PropertyDefine.h"
 #include "SignalDefine.h"
 
+#include "GLRenderContext.h"
+
 Node2DImage::Node2DImage(std::string name):UIObject(name)
 {
 	//<on draw
@@ -57,6 +59,7 @@ void Node2DImage::onDraw(VoidType&&)
 
 	if (true == m_bUIChanged)
 	{
+#ifndef OPENGL_RENDERING
 		//calculate scale
 		display_rect = UIHelper::GetScaleRect(
 			display_rect.x,
@@ -65,29 +68,58 @@ void Node2DImage::onDraw(VoidType&&)
 			m_pTextureToRender->GetHeight(),
 			layoutMethod->GetLayoutScaleX(),
 			layoutMethod->GetLayoutScaleY());
-
+#else
+		//calculate scale
+		display_rect = UIHelper::GetScaleRect(
+			display_rect.x,
+			display_rect.y,
+			m_pTexture->GetWidth(),
+			m_pTexture->GetHeight(),
+			layoutMethod->GetLayoutScaleX(),
+			layoutMethod->GetLayoutScaleY());
+#endif
 		//check fore ground color
 		if (IsPropertyExist(FORE_GROUND_COLOR))
 		{
 			SDL_Color color = originMethod->GetForeGroundColor();
 			if (IS_VALID_COLOR(color))
 			{
+#ifndef OPENGL_RENDERING
 				//clone texture
 				m_pTextureToRender = m_pTexture->Clone(UIHelper::GetRenderer());
 				TextureManipulator(m_pTextureToRender).ColorKey(color);
+#else
+
+#endif
 			}
 		}
-
+#ifndef OPENGL_RENDERING
 		//set opacity
 		m_pTextureToRender->setAlpha(originMethod->GetOpacity());
+#else
+		//set opacity
+#endif
 
 		//reset flag
 		m_bUIChanged = false;
 	}
 
-	//<load texture to render
+#ifndef OPENGL_RENDERING
+	//<Render
 	RenderExContextPtr context = RenderExContext::create(UIHelper::GetRenderer(), sdlResult, display_rect, originMethod->GetAngle(), centerPoint, originMethod->GetFlip());
 	context->excute(m_pTextureToRender);
+#else
+	//<Render
+	/*auto context = GLRender2DContext::create(
+		m_pShaderProgram,
+		m_pTexture,
+		sdlResult,
+		display_rect,
+		originMethod->GetAngle(),
+		centerPoint,
+		originMethod->GetFlip());
+	context->excute();*/
+#endif
 }
 
 void Node2DImage::onClean(VoidType&&)
@@ -105,11 +137,14 @@ int Node2DImage::GetActualHeight() const
 
 void Node2DImage::SetTexture(const std::string& texture_name)
 {
-	m_pTexture = Library::GetInstance()->getTexture(texture_name);
+#ifdef OPENGL_RENDERING
+	m_pTexture = Library::GetInstance()->get<GLTexture>(texture_name);
+#else
+	m_pTexture = Library::GetInstance()->get<Texture>(texture_name);
 
 	//clone texture
 	m_pTextureToRender = m_pTexture->Clone(UIHelper::GetRenderer());
-
+#endif
 	//set flag ui update
 	m_bUIChanged = true;
 }

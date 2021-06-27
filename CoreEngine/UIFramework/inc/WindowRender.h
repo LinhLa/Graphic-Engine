@@ -36,12 +36,14 @@ protected:
 		int flags);
 
 	SDL_Window* getWindow();
-
-	SDL_Renderer* CreateRenderer(int index, uint32_t flags);
+#ifdef OPENGL_RENDERING
 	void* CreateContext();
-	SDL_Surface* GetWindowSurface();
-
 	void SwapWindow();
+#else
+	SDL_Renderer* CreateRenderer(int index, uint32_t flags);
+	SDL_Surface* GetWindowSurface();
+#endif
+
 	void ShowWindow();
 	void DestroyWindow();
 public:

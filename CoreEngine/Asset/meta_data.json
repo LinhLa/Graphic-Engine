@@ -1,487 +1,946 @@
 {
-	"metadata":{
-		"app_name":"MediaPlayer",
-		"version":"1.0",
-		"logo":"logo.png",
-		"release_date":"12122020"
+	"metadata": {
+		"app_name": "MediaPlayer",
+		"version": "1.0",
+		"logo": "logo.png",
+		"release_date": "12122020"
 	},
-	"VertexData_list":
-	[
-		{
-			"name":"Triangledata",
-			"vertices":[0.5,0.5,0.0,0.5,-0.5,0.0,-0.5,-0.5,0.0,-0.5,0.5,0.0],
-			"indices":[0,1,3,1,2,3],
-			"usage":"0"
-		}
-	],
-	"ShaderProgram_list":
-	[
-		{
-			"name":"Triangle",
-			"shader":["TriangleVex","TriangleFrag"]
-		}
-	],
-	"VertexShader_list":
-	[
-		{
-			"name":"TriangleVex",
-			"source":"TriangleVex.glsl"
-		}
-	],
-	"FragmentShader_list":
-	[
-		{
-			"name":"TriangleFrag",
-			"source":"TriangleFrag.glsl"
-		}
-	],
-	"property_list":
-	[
-		{
-			"property_name":"buttonstate",
-			"type":"0",
-			"value":"0",
-			"upper":"100",
-			"lower":"0"
-		},
-		{
-			"property_name":"progress",
-			"type":"1",
-			"value":"0.0",
-			"upper":"100.0",
-			"lower":"-100.0"
-		}
-	],
-	"playback_list":
-	[
-		{
-			"name":"Playback01",
-			"animation_list":
-			[
-				{
-					"property_name":"progress",
-					"keytime":["0","5","20","350","600"],
-					"keyvalue":["0.0","1.0","2.0","3.0","4.7"]
+	"Mesh_list": [{
+			"name": "Cube",
+			"vertices": [
+				-0.5, -0.5, -0.5, 0.0, 0.0,
+				0.5, -0.5, -0.5, 1.0, 0.0,
+				0.5, 0.5, -0.5, 1.0, 1.0,
+				0.5, 0.5, -0.5, 1.0, 1.0,
+				-0.5, 0.5, -0.5, 0.0, 1.0,
+				-0.5, -0.5, -0.5, 0.0, 0.0,
+
+				-0.5, -0.5, 0.5, 0.0, 0.0,
+				0.5, -0.5, 0.5, 1.0, 0.0,
+				0.5, 0.5, 0.5, 1.0, 1.0,
+				0.5, 0.5, 0.5, 1.0, 1.0,
+				-0.5, 0.5, 0.5, 0.0, 1.0,
+				-0.5, -0.5, 0.5, 0.0, 0.0,
+
+				-0.5, 0.5, 0.5, 1.0, 0.0,
+				-0.5, 0.5, -0.5, 1.0, 1.0,
+				-0.5, -0.5, -0.5, 0.0, 1.0,
+				-0.5, -0.5, -0.5, 0.0, 1.0,
+				-0.5, -0.5, 0.5, 0.0, 0.0,
+				-0.5, 0.5, 0.5, 1.0, 0.0,
+
+				0.5, 0.5, 0.5, 1.0, 0.0,
+				0.5, 0.5, -0.5, 1.0, 1.0,
+				0.5, -0.5, -0.5, 0.0, 1.0,
+				0.5, -0.5, -0.5, 0.0, 1.0,
+				0.5, -0.5, 0.5, 0.0, 0.0,
+				0.5, 0.5, 0.5, 1.0, 0.0,
+
+				-0.5, -0.5, -0.5, 0.0, 1.0,
+				0.5, -0.5, -0.5, 1.0, 1.0,
+				0.5, -0.5, 0.5, 1.0, 0.0,
+				0.5, -0.5, 0.5, 1.0, 0.0,
+				-0.5, -0.5, 0.5, 0.0, 0.0,
+				-0.5, -0.5, -0.5, 0.0, 1.0,
+
+				-0.5, 0.5, -0.5, 0.0, 1.0,
+				0.5, 0.5, -0.5, 1.0, 1.0,
+				0.5, 0.5, 0.5, 1.0, 0.0,
+				0.5, 0.5, 0.5, 1.0, 0.0,
+				-0.5, 0.5, 0.5, 0.0, 0.0,
+				-0.5, 0.5, -0.5, 0.0, 1.0
+			],
+			"attribute": [{
+					"name": "aPos",
+					"index": 0,
+					"size": 3,
+					"type": "GL_FLOAT",
+					"normalized": false,
+					"stride": 5,
+					"offset": 0
 				},
 				{
-					"property_name":"buttonstate",
-					"keytime":["0","5","20","350","600"],
-					"keyvalue":["0","1","2","3","4"]
+					"name": "aTexCoord",
+					"index": 1,
+					"size": 2,
+					"type": "GL_FLOAT",
+					"normalized": false,
+					"stride": 5,
+					"offset": 3
 				}
-			]
-		}
-	],
-	"state_manager_list":
-	[
+			],
+			"usage": "0"
+		},
 		{
-			"name":"PlayButtonStateManager",
-			"state_group_list":
-			[
+			"name": "Quad",
+			"vertices": [
+				0.5, 0.5, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,
+				0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0,
+				-0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+				-0.5, 0.5, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0
+			],
+			"attribute": [{
+					"name": "aPos",
+					"index": 0,
+					"size": 3,
+					"type": "GL_FLOAT",
+					"normalized": false,
+					"stride": 8,
+					"offset": 0
+				},
 				{
-					"name":"group1",
-					"property_name":"buttonstate",
-					"state_list":
-					[
-						{
-							"name":"01",
-							"progress":"1.0",
-							"buttonstate":"3"
-						},
-						{
-							"name":"02",
-							"progress":"3.0",
-							"buttonstate":"3"
-						}
-					]
+					"name": "aColor",
+					"index": 1,
+					"size": 3,
+					"type": "GL_FLOAT",
+					"normalized": false,
+					"stride": 8,
+					"offset": 3
+				},
+				{
+					"name": "aTexCoord",
+					"index": 2,
+					"size": 2,
+					"type": "GL_FLOAT",
+					"normalized": false,
+					"stride": 8,
+					"offset": 6
+				}
+			],
+			"indices": [0, 1, 3, 1, 2, 3],
+			"usage": "0"
+		},
+		{
+			"name": "Triangle",
+			"vertices": [
+				-0.5, -0.5, 0.0,
+				0.5, -0.5, 0.0,
+				0.0, 0.5, 0.0
+			],
+			"attribute": [{
+				"name": "aPos",
+				"index": 0,
+				"type": "GL_FLOAT",
+				"normalized": false,
+				"size": 3,
+				"stride": 3,
+				"offset": 0
+			}],
+			"indices": [0, 1, 2],
+			"usage": "0"
+		},
+		{
+			"name": "Texture",
+			"vertices": [
+				1.0, 1.0, 0.0, 1.0, 1.0,
+				1.0, -1.0, 0.0, 1.0, 0.0,
+				-1.0, -1.0, 0.0, 0.0, 0.0,
+				-1.0, 1.0, 0.0, 0.0, 1.0
+			],
+			"attribute": [{
+					"name": "aPos",
+					"index": 0,
+					"size": 3,
+					"type": "GL_FLOAT",
+					"normalized": false,
+					"stride": 5,
+					"offset": 0
+				},
+				{
+					"name": "aTexCoord",
+					"index": 1,
+					"size": 2,
+					"type": "GL_FLOAT",
+					"normalized": false,
+					"stride": 5,
+					"offset": 3
+				}
+			],
+			"indices": [0, 1, 3, 1, 2, 3],
+			"usage": "0"
+		}
+	],
+	"ShaderProgram_list": [{
+			"name": "Quad",
+			"shader": ["QuadVex", "QuadFrag"]
+		},
+		{
+			"name": "Triangle",
+			"shader": ["TriangleVex", "TriangleFrag"]
+		},
+		{
+			"name": "Cube",
+			"shader": ["CubeVex", "CubeFrag"]
+		},
+		{
+			"name": "Texture",
+			"shader": ["TextureVex", "TextureFrag"]
+		},
+		{
+			"name": "Color",
+			"shader": ["ColorVex", "ColorFrag"]
+		}
+	],
+	"VertexShader_list": [{
+			"name": "QuadVex",
+			"source": "QuadVex.glsl"
+		},
+		{
+			"name": "TriangleVex",
+			"source": "TriangleVex.glsl"
+		},
+		{
+			"name": "CubeVex",
+			"source": "CubeVex.glsl"
+		},
+		{
+			"name": "TextureVex",
+			"source": "TextureVex.glsl"
+		},
+		{
+			"name": "ColorVex",
+			"source": "ColorVex.glsl"
+		}
+	],
+	"FragmentShader_list": [{
+			"name": "QuadFrag",
+			"source": "QuadFrag.glsl"
+		},
+		{
+			"name": "TriangleFrag",
+			"source": "TriangleFrag.glsl"
+		},
+		{
+			"name": "CubeFrag",
+			"source": "CubeFrag.glsl"
+		},
+		{
+			"name": "TextureFrag",
+			"source": "TextureFrag.glsl"
+		},
+		{
+			"name": "ColorFrag",
+			"source": "ColorFrag.glsl"
+		}
+	],
+	"texture_list": [
+		{
+			"texture_name": "transparent_window",
+			"texture_path": "blending_transparent_window.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_CLAMP_TO_BORDER",
+				"wrap_t": "GL_CLAMP_TO_BORDER"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
+		{
+			"texture_name": "container",
+			"texture_path": "container.jpg",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_REPEAT",
+				"wrap_t": "GL_REPEAT"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
+		{
+			"texture_name": "default.png",
+			"texture_path": "default.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_CLAMP_TO_BORDER",
+				"wrap_t": "GL_CLAMP_TO_BORDER"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
+		{
+			"texture_name": "landscape.png",
+			"texture_path": "default.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_REPEAT",
+				"wrap_t": "GL_REPEAT"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
+		{
+			"texture_name": "background.png",
+			"texture_path": "background.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "play_arrow.png",
+			"texture_path": "play_arrow.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_REPEAT",
+				"wrap_t": "GL_REPEAT"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
+		{
+			"texture_name": "play_pause.png",
+			"texture_path": "play_pause.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "play_stop.png",
+			"texture_path": "play_stop.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "play_stop.png",
+			"texture_path": "play_stop.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "playbutton_background.png",
+			"texture_path": "playbutton_background.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_REPEAT",
+				"wrap_t": "GL_REPEAT"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
+		{
+			"texture_name": "player_background.png",
+			"texture_path": "player_background.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "scrubbing_bar.png",
+			"texture_path": "scrubbing_bar.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "elapsed_time.png",
+			"texture_path": "elapsed_time.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "fullsize.png",
+			"texture_path": "fullsize.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "speaker.png",
+			"texture_path": "speaker.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		},
+		{
+			"texture_name": "slider.png",
+			"texture_path": "slider.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D"
+		}
+	],
+	"property_type_list": {
+		"name": "STRING",
+		"index": "INT",
+		"size": "INT",
+		"type": "STRING",
+		"normalized": "BOOL",
+		"stride": "INT",
+		"offset": "INT",
+		"indices": "ARRAY_INT",
+		"usage": "STRING",
+		"transform": "VEC3",
+		"rotate": "VEC3",
+		"scale": "VEC3",
+		"w": "FLOAT",
+		"h": "FLOAT",
+		"visible": "BOOL",
+		"angle": "FLOAT",
+		"center_point": "VEC2",
+		"fore_ground_color": "VEC3",
+		"opacity": "FLOAT",
+		"flip": "INT",
+		"isclip": "BOOL",
+		"text": "STRING",
+		"font_name": "STRING",
+		"point_size": "INT",
+		"font_color": "VEC3",
+		"program": "URL_PROGRAM",
+		"mesh": "URL_MESH",
+		"blend_indensity": "FLOAT",
+		"texture_name": "URL_TEXTURE",
+		"progress": "FLOAT",
+		"foregroundColor": "VEC4",
+		"backgroundColor": "VEC4",
+		"texture1": "URL_TEXTURE",
+		"texture2": "URL_TEXTURE"
+	},
+	"resources_list": [{
+			"resource_name": "Texture",
+			"type": "6",
+			"layout": {
+				"transform": [0.0, 0.0, 0.0],
+				"rotate": [0.0, 0.0, 1.0],
+				"scale": [1.0, 1.0, 1.0],
+				"x": 0,
+				"y": 0,
+				"w": 250,
+				"h": 250
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 0,
+					"y": 0
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			},
+			"gl_property": {
+				"program": "Texture",
+				"mesh": "Texture",
+				"blend_indensity": 1.0
+			},
+			"custom_property": [{
+					"property_name": "progress",
+					"value": "0.0",
+					"upper": "100.0",
+					"lower": "-100.0"
+				},
+				{
+					"property_name": "foregroundColor",
+					"value": [0.5, 0.0, 0.0, 1.0]
+				},
+				{
+					"property_name": "texture1",
+					"value": "transparent_window"
+				},
+				{
+					"property_name": "backgroundColor",
+					"value": [0.6, 0.7, 0.8, 1.0]
 				}
 			]
+		},
+		{
+			"texture_name": "landscape.png",
+			"resource_name": "landscape",
+			"type": "0",
+			"layout": {
+				"x": 0,
+				"y": 0,
+				"w": 1197,
+				"h": 445
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 0,
+					"y": 0
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"resource_name": "hh",
+			"type": "2",
+			"layout": {
+				"x": 394,
+				"y": 409,
+				"w": 12,
+				"h": 13
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 420,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false,
+				"fore_ground_color": {
+					"r": 0,
+					"g": 0,
+					"b": 0,
+					"alpha": 0
+				}
+			},
+			"text_property": {
+				"text": "00",
+				"font_name": "arial.ttf",
+				"point_size": 10,
+				"font_color": {
+					"r": 255,
+					"g": 255,
+					"b": 255,
+					"alpha": 255
+				}
+			}
+		},
+		{
+			"resource_name": "colon_h",
+			"type": "2",
+			"layout": {
+				"x": 406,
+				"y": 409,
+				"w": 5,
+				"h": 13
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 420,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false,
+				"fore_ground_color": {
+					"r": 0,
+					"g": 0,
+					"b": 0,
+					"alpha": 0
+				}
+			},
+			"text_property": {
+				"text": ":",
+				"font_name": "arial.ttf",
+				"point_size": 10,
+				"font_color": {
+					"r": 255,
+					"g": 255,
+					"b": 255,
+					"alpha": 255
+				}
+			}
+		},
+		{
+			"resource_name": "mm",
+			"type": "2",
+			"layout": {
+				"x": 411,
+				"y": 409,
+				"w": 12,
+				"h": 13
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 420,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false,
+				"fore_ground_color": {
+					"r": 0,
+					"g": 0,
+					"b": 0,
+					"alpha": 0
+				}
+			},
+			"text_property": {
+				"text": "00",
+				"font_name": "arial.ttf",
+				"point_size": 10,
+				"font_color": {
+					"r": 255,
+					"g": 255,
+					"b": 255,
+					"alpha": 255
+				}
+			}
+		},
+		{
+			"resource_name": "colon_m",
+			"type": "2",
+			"layout": {
+				"x": 423,
+				"y": 409,
+				"w": 5,
+				"h": 13
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 420,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false,
+				"fore_ground_color": {
+					"r": 0,
+					"g": 0,
+					"b": 0,
+					"alpha": 0
+				}
+			},
+			"text_property": {
+				"text": ":",
+				"font_name": "arial.ttf",
+				"point_size": 10,
+				"font_color": {
+					"r": 255,
+					"g": 255,
+					"b": 255,
+					"alpha": 255
+				}
+			}
+		},
+		{
+			"resource_name": "ss",
+			"type": "2",
+			"layout": {
+				"x": 428,
+				"y": 409,
+				"w": 12,
+				"h": 13
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 420,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false,
+				"fore_ground_color": {
+					"r": 0,
+					"g": 0,
+					"b": 0,
+					"alpha": 0
+				}
+			},
+			"text_property": {
+				"text": "00",
+				"font_name": "arial.ttf",
+				"point_size": 10,
+				"font_color": {
+					"r": 255,
+					"g": 255,
+					"b": 255,
+					"alpha": 255
+				}
+			}
+		},
+		{
+			"resource_name": "colon_s",
+			"type": "2",
+			"layout": {
+				"x": 440,
+				"y": 409,
+				"w": 5,
+				"h": 13
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 420,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false,
+				"fore_ground_color": {
+					"r": 0,
+					"g": 0,
+					"b": 0,
+					"alpha": 0
+				}
+			},
+			"text_property": {
+				"text": ":",
+				"font_name": "arial.ttf",
+				"point_size": 10,
+				"font_color": {
+					"r": 255,
+					"g": 255,
+					"b": 255,
+					"alpha": 255
+				}
+			}
+		},
+		{
+			"resource_name": "ms",
+			"type": "2",
+			"layout": {
+				"x": 445,
+				"y": 409,
+				"w": 12,
+				"h": 13
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 420,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false,
+				"fore_ground_color": {
+					"r": 0,
+					"g": 0,
+					"b": 0,
+					"alpha": 0
+				}
+			},
+			"text_property": {
+				"text": "00",
+				"font_name": "arial.ttf",
+				"point_size": 10,
+				"font_color": {
+					"r": 255,
+					"g": 255,
+					"b": 255,
+					"alpha": 255
+				}
+			}
+		},
+		{
+			"texture_name": "play_arrow.png",
+			"resource_name": "play_button",
+			"type": "0",
+			"layout": {
+				"x": 30,
+				"y": 401,
+				"w": 24,
+				"h": 30
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 42,
+					"y": 416
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"texture_name": "playbutton_background.png",
+			"resource_name": "playbutton_background",
+			"type": "0",
+			"layout": {
+				"x": 12,
+				"y": 387,
+				"w": 57,
+				"h": 57
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 6,
+					"y": 193
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"texture_name": "player_background.png",
+			"resource_name": "player_background",
+			"type": "0",
+			"layout": {
+				"x": 0,
+				"y": 396,
+				"w": 534,
+				"h": 40
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 40,
+					"y": 415
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"texture_name": "scrubbing_bar.png",
+			"resource_name": "scrubbing_bar",
+			"type": "0",
+			"layout": {
+				"x": 81,
+				"y": 414,
+				"w": 300,
+				"h": 4
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 267,
+					"y": 416
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"texture_name": "elapsed_time.png",
+			"resource_name": "elapsed_time",
+			"type": "0",
+			"layout": {
+				"x": 81,
+				"y": 414,
+				"w": 138,
+				"h": 4
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 231,
+					"y": 416
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"texture_name": "fullsize.png",
+			"resource_name": "fullsize",
+			"type": "0",
+			"layout": {
+				"x": 505,
+				"y": 410,
+				"w": 11,
+				"h": 12
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 150,
+					"y": 416
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"texture_name": "speaker.png",
+			"resource_name": "speaker",
+			"type": "0",
+			"layout": {
+				"x": 470,
+				"y": 412,
+				"w": 14,
+				"h": 11
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 510,
+					"y": 416
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
+		},
+		{
+			"texture_name": "slider.png",
+			"resource_name": "slider",
+			"type": "0",
+			"layout": {
+				"x": 212,
+				"y": 409,
+				"w": 16,
+				"h": 15
+			},
+			"origin_property": {
+				"visible": true,
+				"angle": 0.0,
+				"center_point": {
+					"x": 477,
+					"y": 417
+				},
+				"opacity": 255,
+				"flip": 0,
+				"isclip": false
+			}
 		}
 	],
-	"texture_list":
-	[
-		{
-			"texture_name":"landscape.png",
-			"texture_path":"landscape.png",
-			"load_to_gpu":true
+	"Keymap": [{
+			"key": ["LCTRL", "O"],
+			"command": "FileDialog"
 		},
 		{
-			"texture_name":"background.png",
-			"texture_path":"background.png",
-			"load_to_gpu":true
+			"key": ["Alt", "F4"],
+			"command": "Close"
 		},
 		{
-			"texture_name":"play_arrow.png",
-			"texture_path":"play_arrow.png",
-			"load_to_gpu":true
+			"key": ["P"],
+			"command": "Play_Stop"
 		},
 		{
-			"texture_name":"play_pause.png",
-			"texture_path":"play_pause.png",
-			"load_to_gpu":true
+			"key": ["UP"],
+			"command": "Volumnup"
 		},
 		{
-			"texture_name":"play_stop.png",
-			"texture_path":"play_stop.png",
-			"load_to_gpu":true
+			"key": ["DOWN"],
+			"command": "Volumndown"
 		},
 		{
-			"texture_name":"play_stop.png",
-			"texture_path":"play_stop.png",
-			"load_to_gpu":true
-		},
-		{
-			"texture_name":"playbutton_background.png",
-			"texture_path":"playbutton_background.png",
-			"load_to_gpu":true
-		},
-		{
-			"texture_name":"player_background.png",
-			"texture_path":"player_background.png",
-			"load_to_gpu":true
-		},
-		{
-			"texture_name":"scrubbing_bar.png",
-			"texture_path":"scrubbing_bar.png",
-			"load_to_gpu":true
-		},
-		{
-			"texture_name":"elapsed_time.png",
-			"texture_path":"elapsed_time.png",
-			"load_to_gpu":true
-		},
-		{
-			"texture_name":"fullsize.png",
-			"texture_path":"fullsize.png",
-			"load_to_gpu":true
-		},
-		{
-			"texture_name":"speaker.png",
-			"texture_path":"speaker.png",
-			"load_to_gpu":true
-		},
-		{
-			"texture_name":"slider.png",
-			"texture_path":"slider.png",
-			"load_to_gpu":true
-		}
-	],
-	"resources_list":
-	[
-		{
-			"texture_name":"landscape.png",
-			"resource_name":"landscape",
-			"type":"0",
-			"layout":{"x":0,"y":0,"w":1197,"h":445},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":0,"y":0},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"resource_name":"hh",
-			"type":"2",
-			"layout":{"x":394,"y":409,"w":12,"h":13},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":420,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false,
-				"fore_ground_color":{"r":0,"g":0,"b":0,"alpha":0}
-			},
-			"text_property":
-			{
-				"text":"00",
-				"font_name":"arial.ttf",
-				"point_size":10,
-				"font_color":{"r":255,"g":255,"b":255,"alpha":255}
-			}
-		},
-		{
-			"resource_name":"colon_h",
-			"type":"2",
-			"layout":{"x":406,"y":409,"w":5,"h":13},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":420,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false,
-				"fore_ground_color":{"r":0,"g":0,"b":0,"alpha":0}
-			},
-			"text_property":
-			{
-				"text":":",
-				"font_name":"arial.ttf",
-				"point_size":10,
-				"font_color":{"r":255,"g":255,"b":255,"alpha":255}
-			}
-		},
-		{
-			"resource_name":"mm",
-			"type":"2",
-			"layout":{"x":411,"y":409,"w":12,"h":13},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":420,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false,
-				"fore_ground_color":{"r":0,"g":0,"b":0,"alpha":0}
-			},
-			"text_property":
-			{
-				"text":"00",
-				"font_name":"arial.ttf",
-				"point_size":10,
-				"font_color":{"r":255,"g":255,"b":255,"alpha":255}
-			}
-		},
-		{
-			"resource_name":"colon_m",
-			"type":"2",
-			"layout":{"x":423,"y":409,"w":5,"h":13},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":420,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false,
-				"fore_ground_color":{"r":0,"g":0,"b":0,"alpha":0}
-			},
-			"text_property":
-			{
-				"text":":",
-				"font_name":"arial.ttf",
-				"point_size":10,
-				"font_color":{"r":255,"g":255,"b":255,"alpha":255}
-			}
-		},
-		{
-			"resource_name":"ss",
-			"type":"2",
-			"layout":{"x":428,"y":409,"w":12,"h":13},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":420,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false,
-				"fore_ground_color":{"r":0,"g":0,"b":0,"alpha":0}
-			},
-			"text_property":
-			{
-				"text":"00",
-				"font_name":"arial.ttf",
-				"point_size":10,
-				"font_color":{"r":255,"g":255,"b":255,"alpha":255}
-			}
-		},
-		{
-			"resource_name":"colon_s",
-			"type":"2",
-			"layout":{"x":440,"y":409,"w":5,"h":13},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":420,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false,
-				"fore_ground_color":{"r":0,"g":0,"b":0,"alpha":0}
-			},
-			"text_property":
-			{
-				"text":":",
-				"font_name":"arial.ttf",
-				"point_size":10,
-				"font_color":{"r":255,"g":255,"b":255,"alpha":255}
-			}
-		},
-		{
-			"resource_name":"ms",
-			"type":"2",
-			"layout":{"x":445,"y":409,"w":12,"h":13},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":420,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false,
-				"fore_ground_color":{"r":0,"g":0,"b":0,"alpha":0}
-			},
-			"text_property":
-			{
-				"text":"00",
-				"font_name":"arial.ttf",
-				"point_size":10,
-				"font_color":{"r":255,"g":255,"b":255,"alpha":255}
-			}
-		},
-		{
-			"texture_name":"play_arrow.png",
-			"resource_name":"play_button",
-			"type":"0",
-			"layout":{"x":30,"y":401,"w":24,"h":30},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":42,"y":416},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"texture_name":"playbutton_background.png",
-			"resource_name":"playbutton_background",
-			"type":"0",
-			"layout":{"x":12,"y":387,"w":57,"h":57},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":6,"y":193},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"texture_name":"player_background.png",
-			"resource_name":"player_background",
-			"type":"0",
-			"layout":{"x":0,"y":396,"w":534,"h":40},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":40,"y":415},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"texture_name":"scrubbing_bar.png",
-			"resource_name":"scrubbing_bar",
-			"type":"0",
-			"layout":{"x":81,"y":414,"w":300,"h":4},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":267,"y":416},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"texture_name":"elapsed_time.png",
-			"resource_name":"elapsed_time",
-			"type":"0",
-			"layout":{"x":81,"y":414,"w":138,"h":4},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":231,"y":416},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"texture_name":"fullsize.png",
-			"resource_name":"fullsize",
-			"type":"0",
-			"layout":{"x":505,"y":410,"w":11,"h":12},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":150,"y":416},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"texture_name":"speaker.png",
-			"resource_name":"speaker",
-			"type":"0",
-			"layout":{"x":470,"y":412,"w":14,"h":11},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":510,"y":416},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		},
-		{
-			"texture_name":"slider.png",
-			"resource_name":"slider",
-			"type":"0",
-			"layout":{"x":212,"y":409,"w":16,"h":15},
-			"origin_property":
-			{
-				"visible":true,
-				"angle":0.0,
-				"center_point":{"x":477,"y":417},
-				"opacity":255,
-				"flip":0,
-				"isclip":false
-			}
-		}
-	],
-	"Keymap":
-	[
-		{
-			"key":["LCTRL","O"],
-			"command":"FileDialog"
-		},
-		{
-			"key":["Alt","F4"],
-			"command":"Close"
-		},
-		{
-			"key":["P"],
-			"command":"Play_Stop"
-		},
-		{
-			"key":["UP"],
-			"command":"Volumnup"
-		},
-		{
-			"key":["DOWN"],
-			"command":"Volumndown"
-		},
-		{
-			"key":["LCTRL","RETURN"],
-			"command":"Scale"
+			"key": ["LCTRL", "RETURN"],
+			"command": "Scale"
 		}
 	]
 }

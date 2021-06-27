@@ -10,9 +10,6 @@
     <ClCompile Include=".\UIFramework\Font.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
-    <ClCompile Include=".\UIFramework\IEntity.cpp">
-      <Filter>UIFramework</Filter>
-    </ClCompile>
     <ClCompile Include=".\UIFramework\Node2DImage.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
@@ -199,6 +196,42 @@
     <ClCompile Include="UIFramework\VertexData.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
+    <ClCompile Include="UIFramework\Mesh.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\SceneHelper.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Attribute.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLTypeDictionary.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Uniform.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\PropertyDefine.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLTexture.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLRenderContext.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Node3D.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Renderer3D.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLRenderManipulator.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -243,9 +276,6 @@
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
     <ClInclude Include="inc\FrameRateCapping.h">
-      <Filter>Header Files\UIFramework</Filter>
-    </ClInclude>
-    <ClInclude Include=".\UIFramework\inc\IEntity.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
     <ClInclude Include=".\UIFramework\inc\Surface.h">
@@ -396,6 +426,39 @@
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
     <ClInclude Include="UIFramework\inc\VertexData.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Mesh.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\SceneHelper.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Attribute.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLTypeDictionary.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Uniform.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Node3D.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLTexture.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLRenderContext.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Renderer3D.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLRenderManipulator.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
   </ItemGroup>

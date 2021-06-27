@@ -4,15 +4,15 @@
 #include "IPropertyMethod.h"
 #include "ISignalMethod.h"
 #include "IProperty.h"
-
 enum UI_TYPE : uint8_t
 {
-	NODE_2D_IMAGE_TYPE = 0,
-	NODE_2D_BUTTON_TYPE,
-	NODE_2D_TEXT_TYPE,
-	NODE_2D_VIEWPORT_TYPE,
-	EMPTY_NODE,
-	STACK_LAYOUT_2D,
+	NODE_2D_IMAGE_TYPE 		= 0U,
+	NODE_2D_BUTTON_TYPE 	= 1U,
+	NODE_2D_TEXT_TYPE		= 2U,
+	NODE_2D_VIEWPORT_TYPE	= 3U,
+	EMPTY_NODE				= 4U,
+	STACK_LAYOUT_2D			= 5U,
+	NODE_3D					= 6U,
 };
 
 class UIObject;

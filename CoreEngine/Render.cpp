@@ -49,7 +49,7 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	//Initialize OpenGL context
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, Configuration::GetInstance()->major_verion);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, Configuration::GetInstance()->minor_version);
-    SDL_GL_SetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE ); //  Should be used in conjunction with the SDL_GL_CONTEXT_MAJOR_VERSION and SDL_GL_CONTEXT_MINOR_VERSION attributes
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); //  Should be used in conjunction with the SDL_GL_CONTEXT_MAJOR_VERSION and SDL_GL_CONTEXT_MINOR_VERSION attributes
 
 	//SDL_GL_SetAttribute(SDL_GL_RED_SIZE, Configuration::GetInstance()->r_size);
 	//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, Configuration::GetInstance()->g_size);
@@ -82,22 +82,27 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	// Create an OpenGL context associated with the window.
 	m_glcontext = WindowRender::GetInstance()->CreateContext();
 
-    //Since we want the latest features, we have to set glewExperimental to true
+	//Since we want the latest features, we have to set glewExperimental to true
 	glewExperimental = GL_TRUE;
 
 	//Initialize GLEW
 	GLenum glewError = glewInit();
-    if(GLEW_OK != glewError)
-    {
-	    SDL_Log("glewInit() failed\n", glewGetErrorString(glewError));
-        _ASSERT(false);
-    }
+	if (GLEW_OK != glewError)
+	{
+		SDL_Log("glewInit() failed: %s\n", glewGetErrorString(glewError));
+		_ASSERT(false);
+	}
 
 	//Use Vsync
 	if (SDL_GL_SetSwapInterval(1) < 0)
 	{
 		SDL_Log("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
+
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_SCISSOR_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #else
 	//<Get window render
 	m_pRenderer = WindowRender::GetInstance()->CreateRenderer(-1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
@@ -157,22 +162,20 @@ void Render::render()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	//<Clear context
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	//<Extra drawing functions here>
-
-	//<Swap our buffer to display the current contents of buffer on screen
-	WindowRender::GetInstance()->SwapWindow();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 #else
 	//< clear the window
 	SDL_RenderClear(m_pRenderer);
-
+#endif
 	//< render scene graph
 	SDL_Event sdlevent;
 	sdlevent.type = SDL_USEREVENT;
 	sdlevent.user.code = 0x02;
 	Scene::GetInstance()->onEvent(sdlevent);
-
+#ifdef OPENGL_RENDERING
+	//<Swap our buffer to display the current contents of buffer on screen
+	WindowRender::GetInstance()->SwapWindow();
+#else
 	/* Update screen*/
 	SDL_RenderPresent(m_pRenderer);
 #endif

@@ -1,11 +1,18 @@
 #pragma once
 #include <UIObject.h>
+#include "GLTexture.h"
 #include <Texture.h>
+#include "ShaderProgram.h"
 class Node2DImage final: public UIObject, public creator<Node2DImage>
 {
 private:
+#ifdef OPENGL_RENDERING
+	GLTexturePtr		m_pTexture = nullptr;
+	ShaderProgramPtr	m_pShaderProgram = nullptr;
+#else
 	TexturePtr 	m_pTexture = nullptr;
 	TexturePtr 	m_pTextureToRender = nullptr;
+#endif
 	bool		m_bUIChanged = false;
 protected:
 	Node2DImage(std::string name);

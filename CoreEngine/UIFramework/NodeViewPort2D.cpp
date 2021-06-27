@@ -21,9 +21,12 @@ uint8_t NodeViewPort2D::getType()
 void NodeViewPort2D::onInit(VoidType&&)
 {
 	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
+#ifndef OPENGL_RENDERING
 	//<load texture to render
 	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
 	SDL_RenderSetViewport(UIHelper::GetRenderer(), &display_rect);
+#else
+#endif
 }
 
 void NodeViewPort2D::onDraw(VoidType&&)
@@ -34,12 +37,14 @@ void NodeViewPort2D::onDraw(VoidType&&)
 	{
 		return;
 	}
-
+#ifndef OPENGL_RENDERING
 	SDL_Rect display_rect = LayoutMethod->GetLayoutInformation();
 
 	//Render texture to screen
 	RenderContextPtr context = RenderContext::create(UIHelper::GetRenderer(), display_rect, display_rect);
 	context->excute(m_pTexture);
+#else
+#endif
 }
 
 void NodeViewPort2D::onClean(VoidType&&)

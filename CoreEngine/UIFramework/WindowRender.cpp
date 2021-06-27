@@ -27,16 +27,7 @@ SDL_Window* WindowRender::getWindow()
 	return m_pWindow;
 }
 
-SDL_Renderer* WindowRender::CreateRenderer(int index, uint32_t flags)
-{
-	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, flags);
-	if (!m_pRenderer) {
-		SDL_Log("SDL_CreateRenderer() failed: %s\n", SDL_GetError());
-		_ASSERT(false);
-	}
-	return m_pRenderer;
-}
-
+#ifdef OPENGL_RENDERING
 void* WindowRender::CreateContext()
 {
 	void* glcontext = nullptr;
@@ -49,6 +40,21 @@ void* WindowRender::CreateContext()
 	return glcontext;
 }
 
+void WindowRender::SwapWindow()
+{
+	SDL_GL_SwapWindow(m_pWindow);
+}
+#else
+SDL_Renderer* WindowRender::CreateRenderer(int index, uint32_t flags)
+{
+	m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, flags);
+	if (!m_pRenderer) {
+		SDL_Log("SDL_CreateRenderer() failed: %s\n", SDL_GetError());
+		_ASSERT(false);
+	}
+	return m_pRenderer;
+}
+
 SDL_Surface* WindowRender::GetWindowSurface()
 {
 	SDL_Surface* pScreenSurface = SDL_GetWindowSurface(m_pWindow);
@@ -59,11 +65,7 @@ SDL_Surface* WindowRender::GetWindowSurface()
 	}
 	return pScreenSurface;
 }
-
-void WindowRender::SwapWindow()
-{
-	SDL_GL_SwapWindow(m_pWindow);
-}
+#endif
 
 void WindowRender::ShowWindow()
 {

@@ -93,14 +93,14 @@ namespace UIHelper
 		return Render::GetInstance()->WindowPixelFormat();
 	}
 
+	const SDL_PixelFormat* WindowSurfaceFormat()
+	{
+		return Render::GetInstance()->WindowSurfaceFormat();
+	}
+
 	SDL_Rect GetWindowRect()
 	{
 		Configuration *pConfig = Configuration::GetInstance();
 		return SDL_Rect{ 0, 0, pConfig->height, pConfig->width };
-	}
-
-	const SDL_PixelFormat* WindowSurfaceFormat()
-	{
-		return Render::GetInstance()->WindowSurfaceFormat();
 	}
 }

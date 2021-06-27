@@ -55,6 +55,9 @@ void NodeText2D::UpdateFont()
 	TextPropertyPtr TextMethod = GetPropertyMethodObj<TextProperty>();
 	if (TextMethod)
 	{
+#ifdef OPENGL_RENDERING
+
+#else
 		//create new font
 		m_pFont = Font::create();
 
@@ -68,6 +71,7 @@ void NodeText2D::UpdateFont()
 			TextMethod->GetText().c_str(),
 			TextMethod->GetColor(),
 			UIHelper::GetRenderer());
+#endif
 	}
 
 	//reset flag
@@ -86,7 +90,7 @@ void NodeText2D::onDraw(VoidType&&)
 {
 	auto OriginMethod = GetPropertyMethodObj<OriginProperty>();
 	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
-
+#ifndef OPENGL_RENDERING
 	//Open new font and create texture
 	UpdateFont();
 	SDL_Rect sdlResult{ 0, 0, m_pFont->GetWidth(), m_pFont->GetHeight() };
@@ -126,7 +130,9 @@ void NodeText2D::onDraw(VoidType&&)
 	//<load texture to render
 	RenderExContextPtr context = RenderExContext::create(UIHelper::GetRenderer(), sdlResult, display_rect, OriginMethod->GetAngle(), centerPoint, OriginMethod->GetFlip());
 	context->excute(m_pFont);
+#else
 
+#endif
 }
 
 void NodeText2D::onClean(VoidType&&)

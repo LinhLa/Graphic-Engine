@@ -5,54 +5,45 @@
 #include <typeinfo>
 #include <memory>
 #include <sstream>
+#include <map>
 #include "creator.h"
 #include "Signal.h"
 #include "log.h"
+#include "utils.h"
 #include <SDL.h>
-template<class T>
-T ConvertToType(std::string& strVal)
-{
-	std::stringstream sstream(strVal);
-	T value;
-	sstream >> value;
-	return value;
-}
+#include <glm/glm.hpp>
 
-enum PROPERTY_TYPE: uint8_t
+enum PROPERTY_TYPE: int32_t
 {
-	INT = 0,
-	FLOAT = 1,
-	BOOL = 3,
-	COLOR = 4,
+	UNDEFINE = 0U,
+	INT,
+	FLOAT,
+	BOOL,
+	STRING,
+	GLM_VEC4,
+	GLM_VEC3,
+	VEC4,
+	VEC3,
+	VEC2,
+	URL_TEXTURE,
+	URL_SHADER,
+	URL_PROGRAM,
+	URL_MESH,
+	ARRAY_INT,
 };
 
-template<uint8_t>
-struct PropertyType{};
 
-template<>
-struct PropertyType<0>
+class PropertyType final: public creator<PropertyType>
 {
-	typedef int Type;
+public:
+	friend class creator<PropertyType>;
+	uint8_t m_type;
+	PropertyType(uint8_t type) :m_type(type) {}
+	~PropertyType() {}
 };
 
-template<>
-struct PropertyType<1>
-{
-	typedef float Type;
-};
-
-template<>
-struct PropertyType<2>
-{
-	typedef bool Type;
-};
-
-template<>
-struct PropertyType<3>
-{
-	typedef SDL_Color Type;
-};
-
+typedef std::shared_ptr<PropertyType> PropertyTypePtr;
+extern const std::map<std::string, uint8_t> property_type_map;
 /**
  * @brief      forward declairation
  */
@@ -134,10 +125,14 @@ class Property final: public IProperty, public creator<Property<T>>
 private:
 	std::string 	m_property_name;
 	T 				m_value;
+	T				m_upper;
+	T				m_lower;
+	int32_t 		m_type = 0;
+	bool 			m_isAnimate = false;
 public:
 	std::shared_ptr<Signal<T>> 	m_pSignalValueChange;
 protected:
-	Property(std::string name, T&& value = T{}) :m_property_name(name), m_value(value)
+	Property(std::string name, T&& value = T{}, int32_t uType = UNDEFINE) :m_property_name(name), m_value(value), m_type(uType)
 	{
 		m_pSignalValueChange = Signal<T>::create();
 	}
@@ -158,8 +153,11 @@ public:
 
 	void SetValue(T&& value)
 	{
-		m_value = value;
-		m_pSignalValueChange->onEvent(std::forward<T>(value));
+		if (!m_isAnimate)
+		{
+			m_value = value;
+			m_pSignalValueChange->onEvent(std::forward<T>(value));
+		}
 	}
 
 	T GetValue() const
@@ -171,6 +169,26 @@ public:
 	void Visitor(T& visitor)
 	{
 		visitor.accept(this);
+	}
+
+	uint8_t GetType() const
+	{
+		return m_type;
+	}
+
+	void setAnimate(bool isAnimate)
+	{
+		m_isAnimate = isAnimate;
+	}
+
+	void setUpper(T upper)
+	{
+		m_upper = upper;
+	}
+
+	void setLower(T lower)
+	{
+		m_lower = lower;
 	}
 };
 
@@ -188,6 +206,7 @@ public:
 	bool IsPropertyExist(std::string);
 
 	bool AddProperty(std::string, IPropertyPtr);
+	IPropertyPtr GetProperty(std::string);
 	void RemoveProperty(std::string);
 
 	template<typename U>

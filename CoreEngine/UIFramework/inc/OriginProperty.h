@@ -1,5 +1,12 @@
 #pragma once
+#ifndef OPENGL_RENDERING
 #include <SDL.h>
+#else
+#include <gl\glew.h>
+#include <SDL_opengl.h>
+#include <gl\glu.h>
+#include <glm/vec4.hpp>
+#endif
 #include <string>
 #include "creator.h"
 #include "IPropertyMethod.h"
@@ -19,16 +26,7 @@ public:
 	void init() override;
 
 	bool 	isVisible() const;
-	//<Gets the value of VisibleProperty.More...
-
 	void 	SetVisible(bool value);
-	//<Sets the value of VisibleProperty.More...
-
-	uint8_t GetOpacity() const;
-	//<Gets the value of OpacityProperty.More...
-
-	void 	SetOpacity(uint8_t value);
-	//<Sets the value of OpacityProperty.More...
 
 	void SetClip(bool isClip);
 	bool IsClip() const;
@@ -36,15 +34,18 @@ public:
 	void SetAngle(double);
 	double GetAngle() const;
 
+	void SetBroadCastEvent(bool);
+	bool IsBroadCastEvent() const;
+
+	uint8_t GetOpacity() const;
+	void 	SetOpacity(uint8_t value);
+
 	void SetCenterPoint(int x, int y);
 	void SetCenterPoint(SDL_Point point);
 	SDL_Point GetCenterPoint() const;
 
 	void SetFlip(SDL_RendererFlip);
 	SDL_RendererFlip GetFlip() const;
-
-	void SetBroadCastEvent(bool);
-	bool IsBroadCastEvent() const;
 
 	void SetForeGroundColor(SDL_Color);
 	SDL_Color GetForeGroundColor() const;
