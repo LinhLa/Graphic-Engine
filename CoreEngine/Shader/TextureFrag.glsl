@@ -1,12 +1,13 @@
 #version 330 core
 out vec4 FragColor;
   
+in vec4 ourColor;
 in vec2 TexCoord;
+in float outOpacity;
 
 uniform sampler2D texture1;
-uniform vec4 foregroundColor;
+
 void main()
 {
-    vec4 texColor  = texture(texture1, TexCoord);
-    FragColor = texColor * foregroundColor;
+    FragColor =  texture(texture1, TexCoord) * outOpacity * ourColor.a + ourColor * outOpacity * (1 - ourColor.a);
 }

@@ -208,7 +208,7 @@ GLint ShaderProgram::getTextureUnitCount() const
 	return m_textureUnitCount;
 }
 
-void ShaderProgram::syncUniformToUIObject(UIObjectPtr pObject)
+void ShaderProgram::syncUniformToUIObject(std::shared_ptr<PropertyTable> pObject)
 {
 	if(!pObject)
 	{
@@ -226,7 +226,7 @@ void ShaderProgram::syncUniformToUIObject(UIObjectPtr pObject)
 	}
 }
 
-void ShaderProgram::setUniformFromUIObject(UIObjectPtr pObject)
+void ShaderProgram::setUniformFromUIObject(std::shared_ptr<PropertyTable> pObject)
 {
 	if(!pObject)
 	{

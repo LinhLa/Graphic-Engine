@@ -27,9 +27,13 @@ using namespace util;
 #include "Shader.h"
 #include "ShaderProgram.h"
 #include "Mesh.h"
-#include "VertexAttribute.h"
+#include "Model.h"
 
 #include "GLTypeDictionary.h"
+#include "colladainterface.h"
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>           // Output data structure
+#include <assimp/postprocess.h>     // Post processing flags
 
 static const std::string PROPERTY_TYPE_LIST = std::string("property_type_list");
 static const std::string TEXTURE_LIST = std::string("texture_list");
@@ -76,12 +80,14 @@ static const std::string RED = std::string("r");
 static const std::string GREEN = std::string("g");
 static const std::string BLUE = std::string("b");
 
-static const std::string CUSTOM_PROPERTY_LIST = std::string("custom_property");
+static const std::string MATERIAL_PROPERTY_LIST = std::string("material_property");
 static const std::string PROPERTY_NAME = std::string("property_name");
 static const std::string PROPERTY_TYPE = std::string("type");
 static const std::string PROPERTY_VALUE = std::string("value");
 static const std::string PROPERTY_UPPER = std::string("upper");
 static const std::string PROPERTY_LOWER = std::string("lower");
+
+static const std::string THREE_D_ASSET_LIST = std::string("3D_asset_list");
 
 static const std::string NAME = std::string("name");
 
@@ -97,24 +103,18 @@ static const std::string FRAG_SHADER_LIST = std::string("FragmentShader_list");
 static const std::string SHADER_SOURCE = std::string("source");
 static const std::string SHADER = std::string("shader");
 
-static const std::string MESH_LIST = std::string("Mesh_list");
-static const std::string VERTICES = std::string("vertices");
+static const std::string MODEL_LIST = std::string("Model_list");
+static const std::string POSITION = std::string("position");
+static const std::string NORMAL = std::string("normal");
 static const std::string INDICES = std::string("indices");
-static const std::string USAGE = std::string("usage");
+static const std::string UV = std::string("uv");
 
 static const std::string GLPROPERTY = std::string("gl_property");
 static const std::string MATERIAL = std::string("material");
+static const std::string MODEL = std::string("model");
 static const std::string MESH = std::string("mesh");
 static const std::string PROGRAM = std::string("program");
 static const std::string BLEND_INDENSITY = std::string("blend_indensity");
-
-static const std::string ATTRIBUTE = std::string("attribute");
-static const std::string INDEX = std::string("index");
-static const std::string TYPE = std::string("type");
-static const std::string NORMALIZED = std::string("normalized");
-static const std::string SIZE = std::string("size");
-static const std::string STRIDE = std::string("stride");
-static const std::string OFFSET = std::string("offset");
 
 static const std::string TARGET = std::string("target");
 static const std::string TEXTURE_PARAM = std::string("texture_param");
@@ -129,6 +129,15 @@ static const std::string FILTER = std::string("filter");
 
 static const std::string MINIFYING = std::string("minifying");
 static const std::string MAGNIFYING = std::string("magnifying");
+
+static const std::string CAM_POSITION = std::string("cam position");
+static const std::string CAM_FRONT = std::string("cam front");
+static const std::string CAM_TARGET = std::string("cam target");
+static const std::string CAM_UP = std::string("cam up");
+static const std::string FOV = std::string("fov");
+static const std::string NEAR_PLANE = std::string("near plane");
+static const std::string FAR_PLANE = std::string("far plane");
+static const std::string CAMERA = std::string("camera");
 
 static picojson::value snull;
 
@@ -145,7 +154,7 @@ std::string get(const picojson::value& o)
 void LoadPropertyTypeList(picojson::value& json_value)
 {
 	picojson::object o_list = json_value.get(PROPERTY_TYPE_LIST).get<picojson::object>();
-	for (auto &item : o_list)
+	for (auto& item : o_list)
 	{
 		std::string name = item.first;
 		std::string type = item.second.get<std::string>();
@@ -156,9 +165,122 @@ void LoadPropertyTypeList(picojson::value& json_value)
 	}
 }
 
-void LoadCustomPropertyList(picojson::array& o_array, UIObjectPtr pObject)
+void LoadGLProperty(picojson::object& o_glProperty, Node3DPtr pObject)
 {
 	auto glMethod = pObject->GetPropertyMethodObj<GLProperty>();
+
+	//<set model
+	if (o_glProperty.end() != o_glProperty.find(MODEL))
+	{
+		std::string model_name = o_glProperty[MODEL].get<std::string>();
+		pObject->SetModel(model_name);
+	}
+
+	//<set program
+	if (o_glProperty.end() != o_glProperty.find(PROGRAM))
+	{
+		std::string program_name = o_glProperty[PROGRAM].get<std::string>();
+		pObject->SetProgram(program_name);
+	}
+
+	//<set indensity
+	if (o_glProperty.end() != o_glProperty.find(BLEND_INDENSITY))
+	{
+		double indensity = o_glProperty[BLEND_INDENSITY].get<double>();
+		glMethod->SetBlendIndensity(static_cast<float>(indensity));
+	}
+
+	//<set Cam position
+	if (o_glProperty.end() != o_glProperty.find(CAM_POSITION))
+	{
+		glm::vec3 pos;
+		std::vector<float> vec3;
+		picojson::array o_vec3_list = o_glProperty[CAM_POSITION].get<picojson::array>();
+		for (picojson::value item : o_vec3_list)
+		{
+			vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
+		}
+		pos.x = vec3[0];
+		pos.y = vec3[1];
+		pos.z = vec3[2];
+		glMethod->SetCamPos(pos);
+	}
+
+	//<set Cam direction
+	if (o_glProperty.end() != o_glProperty.find(CAM_FRONT))
+	{
+		glm::vec3 front;
+		std::vector<float> vec3;
+		picojson::array o_vec3_list = o_glProperty[CAM_FRONT].get<picojson::array>();
+		for (picojson::value item : o_vec3_list)
+		{
+			vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
+		}
+		front.x = vec3[0];
+		front.y = vec3[1];
+		front.z = vec3[2];
+		glMethod->SetCamFront(front);
+	}
+
+
+	//<Set Cam target
+	if (o_glProperty.end() != o_glProperty.find(CAM_TARGET))
+	{
+		glm::vec3 target;
+		std::vector<float> vec3;
+		picojson::array o_vec3_list = o_glProperty[CAM_TARGET].get<picojson::array>();
+		for (picojson::value item : o_vec3_list)
+		{
+			vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
+		}
+		target.x = vec3[0];
+		target.y = vec3[1];
+		target.z = vec3[2];
+		glMethod->SetCamTarget(target);
+	}
+
+	//<set Cam up
+	if (o_glProperty.end() != o_glProperty.find(CAM_UP))
+	{
+		glm::vec3 up;
+		std::vector<float> vec3;
+		picojson::array o_vec3_list = o_glProperty[CAM_UP].get<picojson::array>();
+		for (picojson::value item : o_vec3_list)
+		{
+			vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
+		}
+		up.x = vec3[0];
+		up.y = vec3[1];
+		up.z = vec3[2];
+		glMethod->SetCamUp(up);
+	}
+	//<set Camera type
+	if (o_glProperty.end() != o_glProperty.find(CAMERA))
+	{
+		std::string cam_type = o_glProperty[CAMERA].get<std::string>();
+		glMethod->SetCameraType(cameraMap.at(cam_type));
+	}
+
+	//<set FOV
+	if (o_glProperty.end() != o_glProperty.find(FOV))
+	{
+		glMethod->SetFOV(DOUBLE2FLOAT(o_glProperty[FOV].get<double>()));
+	}
+
+	//<set near/far plane
+	if (o_glProperty.end() != o_glProperty.find(NEAR_PLANE))
+	{
+		glMethod->SetNearPlane(DOUBLE2FLOAT(o_glProperty[NEAR_PLANE].get<double>()));
+	}
+	if (o_glProperty.end() != o_glProperty.find(FAR_PLANE))
+	{
+		glMethod->SetFarPlane(DOUBLE2FLOAT(o_glProperty[FAR_PLANE].get<double>()));
+	}
+}
+
+void LoadMaterialPropertyList(picojson::array& o_array, Node3DPtr pObject)
+{
+	auto pMaterial = Material::create(pObject->getName());
 	for (picojson::array::iterator iter = o_array.begin(); iter != o_array.end(); ++iter)
 	{
 		std::string name = get(iter->get(PROPERTY_NAME));
@@ -179,13 +301,13 @@ void LoadCustomPropertyList(picojson::array& o_array, UIObjectPtr pObject)
 			auto PropertyPtr = Property<int>::create(name, ConvertToType<int>(value), uType);
 			PropertyPtr->setUpper(iUpper);
 			PropertyPtr->setLower(iLower);
-			pObject->AddProperty(name, PropertyPtr);
+			pMaterial->AddProperty(name, PropertyPtr);
 		}
 
 		if (BOOL == uType)
 		{
 			std::string value = get(iter->get(PROPERTY_VALUE));
-			pObject->AddProperty(name, Property<bool>::create(name, ConvertToType<bool>(value), uType));
+			pMaterial->AddProperty(name, Property<bool>::create(name, ConvertToType<bool>(value), uType));
 		}
 
 		if (FLOAT == uType)
@@ -198,7 +320,7 @@ void LoadCustomPropertyList(picojson::array& o_array, UIObjectPtr pObject)
 			auto PropertyPtr = Property<float>::create(name, ConvertToType<float>(value), uType);
 			PropertyPtr->setUpper(iUpper);
 			PropertyPtr->setLower(iLower);
-			pObject->AddProperty(name, PropertyPtr);
+			pMaterial->AddProperty(name, PropertyPtr);
 		}
 
 		if (VEC4 == uType)
@@ -214,7 +336,7 @@ void LoadCustomPropertyList(picojson::array& o_array, UIObjectPtr pObject)
 			value.y = vec4[1];
 			value.z = vec4[2];
 			value.w = vec4[3];
-			pObject->AddProperty(name, Property<glm::vec4>::create(name, std::move(value), uType));
+			pMaterial->AddProperty(name, Property<glm::vec4>::create(name, std::move(value), uType));
 		}
 
 		if (VEC3 == uType)
@@ -229,7 +351,7 @@ void LoadCustomPropertyList(picojson::array& o_array, UIObjectPtr pObject)
 			value.x = vec3[0];
 			value.y = vec3[1];
 			value.z = vec3[2];
-			pObject->AddProperty(name, Property<glm::vec3>::create(name, std::move(value), uType));
+			pMaterial->AddProperty(name, Property<glm::vec3>::create(name, std::move(value), uType));
 		}
 
 		if (VEC2 == uType)
@@ -243,24 +365,24 @@ void LoadCustomPropertyList(picojson::array& o_array, UIObjectPtr pObject)
 			}
 			value.x = vec2[0];
 			value.y = vec2[1];
-			pObject->AddProperty(name, Property<glm::vec2>::create(name, std::move(value), uType));
+			pMaterial->AddProperty(name, Property<glm::vec2>::create(name, std::move(value), uType));
 		}
 
 		if (URL_TEXTURE == uType)
 		{
 			std::string value = get(iter->get(PROPERTY_VALUE));
-			pObject->AddProperty(name, Property<std::string>::create(name, std::move(value), uType));
 			//<set texture unit
-			glMethod->AddTexture(Library::GetInstance()->get<GLTexture>(value));
+			pMaterial->AddTexture(name, Library::GetInstance()->get<GLTexture>(value));
 		}
 
 		if ((STRING == uType) ||
 			(URL_SHADER == uType) ||
 			(URL_PROGRAM == uType) ||
-			(URL_MESH == uType))
+			(URL_MESH == uType) ||
+			(URL_MODEL == uType))
 		{
 			std::string value = get(iter->get(PROPERTY_VALUE));
-			pObject->AddProperty(name, Property<std::string>::create(name, std::move(value), uType));
+			pMaterial->AddProperty(name, Property<std::string>::create(name, std::move(value), uType));
 		}
 
 		if (ARRAY_INT == uType)
@@ -271,9 +393,11 @@ void LoadCustomPropertyList(picojson::array& o_array, UIObjectPtr pObject)
 			{
 				value.push_back(DOUBLE2INT(item.get<double>()));
 			}
-			pObject->AddProperty(name, Property<std::vector<int>>::create(name, std::move(value), uType));
+			pMaterial->AddProperty(name, Property<std::vector<int>>::create(name, std::move(value), uType));
 		}
 	}
+	Library::GetInstance()->add<Material>(pMaterial->getName(), pMaterial);
+	pObject->SetMaterial(pMaterial->getName());
 }
 
 void LoadTextureList(picojson::value& json_value)
@@ -293,32 +417,32 @@ void LoadTextureList(picojson::value& json_value)
 		if (snull != iter->get(WRAP))
 		{
 			picojson::object o_wrap = iter->get(WRAP).get<picojson::object>();
-			if (snull != o_wrap.at(WRAP_S))
+			if (o_wrap.end() != o_wrap.find(WRAP_S))
 			{
 				GLenum param = GL_TEXTURE_PVALUE_MAP.at(o_wrap[WRAP_S].get<std::string>());
 				pGLTexture->addTextureParam(TEXT_PARAM_I, GL_TEXTURE_WRAP_S, param);
 			}
-			if (snull != o_wrap.at(WRAP_T))
+			if (o_wrap.end() != o_wrap.find(WRAP_T))
 			{
 				GLenum param = GL_TEXTURE_PVALUE_MAP.at(o_wrap[WRAP_T].get<std::string>());
 				pGLTexture->addTextureParam(TEXT_PARAM_I, GL_TEXTURE_WRAP_T, param);
 			}
 		}
-	
+
 		if (snull != iter->get(FILTER))
 		{
 			picojson::object o_filter = iter->get(FILTER).get<picojson::object>();
-			if (snull != o_filter.at(MINIFYING))
+			if (o_filter.end() != o_filter.find(MINIFYING))
 			{
 				GLenum param = GL_TEXTURE_PVALUE_MAP.at(o_filter[MINIFYING].get<std::string>());
 				pGLTexture->addTextureParam(TEXT_PARAM_I, GL_TEXTURE_MIN_FILTER, param);
-			}
-			if (snull != o_filter.at(MAGNIFYING))
+	}
+			if (o_filter.end() != o_filter.find(MAGNIFYING))
 			{
 				GLenum param = GL_TEXTURE_PVALUE_MAP.at(o_filter[MAGNIFYING].get<std::string>());
 				pGLTexture->addTextureParam(TEXT_PARAM_I, GL_TEXTURE_MAG_FILTER, param);
 			}
-		}
+}
 
 		pGLTexture->loadToGPU(loadtoGPU);
 		pGLTexture->init();
@@ -348,7 +472,6 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 		uint8_t type = std::stoi(iter->get(UI_TYPE).get<std::string>()) & 0xFF;
 		switch (type)
 		{
-#ifndef OPENGL_RENDERING
 		case NODE_2D_IMAGE_TYPE:
 			pObject = Node2DImage::create(resource_name);
 			break;
@@ -361,16 +484,13 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 		case NODE_2D_VIEWPORT_TYPE:
 			pObject = NodeViewPort2D::create(resource_name);
 			break;
-#else
 		case NODE_3D:
 			pObject = Node3D::create(resource_name);
 			break;
-#endif
 		default:
 			continue;
 			break;
 		}
-#ifndef OPENGL_RENDERING
 		//<set image
 		if (NODE_2D_IMAGE_TYPE == type)
 		{
@@ -392,6 +512,54 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 			layoutMethod->SetLayoutPosition(
 				DOUBLE2INT(o_layout[X_COODINATOR].get<double>()),
 				DOUBLE2INT(o_layout[Y_COODINATOR].get<double>()));
+
+			//<Set layout transform
+			if (o_layout.end() != o_layout.find(TRANSFORM))
+			{
+				glm::vec3 vTransform;
+				std::vector<float> vec3;
+				picojson::array o_vec3_list = o_layout[TRANSFORM].get<picojson::array>();
+				for (picojson::value item : o_vec3_list)
+				{
+					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
+				}
+				vTransform.x = vec3[0];
+				vTransform.y = vec3[1];
+				vTransform.z = vec3[2];
+				layoutMethod->SetLayoutTransform(vTransform);
+			}
+
+			//<Set layout rotation
+			if (o_layout.end() != o_layout.find(ROTATE))
+			{
+				glm::vec3 vRotate;
+				std::vector<float> vec3;
+				picojson::array o_vec3_list = o_layout[ROTATE].get<picojson::array>();
+				for (picojson::value item : o_vec3_list)
+				{
+					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
+				}
+				vRotate.x = vec3[0];
+				vRotate.y = vec3[1];
+				vRotate.z = vec3[2];
+				layoutMethod->SetRotation(vRotate);
+			}
+
+			//<Set layout scale
+			if (o_layout.end() != o_layout.find(SCALE))
+			{
+				glm::vec3 vScale;
+				std::vector<float> vec3;
+				picojson::array o_vec3_list = o_layout[SCALE].get<picojson::array>();
+				for (picojson::value item : o_vec3_list)
+				{
+					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
+				}
+				vScale.x = vec3[0];
+				vScale.y = vec3[1];
+				vScale.z = vec3[2];
+				layoutMethod->SetLayoutScale(vScale);
+			}
 		}
 
 		//<set origin property
@@ -401,18 +569,23 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 
 			//<Set origin property
 			picojson::object o_origin_property = iter->get(ORIGINAL_PROPERTY).get<picojson::object>();
-			picojson::object o_center_point = o_origin_property[CENTER_POINT].get<picojson::object>();
+
+			//Visible
 			originMethod->SetVisible(o_origin_property[VISIBLE].get<bool>());
 
+			//Pivot point
+			picojson::object o_center_point = o_origin_property[CENTER_POINT].get<picojson::object>();
 			originMethod->SetCenterPoint(
 				DOUBLE2INT(o_center_point[X_COODINATOR].get<double>()),
 				DOUBLE2INT(o_center_point[Y_COODINATOR].get<double>()));
 
+			//Flip, Opacity, Angle, Clip
 			originMethod->SetFlip(SDL_RendererFlip(DOUBLE2INT(o_origin_property[FLIP].get<double>())));
 			originMethod->SetOpacity(DOUBLE2INT(o_origin_property[OPACITY].get<double>()));
 			originMethod->SetAngle(o_origin_property[ANGLE].get<double>());
 			originMethod->SetClip(o_origin_property[ISCLIP].get<bool>());
 
+			//Foreground color
 			if (o_origin_property.end() != o_origin_property.find(FOREGROUND_COLOR))
 			{
 				picojson::object o_foreground = o_origin_property[FOREGROUND_COLOR].get<picojson::object>();
@@ -425,6 +598,7 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 				originMethod->SetForeGroundColor(color);
 			}
 
+			//Background color
 			if (o_origin_property.end() != o_origin_property.find(BACKGROUND_COLOR))
 			{
 				picojson::object o_background = o_origin_property[BACKGROUND_COLOR].get<picojson::object>();
@@ -451,108 +625,29 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 
 			picojson::object o_fontColor = o_text_property[FONT_COLOR].get<picojson::object>();
 			textMethod->SetColor(
-					DOUBLE2INT(o_fontColor[RED].get<double>()),
-					DOUBLE2INT(o_fontColor[GREEN].get<double>()),
-					DOUBLE2INT(o_fontColor[BLUE].get<double>()),
-					DOUBLE2INT(o_fontColor[ALPHA].get<double>()));
+				DOUBLE2INT(o_fontColor[RED].get<double>()),
+				DOUBLE2INT(o_fontColor[GREEN].get<double>()),
+				DOUBLE2INT(o_fontColor[BLUE].get<double>()),
+				DOUBLE2INT(o_fontColor[ALPHA].get<double>()));
 		}
-#else
+
 		if (NODE_3D == type)
 		{
-			//set layout property
-			if (snull != iter->get(LAYOUT))
-			{
-				picojson::object o_layout = iter->get(LAYOUT).get<picojson::object>();
-				auto layoutMethod = pObject->GetPropertyMethodObj<LayoutProperty>();
-
-				//<Set layout width and height
-				layoutMethod->SetLayoutWidth(DOUBLE2INT(o_layout[WIDTH].get<double>()));
-				layoutMethod->SetLayoutHeight(DOUBLE2INT(o_layout[HEIGHT].get<double>()));
-
-				//<Set layout transform
-				glm::vec3 vTransform;
-				std::vector<float> vec3;
-				picojson::array o_vec3_list = o_layout[TRANSFORM].get<picojson::array>();
-				for (picojson::value item : o_vec3_list)
-				{
-					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
-				}
-				vTransform.x = vec3[0];
-				vTransform.y = vec3[1];
-				vTransform.z = vec3[2];
-				layoutMethod->SetLayoutTransform(vTransform);
-
-				//<Set layout rotation
-				glm::vec3 vRotate;
-				vec3.clear();
-				o_vec3_list = o_layout[ROTATE].get<picojson::array>();
-				for (picojson::value item : o_vec3_list)
-				{
-					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
-				}
-				vRotate.x = vec3[0];
-				vRotate.y = vec3[1];
-				vRotate.z = vec3[2];
-				layoutMethod->SetRotation(vRotate);
-
-				//<Set layout scale
-				glm::vec3 vScale;
-				vec3.clear();
-				o_vec3_list = o_layout[SCALE].get<picojson::array>();
-				for (picojson::value item : o_vec3_list)
-				{
-					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
-				}
-				vScale.x = vec3[0];
-				vScale.y = vec3[1];
-				vScale.z = vec3[2];
-				layoutMethod->SetLayoutScale(vScale);
-
-			}
-
-			//<set origin property
-			if (snull != iter->get(ORIGINAL_PROPERTY))
-			{
-				OriginPropertyPtr originMethod = pObject->GetPropertyMethodObj<OriginProperty>();
-
-				//<Set origin property
-				picojson::object o_origin_property = iter->get(ORIGINAL_PROPERTY).get<picojson::object>();
-				picojson::object o_center_point = o_origin_property[CENTER_POINT].get<picojson::object>();
-				originMethod->SetVisible(o_origin_property[VISIBLE].get<bool>());
-
-				originMethod->SetOpacity(DOUBLE2INT(o_origin_property[OPACITY].get<double>()));
-				originMethod->SetAngle(o_origin_property[ANGLE].get<double>());
-				originMethod->SetClip(o_origin_property[ISCLIP].get<bool>());
-			}
-
 			//set gl property
 			if (snull != iter->get(GLPROPERTY))
 			{
 				picojson::object o_glProperty = iter->get(GLPROPERTY).get<picojson::object>();
-				auto glMethod = pObject->GetPropertyMethodObj<GLProperty>();
-
-				//<set program
-				std::string program_name = o_glProperty[PROGRAM].get<std::string>();
-				std::dynamic_pointer_cast<Node3D>(pObject)->SetProgram(program_name);
-
-				//<set mesh
-				std::string mesh_name = o_glProperty[MESH].get<std::string>();
-				std::dynamic_pointer_cast<Node3D>(pObject)->SetMesh(mesh_name);
-
-				//<set indensity
-				double indensity = o_glProperty[BLEND_INDENSITY].get<double>();
-				glMethod->SetBlendIndensity(static_cast<float>(indensity));
+				LoadGLProperty(o_glProperty, std::dynamic_pointer_cast<Node3D>(pObject));
 			}
 
-			//<Set custome property list
-			if (snull != iter->get(CUSTOM_PROPERTY_LIST))
+			//<Set material property list
+			if (snull != iter->get(MATERIAL_PROPERTY_LIST))
 			{
-				picojson::array o_array = iter->get(CUSTOM_PROPERTY_LIST).get<picojson::array>();
-				LoadCustomPropertyList(o_array, pObject);
+				picojson::array o_array = iter->get(MATERIAL_PROPERTY_LIST).get<picojson::array>();
+				LoadMaterialPropertyList(o_array, std::dynamic_pointer_cast<Node3D>(pObject));
 			}
 		}
-#endif
-		
+
 		//<add to ui object table
 		UIObjectTable[resource_name] = pObject;
 		LOG_DEBUG("Resource added[%s]", resource_name.c_str());
@@ -658,34 +753,81 @@ void LoadShaderProgramList(picojson::value& json_value)
 	}
 }
 
+void LoadModel(picojson::value& json_value)
+{
+	std::string obj_file;
+	picojson::array o_model_list = json_value.get(THREE_D_ASSET_LIST).get<picojson::array>();
+	for (picojson::value item : o_model_list)
+	{
+		obj_file = Configuration::GetInstance()->asset_path + item.get<std::string>();
+
+		auto pModel = Model::create(obj_file.c_str());
+		Library::GetInstance()->add<Model>(pModel->getName(), pModel);
+	}
+}
+
 void LoadMeshList(picojson::value& json_value)
 {
 	//<get vertex data
-	picojson::array o_vertex_data_list = json_value.get(MESH_LIST).get<picojson::array>();
+	picojson::array o_vertex_data_list = json_value.get(MODEL_LIST).get<picojson::array>();
 	for (picojson::array::iterator iter = o_vertex_data_list.begin(); iter != o_vertex_data_list.end(); ++iter)
 	{
 		std::string name = iter->get(NAME).get<std::string>();
-		GLenum usage;
-		switch(std::stoi(iter->get(USAGE).get<std::string>()))
+
+		picojson::array o_position_list;
+		picojson::array o_normal_list;
+		picojson::array o_uv_list;
+		if (snull != iter->get(POSITION))
 		{
-			case 0:
-			usage = GL_STATIC_DRAW;
-			break;
-			case 1:
-			usage = GL_DYNAMIC_DRAW;
-			break;
-			default:
-			usage = GL_STATIC_DRAW;
-			break;
+			o_position_list = iter->get(POSITION).get<picojson::array>();
 		}
-		std::vector<float> vertices;
-		picojson::array o_vertices_list = iter->get(VERTICES).get<picojson::array>();
-		for (picojson::value item : o_vertices_list)
+		if (snull != iter->get(NORMAL))
 		{
-			vertices.push_back(static_cast<float>(item.get<double>()));
+			o_normal_list = iter->get(NORMAL).get<picojson::array>();
+		}
+		if (snull != iter->get(UV))
+		{
+			o_uv_list = iter->get(UV).get<picojson::array>();
 		}
 
-		std::vector<uint32_t> indices;
+		std::vector<VertexRecord> vertices;
+		std::vector<TextureRecord> textures;
+
+		size_t pos = 0;
+		size_t uv = 0;
+		while (pos < o_position_list.size())
+		{
+			VertexRecord vertex;
+			glm::vec3 vector;
+
+			// process vertex positions, normals and texture coordinates 
+			vector.x = o_position_list[pos].get<double>();
+			vector.y = o_position_list[pos + 1].get<double>();
+			vector.z = o_position_list[pos + 2].get<double>();
+			vertex.Position = vector;
+
+			if (0 < o_normal_list.size())
+			{
+				vector.x = o_normal_list[pos].get<double>();
+				vector.y = o_normal_list[pos + 1].get<double>();
+				vector.z = o_normal_list[pos + 2].get<double>();
+				vertex.Normal = vector;
+			}
+			//does the mesh contain texture coordinates?
+			glm::vec2 vec;
+			if (0 < o_uv_list.size())
+			{
+				vec.x = o_uv_list[uv].get<double>();
+				vec.y = o_uv_list[uv + 1].get<double>();
+				vertex.TexCoords = vec;
+			}
+			vertices.push_back(vertex);
+			pos += 3;
+			uv += 2;
+		}
+
+		// process indices
+		std::vector<unsigned int> indices;
 		if (snull != iter->get(INDICES))
 		{
 			picojson::array o_indices_list = iter->get(INDICES).get<picojson::array>();
@@ -695,34 +837,13 @@ void LoadMeshList(picojson::value& json_value)
 			}
 		}
 
-		auto pVertexData = VertexData::create(std::move(vertices), std::move(indices), usage);
-		auto pMesh = Mesh::create(name, pVertexData);
+		// process material
 
-		picojson::array o_attribute_list = iter->get(ATTRIBUTE).get<picojson::array>();
-		for (picojson::array::iterator iter = o_attribute_list.begin(); iter != o_attribute_list.end(); ++iter)
-		{
-			std::string name = iter->get(NAME).get<std::string>();
-
-			GLuint index = DOUBLE2UINT32(iter->get(INDEX).get<double>());
-
-			GLenum type = ENUM_TYPE_FROMSTRING.at(iter->get(TYPE).get<std::string>());
-
-			size_t sizeOfType = SIZE_TYPE_FROMSTRING.at(iter->get(TYPE).get<std::string>());
-
-			GLboolean isNormalize = iter->get(NORMALIZED).get<bool>() ? GL_TRUE: GL_FALSE;
-
-			GLint size = DOUBLE2INT(iter->get(SIZE).get<double>());
-
-			GLsizei stride = DOUBLE2INT(iter->get(STRIDE).get<double>());
-			GLsizei offset = DOUBLE2INT(iter->get(OFFSET).get<double>());
-			auto pVertexAttribute = VertexAttribute::create(name, index, size, type, isNormalize, stride * sizeOfType, (void*)(offset*sizeOfType));
-			pVertexAttribute->debug();
-			pMesh->addAttribute(pVertexAttribute);
-		}
-		pMesh->init();
-		pMesh->debug();
+		auto pMesh = Mesh::create(vertices, indices, textures);
+		auto pModel = Model::create(name, std::vector<MeshPtr>{pMesh});
+		pModel->debug();
 		//<Add to library
-		Library::GetInstance()->add<Mesh>(name, pMesh);
+		Library::GetInstance()->add<Model>(name, pModel);
 	}
 
 }

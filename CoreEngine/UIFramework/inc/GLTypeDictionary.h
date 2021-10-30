@@ -28,3 +28,6 @@ extern const std::unordered_map<std::string, GLenum> GL_TEXTURE_TARGET_MAP;
 extern const std::unordered_map<std::string, GLenum> GL_TEXTURE_PNAME_MAP;
 extern const std::unordered_map<std::string, GLenum> GL_TEXTURE_PVALUE_MAP;
 extern const std::unordered_map<std::string, GL_TEXTURE_FUNC> GL_TEXTURE_FUNC_MAP; 
+extern const std::unordered_map<std::string, GLenum> GL_BUFFER_BINDING_TARGET_MAP;
+extern const std::unordered_map<std::string, GLenum> GL_BUFFER_USAGE_MAP;
+extern const std::unordered_map<std::string, GLenum> GL_PRIMITIVE_MAP;

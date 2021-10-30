@@ -6,7 +6,6 @@
 #include "LayoutProperty.h"
 
 #include "PropertyDefine.h"
-#include "macro_define.h"
 
 #include "UIHelper.h"
 #include "SignalDefine.h"

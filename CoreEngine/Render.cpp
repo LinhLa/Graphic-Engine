@@ -99,7 +99,6 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 		SDL_Log("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
 
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_SCISSOR_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

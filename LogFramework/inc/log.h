@@ -50,7 +50,7 @@
 
 std::string CurrentTime();
 
-enum TLogLevel:uint8_t { FATAL = 0, LERROR, WARN, INFO, DEBUG, TRACE, ALL, OFF, };
+enum TLogLevel:uint8_t { FATAL = 0, LERROR, WARN, INFO, LDEBUG, TRACE, ALL, OFF, };
 
 template <typename OutputDevice>
 class Log
@@ -143,7 +143,7 @@ public:
 };
 
 template <typename T>
-TLogLevel Log<T>::m_logLevel = DEBUG;
+TLogLevel Log<T>::m_logLevel = LDEBUG;
 
 template <typename T>
 std::string Log<T>::m_module_name = "UNKNOWN";
@@ -164,7 +164,7 @@ typedef Log<Output2Socket> LogObject;
 #define LOG_ERROR(format, ...)	LogObject().Print(LERROR, "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_WARN(format, ...)	LogObject().Print(WARN , "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_INFO(format, ...)	LogObject().Print(INFO , "%s :" format, __FUNCTION__, __VA_ARGS__)
-#define LOG_DEBUG(format, ...) 	LogObject().Print(DEBUG, "%s :" format, __FUNCTION__, __VA_ARGS__)
+#define LOG_DEBUG(format, ...) 	LogObject().Print(LDEBUG, "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_TRACE(format, ...) 	LogObject().Print(TRACE, "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_ALL(format, ...) 	LogObject().Print(ALL, "%s :" format, __FUNCTION__, __VA_ARGS__)
 #define LOG_OFF(format, ...)

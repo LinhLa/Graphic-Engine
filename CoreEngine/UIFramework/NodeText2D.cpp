@@ -13,34 +13,39 @@
 #include "PropertyDefine.h"
 #include "SignalDefine.h"
 
+#include "GLRenderContext.h"
+
 NodeText2D::NodeText2D(std::string name):UIObject(name)
 {
 	AddPropertyMethodObj(TextProperty::create(dynamic_cast<PropertyTable*>(this)));
 
-	std::function<void(std::string&&)> strCallback = [&](std::string&&) {m_bFontChanged = m_bUIChanged = true; };
-	std::function<void(int32_t&&)> i32Callback = [&](int32_t&&) {m_bFontChanged = m_bUIChanged = true; };
-	std::function<void(SDL_Color&&)> sdlColorCallback = [&](SDL_Color&&) {m_bFontChanged = m_bUIChanged = true; };
+	std::function<void(std::string&&)> onTextUpdate = [&](std::string&&) {m_bFontChanged = m_bUIChanged = true; };
+	std::function<void(int32_t&&)> onFontSizeUpdate = [&](int32_t&&) {m_bFontChanged = m_bUIChanged = true; };
+	std::function<void(SDL_Color&&)> onColorUpdate = [&](SDL_Color&&) {m_bFontChanged = m_bUIChanged = true; };
 
 	//<on text propert changed
-	BindPropertySignal(TEXT, strCallback);
-	BindPropertySignal(FONT_NAME, strCallback);
-	BindPropertySignal(FONT_SIZE, i32Callback);
-	BindPropertySignal(FONT_COLOR, sdlColorCallback);
+	BindPropertySignal(TEXT, onTextUpdate);
+	BindPropertySignal(FONT_NAME, onTextUpdate);
+	BindPropertySignal(FONT_SIZE, onFontSizeUpdate);
+	BindPropertySignal(FONT_COLOR, onColorUpdate);
 
 	//<on foreground color changed
-	BindPropertySignal(FORE_GROUND_COLOR, sdlColorCallback);
+	BindPropertySignal(FORE_GROUND_COLOR, onColorUpdate);
 
 	//<on draw
 	bind(ON_DRAW_SIGNAL, this, &NodeText2D::onDraw);
 
 	//<on scale changed
-	std::function<void(float&&)> floatCallback = [&](float&& value) {m_bUIChanged = true;	};
-	BindPropertySignal(SCALE_X, floatCallback);
-	BindPropertySignal(SCALE_Y, floatCallback);
+	std::function<void(float&&)> onScaleUpdate = [&](float&& value) {m_bUIChanged = true;	};
+	BindPropertySignal(SCALE_X, onScaleUpdate);
+	BindPropertySignal(SCALE_Y, onScaleUpdate);
 
 	//<on alpha changed
-	std::function<void(uint8_t&&)> u8Callback = [&](uint8_t&& value) {m_bUIChanged = true;	};
-	BindPropertySignal(OPACITY, u8Callback);
+	std::function<void(uint8_t&&)> onOpacityUpdate = [&](uint8_t&& value) {m_bUIChanged = true;	};
+	BindPropertySignal(OPACITY, onOpacityUpdate);
+
+	//<create texture to render GLTexture(const std::string& name, GLenum target, int w, int h, GLint format);
+	m_pTexture = GLTexture::create(m_name, GL_SAMPLER_2D, Configuration::GetInstance()->width, Configuration::GetInstance()->height, GL_RGB);
 }
 
 NodeText2D::~NodeText2D(){}
@@ -56,7 +61,16 @@ void NodeText2D::UpdateFont()
 	if (TextMethod)
 	{
 #ifdef OPENGL_RENDERING
+		//create new font
+		m_pGLFont = GLFont::create();
 
+		//open font
+		m_pGLFont->OpenFont(
+			TextMethod->GetFontName().c_str(),
+			TextMethod->GetFontSize());
+
+		//load font texture
+		m_pGLFont->loadFont(TextMethod->GetText().c_str());
 #else
 		//create new font
 		m_pFont = Font::create();
@@ -88,19 +102,22 @@ void NodeText2D::onInit(VoidType&&)
 
 void NodeText2D::onDraw(VoidType&&)
 {
-	auto OriginMethod = GetPropertyMethodObj<OriginProperty>();
+	auto originMethod = GetPropertyMethodObj<OriginProperty>();
 	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
-#ifndef OPENGL_RENDERING
+	auto TextMethod = GetPropertyMethodObj<TextProperty>();
 	//Open new font and create texture
 	UpdateFont();
+#ifndef OPENGL_RENDERING
 	SDL_Rect sdlResult{ 0, 0, m_pFont->GetWidth(), m_pFont->GetHeight() };
+#endif
 	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
 
 	//get center point
-	SDL_Point centerPoint = OriginMethod->GetCenterPoint();
+	SDL_Point centerPoint = originMethod->GetCenterPoint();
 
 	if (true == m_bUIChanged)
 	{
+#ifndef OPENGL_RENDERING
 		//calculate scale
 		display_rect = UIHelper::GetScaleRect(
 			display_rect.x,
@@ -121,17 +138,44 @@ void NodeText2D::onDraw(VoidType&&)
 		}
 
 		//set alpha
-		m_pFont->setAlpha(OriginMethod->GetOpacity());
-
+		m_pFont->setAlpha(originMethod->GetOpacity());
+#endif
 		//reset flag
 		m_bUIChanged = false;
 	}
-
+#ifndef OPENGL_RENDERING
 	//<load texture to render
 	RenderExContextPtr context = RenderExContext::create(UIHelper::GetRenderer(), sdlResult, display_rect, OriginMethod->GetAngle(), centerPoint, OriginMethod->GetFlip());
 	context->excute(m_pFont);
 #else
+	//get font color
+	SDL_Color color = TextMethod->GetColor();
 
+	//get layout scale
+	auto scale = layoutMethod->GetLayoutScale();
+
+	//<load texture
+	m_pGLFont->renderTexture(
+		m_pTexture,
+		glm::vec2(static_cast<float>(display_rect.x), static_cast<float>(display_rect.y)),
+		glm::vec2(scale.x, scale.y),
+		static_cast<float>(originMethod->GetAngle()),
+		glm::vec2(static_cast<float>(centerPoint.x), static_cast<float>(centerPoint.y)),
+		glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f)
+	);
+
+	//<Render
+	auto context = GLRender2DContext::create(
+		m_pTexture,
+		glm::vec2(0.0f),
+		glm::vec2(1.0f),
+		glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f),
+		0.0f,
+		1.0f,
+		glm::vec2(centerPoint.x, centerPoint.y),
+		SDL_FLIP_NONE);
+
+	//context->excute();
 #endif
 }
 

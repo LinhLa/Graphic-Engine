@@ -23,7 +23,7 @@ public:
 	virtual void debug() = 0;
 
 	virtual void set(IPropertyPtr pProperty) = 0;
-	virtual void sync(UIObjectPtr pObject) = 0;
+	virtual void sync(std::shared_ptr<PropertyTable> pObject) = 0;
 	void glUniform(GLint location, void* param = nullptr);
 
 	template<class U>
@@ -105,7 +105,7 @@ public:
 		}
 	}
 
-	void sync(UIObjectPtr pObject)
+	void sync(std::shared_ptr<PropertyTable> pObject)
 	{
 		if (GL_SAMPLER_2D == m_type)
 		{ 

@@ -6,36 +6,47 @@
 #include <SDL_opengl.h>
 #include <gl\glu.h>
 #include "creator.h"
+#include "ShaderProgram.h"
 
-#include "VertexData.h"
-#include "VertexAttribute.h"
-#include "VertexArrayObject.h"
-#include "VertexBufferObject.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+struct VertexRecord {
+	glm::vec3 Position;
+	glm::vec3 Normal;
+	glm::vec2 TexCoords;
+};
+
+struct TextureRecord {
+	unsigned int id;
+	std::string type;
+	std::string path;
+};
 
 class Mesh final: public creator<Mesh>
 {
 private:
-	friend class Renderer3D;
-	std::string m_name;
-	VertexDataPtr			m_pVData = nullptr;
-	VertexBufferObjectPtr 	m_pVBO = nullptr;
-	ElementBufferObjectPtr 	m_pEBO = nullptr;
-	VertexArrayObjectPtr	m_pVAO = nullptr;
-	std::unordered_map<std::string, VertexAttributePtr>	m_AttributeArray;
+	// mesh data
+	std::vector<VertexRecord>       vertices;
+	std::vector<unsigned int> indices;
+	std::vector<TextureRecord>      textures;
 	
-	void enableAttribute();
+	//  render data
+    uint32_t VAO = 0U;
+    uint32_t VBO = 0U;
+    uint32_t EBO = 0U;
+
 protected:
-	Mesh(const std::string& name, VertexDataPtr);
+	Mesh(std::vector<VertexRecord> vertices, std::vector<unsigned int> indices, std::vector<TextureRecord> textures);
 public:
 	friend class creator<Mesh>;
 	~Mesh();
 
-	void init();
-	void addAttribute(VertexAttributePtr);
-	
+    void setupMesh();
+	void Mesh::debug();
 	std::string getName() const;
-	void draw();
-	void debug();
+	void Draw(ShaderProgramPtr pShader);
 };
 
 typedef std::shared_ptr<Mesh> MeshPtr;

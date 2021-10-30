@@ -24,7 +24,7 @@ void DeltaTime::now()
 
 }
 
-uint64_t DeltaTime::getDelta()
+double DeltaTime::getDelta()
 {
-	return static_cast<uint64_t>( (double)((m_now - m_start) * 1000) / SDL_GetPerformanceFrequency() );
+	return ((double)((m_now - m_start) * 1000) / SDL_GetPerformanceFrequency());
 }

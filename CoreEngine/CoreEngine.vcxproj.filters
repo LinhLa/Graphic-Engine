@@ -184,18 +184,6 @@
     <ClCompile Include="UIFramework\GLInfoLog.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
-    <ClCompile Include="UIFramework\VertexArrayObject.cpp">
-      <Filter>UIFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="UIFramework\VertexAttribute.cpp">
-      <Filter>UIFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="UIFramework\VertexBufferObject.cpp">
-      <Filter>UIFramework</Filter>
-    </ClCompile>
-    <ClCompile Include="UIFramework\VertexData.cpp">
-      <Filter>UIFramework</Filter>
-    </ClCompile>
     <ClCompile Include="UIFramework\Mesh.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
@@ -230,6 +218,27 @@
       <Filter>UIFramework</Filter>
     </ClCompile>
     <ClCompile Include="UIFramework\GLRenderManipulator.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLFont.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\GLFrameBufferObject.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Transformation2D.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="3D Cube\Cube3D.cpp">
+      <Filter>3D Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Model.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Material.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\Camera.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,18 +425,6 @@
     <ClInclude Include="UIFramework\inc\GLInfoLog.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
-    <ClInclude Include="UIFramework\inc\VertexArrayObject.h">
-      <Filter>Header Files\UIFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="UIFramework\inc\VertexAttribute.h">
-      <Filter>Header Files\UIFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="UIFramework\inc\VertexBufferObject.h">
-      <Filter>Header Files\UIFramework</Filter>
-    </ClInclude>
-    <ClInclude Include="UIFramework\inc\VertexData.h">
-      <Filter>Header Files\UIFramework</Filter>
-    </ClInclude>
     <ClInclude Include="UIFramework\inc\Mesh.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
@@ -461,6 +458,27 @@
     <ClInclude Include="UIFramework\inc\GLRenderManipulator.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLFont.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\GLFrameBufferObject.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Transformation2D.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="3D Cube\inc\Cube3D.h">
+      <Filter>Header Files\3D Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Model.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Material.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\Camera.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -489,6 +507,12 @@
     </Filter>
     <Filter Include="Player\Native File Dialog">
       <UniqueIdentifier>{a99f9ec8-b729-498e-b412-f84e2daabda9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3D Cube">
+      <UniqueIdentifier>{8a9ac58a-843f-44ec-8541-ade6441f93c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\3D Cube">
+      <UniqueIdentifier>{f2689d28-701b-4848-93a0-d7d99d06a8e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

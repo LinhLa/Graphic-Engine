@@ -95,7 +95,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +105,7 @@ $(GLEW_HOME)\lib\Release\Win32;
 $(SDL_HOME)\lib\x86;
 $(SDL_TTF)\lib\x86;
 $(SDL_IMAGE)\lib\x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;glew32.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;ColladaImporter.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;freetype.lib;glew32.lib;opengl32.lib;glu32.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -116,7 +116,7 @@ $(SDL_IMAGE)\lib\x86</AdditionalLibraryDirectories>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;OPENGL_RENDERING_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\Player\inc;G:\Development\SDL Game engine\Videos decoder\VideoDecoder\lib\win32\ffmpeg\include;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE);$(SDL_TTF);$(GLEW_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +127,7 @@ $(SDL_HOME)\lib\x64
 $(SDL_TTF)\lib\x64
 ;$(SDL_IMAGE)\lib\x64
 </AdditionalLibraryDirectories>
-      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;glew32d.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Common.lib;LogFramework.lib;MemoryManager.lib;ServiceMgr.lib;ColladaImporter.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;freetype.lib;glew32d.lib;opengl32.lib;glu32.lib;assimp-vc142-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
@@ -192,6 +192,7 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include=".\inc\ResourceAcquire.h" />
     <ClInclude Include=".\inc\Scene.h" />
     <ClInclude Include=".\inc\Timer.h" />
+    <ClInclude Include="3D Cube\inc\Cube3D.h" />
     <ClInclude Include="inc\FpsTracking.h" />
     <ClInclude Include="inc\FrameRateCapping.h" />
     <ClInclude Include="Player\inc\BackGround.h" />
@@ -207,11 +208,15 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UIFramework\inc\Attribute.h" />
+    <ClInclude Include="UIFramework\inc\Camera.h" />
+    <ClInclude Include="UIFramework\inc\GLFont.h" />
+    <ClInclude Include="UIFramework\inc\GLFrameBufferObject.h" />
     <ClInclude Include="UIFramework\inc\GLProperty.h" />
     <ClInclude Include="UIFramework\inc\GLRenderContext.h" />
     <ClInclude Include="UIFramework\inc\GLRenderManipulator.h" />
     <ClInclude Include="UIFramework\inc\GLTexture.h" />
     <ClInclude Include="UIFramework\inc\GLTypeDictionary.h" />
+    <ClInclude Include="UIFramework\inc\Material.h" />
     <ClInclude Include="UIFramework\inc\Mesh.h" />
     <ClInclude Include="UIFramework\inc\AnimationKeyFrame.h" />
     <ClInclude Include="UIFramework\inc\AnimationProperty.h" />
@@ -228,6 +233,7 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\KeyMapDefine.h" />
     <ClInclude Include="UIFramework\inc\LayoutProperty.h" />
     <ClInclude Include="UIFramework\inc\Library.h" />
+    <ClInclude Include="UIFramework\inc\Model.h" />
     <ClInclude Include="UIFramework\inc\Node3D.h" />
     <ClInclude Include="UIFramework\inc\OriginProperty.h" />
     <ClInclude Include="UIFramework\inc\PropertyDefine.h" />
@@ -241,65 +247,79 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\TaskPoolInstance.h" />
     <ClInclude Include="UIFramework\inc\TextProperty.h" />
     <ClInclude Include="UIFramework\inc\TextureManipulator.h" />
+    <ClInclude Include="UIFramework\inc\Transformation2D.h" />
     <ClInclude Include="UIFramework\inc\UIHelper.h" />
     <ClInclude Include="UIFramework\inc\UIObjectSignalMethod.h" />
     <ClInclude Include="UIFramework\inc\Uniform.h" />
-    <ClInclude Include="UIFramework\inc\VertexArrayObject.h" />
-    <ClInclude Include="UIFramework\inc\VertexAttribute.h" />
-    <ClInclude Include="UIFramework\inc\VertexBufferObject.h" />
-    <ClInclude Include="UIFramework\inc\VertexData.h" />
     <ClInclude Include="UIFramework\inc\WindowRender.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include=".\UIFramework\Animation.cpp" />
     <ClCompile Include=".\UIFramework\Font.cpp" />
+    <ClCompile Include="3D Cube\Cube3D.cpp" />
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="FpsTracking.cpp" />
     <ClCompile Include="FrameRateCapping.cpp" />
     <ClCompile Include="Player\BackGround.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\Focus.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\IFocusComponent.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\KeyMap.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\NativeFileDialog\nfd_common.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\NativeFileDialog\nfd_win.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\Player.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\PlayerButton.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\FullSizeSymbol.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\ProgressBar.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\Speaker.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Player\TimeSlide.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="UIFramework\Attribute.cpp" />
+    <ClCompile Include="UIFramework\Camera.cpp" />
+    <ClCompile Include="UIFramework\GLFont.cpp" />
+    <ClCompile Include="UIFramework\GLFrameBufferObject.cpp" />
     <ClCompile Include="UIFramework\GLProperty.cpp" />
     <ClCompile Include="UIFramework\GLRenderContext.cpp" />
     <ClCompile Include="UIFramework\GLRenderManipulator.cpp" />
     <ClCompile Include="UIFramework\GLTexture.cpp" />
     <ClCompile Include="UIFramework\GLTypeDictionary.cpp" />
+    <ClCompile Include="UIFramework\Material.cpp" />
     <ClCompile Include="UIFramework\Mesh.cpp" />
     <ClCompile Include="UIFramework\AnimationKeyFrame.cpp" />
     <ClCompile Include="UIFramework\AnimationProperty.cpp" />
@@ -316,6 +336,7 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="UIFramework\KeyMapDefine.cpp" />
     <ClCompile Include="UIFramework\LayoutProperty.cpp" />
     <ClCompile Include="UIFramework\Library.cpp" />
+    <ClCompile Include="UIFramework\Model.cpp" />
     <ClCompile Include="UIFramework\Node3D.cpp" />
     <ClCompile Include="UIFramework\OriginProperty.cpp" />
     <ClCompile Include="UIFramework\PropertyDefine.cpp" />
@@ -330,6 +351,7 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="UIFramework\TextProperty.cpp" />
     <ClCompile Include="UIFramework\TextureManipulator.cpp" />
     <ClCompile Include="UIFramework\TimeLinePlayback.cpp" />
+    <ClCompile Include="UIFramework\Transformation2D.cpp" />
     <ClCompile Include="UIFramework\UIHelper.cpp" />
     <ClCompile Include="UIFramework\UIObject.cpp" />
     <ClCompile Include=".\UIFramework\Node2DImage.cpp" />
@@ -356,12 +378,6 @@ $(SDL_TTF)\lib\x64
     </ClCompile>
     <ClCompile Include="UIFramework\UIObjectSignalMethod.cpp" />
     <ClCompile Include="UIFramework\Uniform.cpp" />
-    <ClCompile Include="UIFramework\VertexArrayObject.cpp" />
-    <ClCompile Include="UIFramework\VertexAttribute.cpp" />
-    <ClCompile Include="UIFramework\VertexBufferObject.cpp" />
-    <ClCompile Include="UIFramework\VertexData.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="UIFramework\WindowRender.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

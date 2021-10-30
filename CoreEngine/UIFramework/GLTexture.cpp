@@ -13,6 +13,10 @@
  */
 GLTexture::~GLTexture()
 {
+	if (m_textureID)
+	{
+		glDeleteTextures(1, &m_textureID);
+	}
 }
 
 /**
@@ -23,6 +27,25 @@ GLTexture::~GLTexture()
  */
 GLTexture::GLTexture(const std::string &name, const std::string& path, GLenum target):m_name(name),m_path(path), m_target(target)
 {
+}
+
+/**
+ * @brief      Constructs a new instance.
+ *
+ * @param      pRenderer     The renderer
+ * @param[in]  texture_path  The texture path
+ */
+GLTexture::GLTexture(const std::string& name, GLenum target, int w, int h, GLint format):
+	m_name(name), m_target(target), m_width(w), m_height(h),m_iformat(format)
+{
+	//Create empty texture2D
+	glGenTextures(1, &m_textureID);
+	glBindTexture(m_target, m_textureID);
+
+	glTexImage2D(m_target, 0, m_iformat, m_width, m_height, 0, m_iformat, GL_UNSIGNED_BYTE, NULL);
+
+	glTexParameteri(m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 /**
@@ -42,22 +65,24 @@ void GLTexture::init()
  */
 void GLTexture::load()
 {
+	// turn on flip vertical image for top left origin
+	stbi_set_flip_vertically_on_load(true);
+	
 	// load and generate the texture
 	unsigned char* data = stbi_load(m_path.c_str(), &m_width, &m_height, &m_Channels, 0);
-	GLint iformat;
 	if (!data)
 	{
 		throw std::logic_error("Failed to load texture");
 	}
 	if (4 == m_Channels)
 	{
-		iformat = GL_RGBA;
+		m_iformat = GL_RGBA;
 	}
 	else
 	{
-		iformat = GL_RGB;
+		m_iformat = GL_RGB;
 	}
-	glTexImage2D(m_target, 0, iformat, m_width, m_height, 0, iformat, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(m_target, 0, m_iformat, m_width, m_height, 0, m_iformat, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(m_target);
 	stbi_image_free(data);
 }
@@ -190,6 +215,22 @@ int GLTexture::GetHeight() const
 	return m_height;
 }
 
+
+GLint GLTexture::getFormat() const
+{
+	return m_iformat;
+}
+
+GLenum GLTexture::getTarget() const
+{
+	return m_target;
+}
+
+void GLTexture::setLocation(GLenum location)
+{
+	m_location = location;
+}
+
 /**
  * @brief      Loads to gpu.
  *
@@ -221,10 +262,13 @@ void GLTexture::gen()
 /**
  * @brief      active texture
  */
-void GLTexture::active(GLenum location)
+void GLTexture::active()
 {
-	glActiveTexture(location);
-	glBindTexture(m_target, m_textureID);
+	if ((0U != m_location) && (0U != m_textureID))
+	{
+		glActiveTexture(m_location);
+		glBindTexture(m_target, m_textureID);
+	}
 }
 
 /**

@@ -23,9 +23,5 @@ void ContentService::onEndService()
 
 void ContentService::onMessageReceive(MessagePtr msg)
 {
-	switch (msg->m_id)
-	{
-	default:
-		break;
-	}
+	//switch (msg->m_id)
 }

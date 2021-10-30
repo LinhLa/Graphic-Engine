@@ -28,14 +28,16 @@ class GLTexture: public creator<GLTexture>
 private:
 	std::string		m_name;
 	std::string		m_path;
-	GLuint 			m_textureID = 0;
-	GLenum 			m_target = 0;
+	GLuint 			m_textureID = 0U;
+	GLenum 			m_target = 0U;
+	GLenum			m_location = 0U;
 
 	bool m_isLoadToGPU = true;
 
 	int m_width = 0;
 	int m_height = 0;
 	int m_Channels = 0;
+	GLint m_iformat = 0;
 
 	std::list<ScalarParam> m_scalarParamList;
 	std::list<VectorParam> m_vectorParamList;
@@ -45,6 +47,7 @@ private:
 
 protected:
 	GLTexture(const std::string& name, const std::string& path, GLenum target);
+	GLTexture(const std::string& name, GLenum target, int w, int h, GLint format);
 public:
 	virtual ~GLTexture();
 	friend class creator<GLTexture>;
@@ -59,13 +62,18 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 
+	GLint getFormat() const;
+	GLenum getTarget() const;
+
+	void setLocation(GLenum);
 	void loadToGPU(bool flag = true);
 	bool isLoadToGPU() const;
 
 	void gen();
-	void active(GLenum);
+	void active();
 	void bind();
 	void unbind();
+
 	std::string getName() const;
 	GLuint getID() const;
 };

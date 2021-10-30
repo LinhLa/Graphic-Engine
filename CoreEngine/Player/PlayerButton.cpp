@@ -52,6 +52,7 @@ void PlayerButton::AcquireResource()
 void PlayerButton::FocusIn()
 {
 	PlayButtonFadeIn();
+	PlayButtonZoomIn();
 }
 
 void PlayerButton::PlayButtonFadeIn()
@@ -70,7 +71,7 @@ void PlayerButton::PlayButtonFadeIn()
 void PlayerButton::PlayButtonZoomIn()
 {
 	IKeyFramePtr keyframeList = AnimationKeyFrame<float>::create();
-	keyframeList->addSplineKeyframe<float>(0_ms, 300_ms, 0.8F, 1.0F);
+	keyframeList->addSplineKeyframe<float>(0_ms, 500_ms, 0.8F, 1.0F);
 
 	AnimationPropertyPtr zoomAnimation = AnimationProperty::create();
 	zoomAnimation->addEntry(SCALE_X, keyframeList);

@@ -30,7 +30,7 @@ Node2DImage::Node2DImage(std::string name):UIObject(name)
 	BindPropertySignal(SCALE_X, floatCallback);
 	BindPropertySignal(SCALE_Y, floatCallback);
 
-	//set flag ui update <on alpha changed
+	//set flag ui update on alpha changed
 	std::function<void(uint8_t&&)> u8Callback = [&](uint8_t&& value) {m_bUIChanged = true;	};
 	BindPropertySignal(OPACITY, u8Callback);
 }
@@ -51,7 +51,9 @@ void Node2DImage::onDraw(VoidType&&)
 	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
 
 	//get layout display
+#ifndef OPENGL_RENDERING
 	SDL_Rect sdlResult{0, 0, m_pTexture->GetWidth(), m_pTexture->GetHeight()};
+#endif
 	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
 
 	//get center point
@@ -68,38 +70,24 @@ void Node2DImage::onDraw(VoidType&&)
 			m_pTextureToRender->GetHeight(),
 			layoutMethod->GetLayoutScaleX(),
 			layoutMethod->GetLayoutScaleY());
-#else
-		//calculate scale
-		display_rect = UIHelper::GetScaleRect(
-			display_rect.x,
-			display_rect.y,
-			m_pTexture->GetWidth(),
-			m_pTexture->GetHeight(),
-			layoutMethod->GetLayoutScaleX(),
-			layoutMethod->GetLayoutScaleY());
-#endif
+
 		//check fore ground color
 		if (IsPropertyExist(FORE_GROUND_COLOR))
 		{
 			SDL_Color color = originMethod->GetForeGroundColor();
 			if (IS_VALID_COLOR(color))
 			{
-#ifndef OPENGL_RENDERING
+
 				//clone texture
 				m_pTextureToRender = m_pTexture->Clone(UIHelper::GetRenderer());
 				TextureManipulator(m_pTextureToRender).ColorKey(color);
-#else
-
-#endif
 			}
 		}
-#ifndef OPENGL_RENDERING
+
 		//set opacity
 		m_pTextureToRender->setAlpha(originMethod->GetOpacity());
-#else
-		//set opacity
-#endif
 
+#endif
 		//reset flag
 		m_bUIChanged = false;
 	}
@@ -109,16 +97,27 @@ void Node2DImage::onDraw(VoidType&&)
 	RenderExContextPtr context = RenderExContext::create(UIHelper::GetRenderer(), sdlResult, display_rect, originMethod->GetAngle(), centerPoint, originMethod->GetFlip());
 	context->excute(m_pTextureToRender);
 #else
+
+	//get foreground color
+	SDL_Color color = originMethod->GetForeGroundColor();
+	glm::vec4 foregroundColor = glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
+	if (!IS_VALID_COLOR(color))
+	{
+		foregroundColor = glm::vec4(1.0f);
+	}
+
 	//<Render
-	/*auto context = GLRender2DContext::create(
-		m_pShaderProgram,
+	auto context = GLRender2DContext::create(
 		m_pTexture,
-		sdlResult,
-		display_rect,
-		originMethod->GetAngle(),
-		centerPoint,
-		originMethod->GetFlip());
-	context->excute();*/
+		glm::vec2(static_cast<float>(display_rect.x), static_cast<float>(display_rect.y)),
+		glm::vec2(layoutMethod->GetLayoutScaleX(), layoutMethod->GetLayoutScaleY()),
+		foregroundColor,
+		static_cast<float>(originMethod->GetAngle()),
+		originMethod->GetOpacity() / 255.0f,
+		glm::vec2(centerPoint.x, centerPoint.y),
+		SDL_FLIP_NONE);
+
+	context->excute();
 #endif
 }
 

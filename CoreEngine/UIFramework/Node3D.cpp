@@ -14,6 +14,8 @@
 #include "PropertyDefine.h"
 #include "SignalDefine.h"
 
+#include "Camera.h"
+
 Node3D::Node3D(std::string name):UIObject(name)
 {
 	//<on draw
@@ -36,32 +38,26 @@ void Node3D::onDraw(VoidType&&)
 	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
 	auto glProperty = GetPropertyMethodObj<GLProperty>();
 
-	m_pShaderProgram->setUniformFromUIObject(shared_from_this());
+	//update uniform
+	m_pShaderProgram->setUniformFromUIObject(m_pMaterial);
+
+	//get layout display
+	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
+
+	//get center point
+	SDL_Point centerPoint = originMethod->GetCenterPoint();
 
 	//<Create render context
-	/*auto context = GLRender3DContext::create(
+	auto context = GLRender3DContext::create(
 		layoutMethod->GetLayoutScale(),
 		layoutMethod->GetLayoutTransform(),
 		layoutMethod->GetRotation(),
 		originMethod->GetAngle(),
-		glProperty->GetTextureList(),
 		m_pShaderProgram,
-		m_pMesh);*/
+		m_pMaterial,
+		m_pModel,
+		Camera::create(glProperty));
 	
-	//auto pTexture = Library::GetInstance()->get<GLTexture>("landscape.png");
-	SDL_Rect clip;
-	SDL_Rect display{ 0,0, 0, 0};
-	double angle = 0.0f;
-	SDL_Point center{0,0};
-	auto context = GLRender2DContext::create(
-		m_pShaderProgram,
-		m_pMesh,
-		glProperty->GetTextureList(),
-		clip,
-		display,
-		angle,
-		center,
-		SDL_FLIP_NONE);
 	context->excute();
 }
 
@@ -78,13 +74,18 @@ float Node3D::GetActualHeight() const
 	return GetPropertyValue<float>(LAYOUT_HEIGHT);
 }
 
-void Node3D::SetMesh(const std::string& name)
-{
-	m_pMesh = Library::GetInstance()->get<Mesh>(name);
-}
-
 void Node3D::SetProgram(const std::string& name)
 {
 	m_pShaderProgram = Library::GetInstance()->get<ShaderProgram>(name);
-	m_pShaderProgram->syncUniformToUIObject(shared_from_this());
+}
+
+void Node3D::SetModel(const std::string& name)
+{
+	m_pModel = Library::GetInstance()->get<Model>(name);
+}
+
+void Node3D::SetMaterial(const std::string& name)
+{
+	m_pMaterial = Library::GetInstance()->get<Material>(name);
+	m_pShaderProgram->syncUniformToUIObject(m_pMaterial);
 }

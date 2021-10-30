@@ -5,162 +5,32 @@
 		"logo": "logo.png",
 		"release_date": "12122020"
 	},
-	"Mesh_list": [{
+	"Model_list": [
+		{
 			"name": "Cube",
-			"vertices": [
-				-0.5, -0.5, -0.5, 0.0, 0.0,
-				0.5, -0.5, -0.5, 1.0, 0.0,
-				0.5, 0.5, -0.5, 1.0, 1.0,
-				0.5, 0.5, -0.5, 1.0, 1.0,
-				-0.5, 0.5, -0.5, 0.0, 1.0,
-				-0.5, -0.5, -0.5, 0.0, 0.0,
-
-				-0.5, -0.5, 0.5, 0.0, 0.0,
-				0.5, -0.5, 0.5, 1.0, 0.0,
-				0.5, 0.5, 0.5, 1.0, 1.0,
-				0.5, 0.5, 0.5, 1.0, 1.0,
-				-0.5, 0.5, 0.5, 0.0, 1.0,
-				-0.5, -0.5, 0.5, 0.0, 0.0,
-
-				-0.5, 0.5, 0.5, 1.0, 0.0,
-				-0.5, 0.5, -0.5, 1.0, 1.0,
-				-0.5, -0.5, -0.5, 0.0, 1.0,
-				-0.5, -0.5, -0.5, 0.0, 1.0,
-				-0.5, -0.5, 0.5, 0.0, 0.0,
-				-0.5, 0.5, 0.5, 1.0, 0.0,
-
-				0.5, 0.5, 0.5, 1.0, 0.0,
-				0.5, 0.5, -0.5, 1.0, 1.0,
-				0.5, -0.5, -0.5, 0.0, 1.0,
-				0.5, -0.5, -0.5, 0.0, 1.0,
-				0.5, -0.5, 0.5, 0.0, 0.0,
-				0.5, 0.5, 0.5, 1.0, 0.0,
-
-				-0.5, -0.5, -0.5, 0.0, 1.0,
-				0.5, -0.5, -0.5, 1.0, 1.0,
-				0.5, -0.5, 0.5, 1.0, 0.0,
-				0.5, -0.5, 0.5, 1.0, 0.0,
-				-0.5, -0.5, 0.5, 0.0, 0.0,
-				-0.5, -0.5, -0.5, 0.0, 1.0,
-
-				-0.5, 0.5, -0.5, 0.0, 1.0,
-				0.5, 0.5, -0.5, 1.0, 1.0,
-				0.5, 0.5, 0.5, 1.0, 0.0,
-				0.5, 0.5, 0.5, 1.0, 0.0,
-				-0.5, 0.5, 0.5, 0.0, 0.0,
-				-0.5, 0.5, -0.5, 0.0, 1.0
-			],
-			"attribute": [{
-					"name": "aPos",
-					"index": 0,
-					"size": 3,
-					"type": "GL_FLOAT",
-					"normalized": false,
-					"stride": 5,
-					"offset": 0
-				},
-				{
-					"name": "aTexCoord",
-					"index": 1,
-					"size": 2,
-					"type": "GL_FLOAT",
-					"normalized": false,
-					"stride": 5,
-					"offset": 3
-				}
-			],
-			"usage": "0"
+			"position": [-0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5],
+			"uv": [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
 		},
 		{
 			"name": "Quad",
-			"vertices": [
-				0.5, 0.5, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0,
-				0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0,
-				-0.5, -0.5, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-				-0.5, 0.5, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0
-			],
-			"attribute": [{
-					"name": "aPos",
-					"index": 0,
-					"size": 3,
-					"type": "GL_FLOAT",
-					"normalized": false,
-					"stride": 8,
-					"offset": 0
-				},
-				{
-					"name": "aColor",
-					"index": 1,
-					"size": 3,
-					"type": "GL_FLOAT",
-					"normalized": false,
-					"stride": 8,
-					"offset": 3
-				},
-				{
-					"name": "aTexCoord",
-					"index": 2,
-					"size": 2,
-					"type": "GL_FLOAT",
-					"normalized": false,
-					"stride": 8,
-					"offset": 6
-				}
-			],
-			"indices": [0, 1, 3, 1, 2, 3],
-			"usage": "0"
+			"position": [0.5, 0.5, 0.0, 0.5, -0.5, 0.0, -0.5, -0.5, 0.0, -0.5, 0.5, 0.0],
+			"normal":[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0],
+			"uv":[1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+			"indices": [0, 1, 3, 1, 2, 3]
 		},
 		{
 			"name": "Triangle",
-			"vertices": [
-				-0.5, -0.5, 0.0,
-				0.5, -0.5, 0.0,
-				0.0, 0.5, 0.0
-			],
-			"attribute": [{
-				"name": "aPos",
-				"index": 0,
-				"type": "GL_FLOAT",
-				"normalized": false,
-				"size": 3,
-				"stride": 3,
-				"offset": 0
-			}],
-			"indices": [0, 1, 2],
-			"usage": "0"
+			"position": [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0],
+			"indices": [0, 1, 2]
 		},
 		{
 			"name": "Texture",
-			"vertices": [
-				1.0, 1.0, 0.0, 1.0, 1.0,
-				1.0, -1.0, 0.0, 1.0, 0.0,
-				-1.0, -1.0, 0.0, 0.0, 0.0,
-				-1.0, 1.0, 0.0, 0.0, 1.0
-			],
-			"attribute": [{
-					"name": "aPos",
-					"index": 0,
-					"size": 3,
-					"type": "GL_FLOAT",
-					"normalized": false,
-					"stride": 5,
-					"offset": 0
-				},
-				{
-					"name": "aTexCoord",
-					"index": 1,
-					"size": 2,
-					"type": "GL_FLOAT",
-					"normalized": false,
-					"stride": 5,
-					"offset": 3
-				}
-			],
-			"indices": [0, 1, 3, 1, 2, 3],
-			"usage": "0"
+			"position": [1.0, 1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, 0.0, -1.0, 1.0, 0.0],
+			"uv":[1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+			"indices": [0, 1, 3, 1, 2, 3]
 		}
 	],
-	"ShaderProgram_list": [{
+	"ShaderProgram_list":[{
 			"name": "Quad",
 			"shader": ["QuadVex", "QuadFrag"]
 		},
@@ -179,6 +49,10 @@
 		{
 			"name": "Color",
 			"shader": ["ColorVex", "ColorFrag"]
+		},
+		{
+			"name": "Text",
+			"shader": ["TextVex", "TextFrag"]
 		}
 	],
 	"VertexShader_list": [{
@@ -200,6 +74,10 @@
 		{
 			"name": "ColorVex",
 			"source": "ColorVex.glsl"
+		},
+		{
+			"name": "TextVex",
+			"source": "TextVex.glsl"
 		}
 	],
 	"FragmentShader_list": [{
@@ -221,8 +99,13 @@
 		{
 			"name": "ColorFrag",
 			"source": "ColorFrag.glsl"
+		},
+		{
+			"name": "TextFrag",
+			"source": "TextFrag.glsl"
 		}
 	],
+	"3D_asset_list": ["cube.dae", "sphere.dae","Cup_Made_By_Tyro_Smith.dae"],
 	"texture_list": [
 		{
 			"texture_name": "transparent_window",
@@ -268,7 +151,7 @@
 		},
 		{
 			"texture_name": "landscape.png",
-			"texture_path": "default.png",
+			"texture_path": "landscape.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
 			"wrap": {
@@ -397,29 +280,35 @@
 		"font_color": "VEC3",
 		"program": "URL_PROGRAM",
 		"mesh": "URL_MESH",
+		"model":"URL_MODEL",
 		"blend_indensity": "FLOAT",
 		"texture_name": "URL_TEXTURE",
 		"progress": "FLOAT",
 		"foregroundColor": "VEC4",
 		"backgroundColor": "VEC4",
 		"texture1": "URL_TEXTURE",
-		"texture2": "URL_TEXTURE"
+		"texture2": "URL_TEXTURE",
+		"Surface colour": "VEC4",
+		"Transparency":"FLOAT",
+		"Refraction":"FLOAT",
+		"Specular":"FLOAT",
+		"Reflection":"FLOAT"
 	},
 	"resources_list": [{
-			"resource_name": "Texture",
+			"resource_name": "3D Cube",
 			"type": "6",
 			"layout": {
 				"transform": [0.0, 0.0, 0.0],
-				"rotate": [0.0, 0.0, 1.0],
-				"scale": [1.0, 1.0, 1.0],
-				"x": 0,
-				"y": 0,
-				"w": 250,
-				"h": 250
+				"rotate": [0.9, 0.9, 1.0],
+				"scale": [0.5, 0.5, 0.5],
+				"x": 150,
+				"y": 150,
+				"w": 400,
+				"h": 300
 			},
 			"origin_property": {
 				"visible": true,
-				"angle": 0.0,
+				"angle": 45.0,
 				"center_point": {
 					"x": 0,
 					"y": 0
@@ -429,27 +318,32 @@
 				"isclip": false
 			},
 			"gl_property": {
-				"program": "Texture",
-				"mesh": "Texture",
-				"blend_indensity": 1.0
+				"model": "cube",
+				"program": "Cube",
+				"blend_indensity": 1.0,
+				"cam position": [0.0, 0.0, 5.0],
+				"cam front": [0.0, 0.0, -1.0],
+				"cam target": [0.0, 0.0, 0.0],
+				"cam up": [0.0, 1.0, 0.0],
+				"cam target":[0.0, 0.0, 0.0],
+				"near plane":0.1,
+				"far plane":100,
+				"fov" : 45,
+				"camera":"ortho"
 			},
-			"custom_property": [{
+			"material_property": [{
 					"property_name": "progress",
 					"value": "0.0",
 					"upper": "100.0",
 					"lower": "-100.0"
 				},
 				{
-					"property_name": "foregroundColor",
-					"value": [0.5, 0.0, 0.0, 1.0]
-				},
-				{
 					"property_name": "texture1",
-					"value": "transparent_window"
+					"value": "container"
 				},
 				{
-					"property_name": "backgroundColor",
-					"value": [0.6, 0.7, 0.8, 1.0]
+					"property_name": "texture2",
+					"value": "transparent_window"
 				}
 			]
 		},
@@ -631,6 +525,7 @@
 			"resource_name": "ss",
 			"type": "2",
 			"layout": {
+				"scale": [1.0, 1.0, 1.0],
 				"x": 428,
 				"y": 409,
 				"w": 12,
@@ -777,8 +672,8 @@
 				"visible": true,
 				"angle": 0.0,
 				"center_point": {
-					"x": 6,
-					"y": 193
+					"x": 40,
+					"y": 415
 				},
 				"opacity": 255,
 				"flip": 0,

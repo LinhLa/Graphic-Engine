@@ -36,8 +36,8 @@ public:
 	GLuint  getID() const;
 	GLint   getTextureUnitCount() const;
 	std::string getName() const;
-	void syncUniformToUIObject(UIObjectPtr pObject);
-	void setUniformFromUIObject(UIObjectPtr pObject);
+	void syncUniformToUIObject(std::shared_ptr<PropertyTable> pObject);
+	void setUniformFromUIObject(std::shared_ptr<PropertyTable> pObject);
 };
 
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;

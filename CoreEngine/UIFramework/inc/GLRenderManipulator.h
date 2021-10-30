@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include "GLFrameBufferObject.h"
 #include <string>
 /**
  * @brief      This class describes a render clip manipulator.
@@ -23,20 +24,20 @@ public:
 /**
  * @brief      This class describes a render draw manipulator.
  */
-class GLRenderDrawManipulator
-{
-private:
-	SDL_BlendMode m_RenderBlendMode = SDL_BLENDMODE_NONE;
-	SDL_Color	  m_RenderColor;
-public:
-	GLRenderDrawManipulator(SDL_BlendMode mode = SDL_BLENDMODE_BLEND, SDL_Color color = { 0,0,0,255 });
-	~GLRenderDrawManipulator();
-
-	int SetDrawColor(SDL_Color);
-	int SetBlendMode(SDL_BlendMode);
-
-	int FillRect(SDL_Rect);
-};
+//class GLRenderDrawManipulator
+//{
+//private:
+//	SDL_BlendMode m_RenderBlendMode = SDL_BLENDMODE_NONE;
+//	SDL_Color	  m_RenderColor;
+//public:
+//	GLRenderDrawManipulator(SDL_BlendMode mode = SDL_BLENDMODE_BLEND, SDL_Color color = { 0,0,0,255 });
+//	~GLRenderDrawManipulator();
+//
+//	int SetDrawColor(SDL_Color);
+//	int SetBlendMode(SDL_BlendMode);
+//
+//	int FillRect(SDL_Rect);
+//};
 
 /**
  * @brief      This class describes a render target manipulator.
@@ -44,13 +45,10 @@ public:
 class GLRenderTargetManipulator
 {
 private:
-	SDL_Texture* m_pRenderTarget = nullptr;
-	SDL_Texture* m_pTarget = nullptr;
+	GLFrameBufferObjectPtr	m_pFrameBuffer = nullptr;
 public:
-	GLRenderTargetManipulator(SDL_Texture* pTarget = nullptr);
+	GLRenderTargetManipulator(GLFrameBufferObjectPtr pFrameBuffer = nullptr);
 	~GLRenderTargetManipulator();
-
-	int RenderCopy(SDL_Texture* pTexture, const SDL_Rect* srcrect, const SDL_Rect* dstrect);
 };
 
 /**

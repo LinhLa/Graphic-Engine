@@ -7,91 +7,56 @@
 #include "Configuration.h"
 #include "Renderer3D.h"
 
-#define INT2FLOAT(x) (static_cast<float>(x))
-#define SDL_INT2FLOAT(r) (SDL_FRect{INT2FLOAT(r.x), INT2FLOAT(r.y), INT2FLOAT(r.w), INT2FLOAT(r.h)})
-
 GLRender2DContext::GLRender2DContext(
-	ShaderProgramPtr pShaderProgram,
-	MeshPtr	pMesh,
-	std::vector<GLTexturePtr> textureList,
-	SDL_Rect& srcrect,
-	SDL_Rect& dstrect,
-	double angle,
-	SDL_Point& center,
+	GLTexturePtr pTexture,
+	glm::vec2 coordinator,
+	glm::vec2 scale,
+	glm::vec4 color,
+	float angle,
+	float opcity,
+	glm::vec2 center,
 	SDL_RendererFlip flip)
 {
-	m_pShaderProgram = pShaderProgram;
-	m_pMesh = pMesh;
-	m_textureList = textureList;
-	m_srcrect = SDL_INT2FLOAT(srcrect);
-	m_dstrect = SDL_INT2FLOAT(dstrect);
+	m_pTexture = pTexture;
+	m_coordinator = coordinator,
+	m_scale = scale;
+	m_color = color;
 	m_angle = angle;
-	m_center = { INT2FLOAT(center.x), INT2FLOAT(center.y) };
+	m_opcity = opcity;
+	m_center = center;
 	m_flip = flip;
 }
 GLRender2DContext::~GLRender2DContext() {}
 
-void GLRender2DContext::calculateMatrix()
-{
-	glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
-	glm::mat4 ModalMatrix = glm::mat4(1.0f);
-	glm::mat4 ViewMatrix = glm::mat4(1.0f);
-
-	glm::vec3 translate = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 rotate = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3 scale = glm::vec3(0.3f);
-	
-	ModalMatrix = glm::translate(ModalMatrix, translate);
-	ModalMatrix = glm::rotate(ModalMatrix, glm::radians(0.0f), rotate);
-	ModalMatrix = glm::scale(ModalMatrix, scale);
-
-	Renderer3D::GetInstance()->setModalMatrix(ModalMatrix);
-	Renderer3D::GetInstance()->setViewMatrix(ViewMatrix);
-	Renderer3D::GetInstance()->setProjectionMatrix(ProjectionMatrix);
-}
-
-void GLRender2DContext::calculateMatrixBackground()
-{
-	glm::mat4 ProjectionMatrix = glm::mat4(1.0f);
-	glm::mat4 ModalMatrix = glm::mat4(1.0f);
-	glm::mat4 ViewMatrix = glm::mat4(1.0f);
-
-	glm::vec3 translate = glm::vec3(0.0f, 0.0f, 0.001f);
-	glm::vec3 rotate = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3 scale = glm::vec3(0.3f);
-
-	ModalMatrix = glm::translate(ModalMatrix, translate);
-	ModalMatrix = glm::rotate(ModalMatrix, glm::radians(0.0f), rotate);
-	ModalMatrix = glm::scale(ModalMatrix, scale);
-
-	Renderer3D::GetInstance()->setModalMatrix(ModalMatrix);
-	Renderer3D::GetInstance()->setViewMatrix(ViewMatrix);
-	Renderer3D::GetInstance()->setProjectionMatrix(ProjectionMatrix);
-}
-
 void GLRender2DContext::excute()
 {
-	calculateMatrixBackground();
-	Renderer3D::GetInstance()->DrawBackgroundColor(m_pMesh);
-
-	calculateMatrix();
-	Renderer3D::GetInstance()->DrawImage(m_textureList, m_pShaderProgram, m_pMesh);
+	//Render geometry
+	Renderer3D::GetInstance()->DrawImage(
+		m_pTexture,
+		m_coordinator,
+		m_scale,
+		m_angle,
+		m_center,
+		m_opcity,
+		m_color);
 };
 
 GLRender3DContext::GLRender3DContext(
-	const glm::vec3& scale,
-	const glm::vec3& translate,
-	const glm::vec3& rotate,
-	float angle, 
-	std::vector<GLTexturePtr> list,
+	glm::vec3  scale,
+	glm::vec3  translate,
+	glm::vec3  rotate,
+	float	angle,
 	ShaderProgramPtr pProgram,
-	MeshPtr pMesh):
-m_scale(scale), m_translate(translate),m_rotate(rotate),m_angle(angle)
+	MaterialPtr pMaterial,
+	ModelPtr pModel,
+	CameraPtr pCamera):
+	m_scale(scale), m_translate(translate), m_rotate(rotate), m_angle(angle)
 {
-	m_TextureList = list;
 	m_pShaderProgram = pProgram;
-	m_pMesh = pMesh;
-	if (!m_pMesh)
+	m_pModel = pModel;
+	m_pMaterial = pMaterial;
+	m_pCamera = pCamera;
+	if (!m_pModel || !m_pMaterial || !m_pShaderProgram || !pCamera)
 	{
 		throw std::logic_error("invalid argument");
 	}
@@ -101,7 +66,46 @@ GLRender3DContext::~GLRender3DContext() {}
 
 void GLRender3DContext::excute()
 {
-	Renderer3D::GetInstance()->DrawGeometry(m_pShaderProgram, m_TextureList, m_pMesh);
+	processTextureMap();
+
+	//Set matrix for Coordinator System
+	calculateMatrix();
+
+	//Render Geometry
+	Renderer3D::GetInstance()->DrawGeometry(m_pShaderProgram, m_TextureList, m_pModel);
+}
+
+void GLRender3DContext::processTextureMap()
+{
+	auto m_UniformList = m_pShaderProgram->querryUniform();
+	std::vector<GLTexturePtr> list;
+
+	//filter texture list by uniform
+	for (auto& pUniform : m_UniformList)
+	{
+		if (GL_SAMPLER_2D == pUniform->getType())
+		{
+			//for (auto itr = m_TextureList.begin(); itr != m_TextureList.end(); ++itr)
+			{
+				if (m_pMaterial->hasTextureMap(pUniform->getName()))
+				//if (0 == pUniform->get<std::string>().compare((*itr)->getName()))
+				{
+					auto pTexture = m_pMaterial->GetTexture(pUniform->getName());
+					list.push_back(pTexture);
+
+					//reset location
+					pTexture->setLocation(0U);
+					break;
+				}
+			}
+		}
+	}
+
+	m_TextureList = std::move(list);
+	if ((1 == m_pShaderProgram->getTextureUnitCount()) && (1 == m_TextureList.size()))
+	{
+		(*m_TextureList.begin())->setLocation(GL_TEXTURE0);
+	}
 }
 
 void GLRender3DContext::calculateMatrix()
@@ -110,24 +114,18 @@ void GLRender3DContext::calculateMatrix()
 	glm::mat4 ModalMatrix = glm::mat4(1.0f);
 	glm::mat4 ViewMatrix = glm::mat4(1.0f);
 
-	glm::vec3 translate = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 rotate = glm::vec3(0.0f, 0.0f, 1.0f);
-	glm::vec3 scale = glm::vec3(0.3f);
-
-	ModalMatrix = glm::translate(ModalMatrix, translate);
-	ModalMatrix = glm::rotate(ModalMatrix, glm::radians(0.0f), rotate);
-	ModalMatrix = glm::scale(ModalMatrix, scale);
+	ModalMatrix = glm::translate(ModalMatrix, m_translate);
+	ModalMatrix = glm::rotate(ModalMatrix, glm::radians(m_angle), m_rotate);
+	ModalMatrix = glm::scale(ModalMatrix, m_scale);
 
 	Renderer3D::GetInstance()->setModalMatrix(ModalMatrix);
 
-	// note that we're translating the scene in the reverse direction of where we want to move
-	ViewMatrix = glm::translate(ViewMatrix, glm::vec3(0.0f, 0.0f, -3.0f));
+	ViewMatrix = m_pCamera->View();
 	Renderer3D::GetInstance()->setViewMatrix(ViewMatrix);
 
 	float width = static_cast<float>(Configuration::GetInstance()->width);
 	float height = static_cast<float>(Configuration::GetInstance()->height);
 
-	//ProjectionMatrix = glm::ortho(0.0f, width, 0.0f, height, 0.0f, 100.0f);
-	//ProjectionMatrix = glm::perspective(glm::radians(45.0f), width / height, 0.1f, 100.0f);
+	ProjectionMatrix = glm::perspective(glm::radians(m_pCamera->Zoom()), width / height, m_pCamera->NearPlane(), m_pCamera->FarPlane());
 	Renderer3D::GetInstance()->setProjectionMatrix(ProjectionMatrix);
 }

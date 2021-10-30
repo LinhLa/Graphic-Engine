@@ -6,6 +6,9 @@
 #include <SDL_opengl.h>
 #include <gl\glu.h>
 
+#include "log.h"
+#include "Renderer3D.h"
+
 #include <stdexcept>
 
 #define IS_VALID_RECT(rect)		(0 != rect.x && 0 != rect.y && 0 != rect.h && 0 != rect.w)
@@ -102,42 +105,46 @@ void GLRenderClipManipulator::SetRenderClipTarget()
 //	return iResult;
 //}
 //
-//GLRenderTargetManipulator::GLRenderTargetManipulator(SDL_Texture* pTarget):m_pTarget(pTarget)
-//{
-//	if (nullptr == m_pTarget)
-//	{
-//		throw std::logic_error("invalid argument");
-//	}
-//	m_pRenderTarget = SDL_GetRenderTarget(m_pRenderer);
-//	SDL_SetRenderTarget(m_pRenderer, m_pTarget);
-//}
-//
-//GLRenderTargetManipulator::~GLRenderTargetManipulator()
-//{
-//	SDL_SetRenderTarget(m_pRenderer, m_pRenderTarget);
-//}
-//
-//int GLRenderTargetManipulator::RenderCopy(SDL_Texture* pTexture, const SDL_Rect* srcrect, const SDL_Rect* dstrect)
-//{
-//	return SDL_RenderCopy(m_pRenderer, pTexture, srcrect, dstrect);
-//}
-//
-//GLRenderScaleManipulator::GLRenderScaleManipulator(float scaleX, float scaleY):m_pRenderer(pRenderer)
-//{
-//	SDL_RenderGetScale(m_pRenderer, &m_scaleX, &m_scaleY);
-//
-//	if (0 > SDL_RenderSetScale(m_pRenderer, scaleX, scaleY))
-//	{
-//		SDL_Log("SDL_RenderSetScale() failed: %s\n", SDL_GetError());
-//		_ASSERT(false);
-//	}
-//}
-//
-//GLRenderScaleManipulator::~GLRenderScaleManipulator()
-//{
-//	if (0 > SDL_RenderSetScale(m_pRenderer, m_scaleX, m_scaleY))
-//	{
-//		SDL_Log("SDL_RenderSetScale() failed: %s\n", SDL_GetError());
-//		_ASSERT(false);
-//	}
-//}
+GLRenderTargetManipulator::GLRenderTargetManipulator(GLFrameBufferObjectPtr pFrameBuffer)
+{
+	m_pFrameBuffer = pFrameBuffer;
+	if (!m_pFrameBuffer)
+	{
+		throw std::logic_error("invalid argument");
+	}
+	//<Bind FBO
+	glBindFramebuffer(GL_FRAMEBUFFER, m_pFrameBuffer->getID());
+
+	//<Set Clear color
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+	//<Clear context
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/*when drawing the quad, we're disabling depth testing since we want to make sure the quad always renders in front of everything else
+	we'll have to enable depth testing again when we draw the normal scene though.*/
+	glEnable(GL_DEPTH_TEST);
+}
+
+GLRenderTargetManipulator::~GLRenderTargetManipulator()
+{
+	// back to default
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); 
+
+	//<Set Clear color
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+	//<Clear context
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+GLRenderScaleManipulator::GLRenderScaleManipulator(float X, float Y)
+{
+	Renderer3D::GetInstance()->getRenderScale(m_scaleX, m_scaleY);
+	Renderer3D::GetInstance()->getRenderScale(X, Y);
+}
+
+GLRenderScaleManipulator::~GLRenderScaleManipulator()
+{
+	Renderer3D::GetInstance()->getRenderScale(m_scaleX, m_scaleY);
+}

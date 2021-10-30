@@ -14,5 +14,6 @@ public:
 	friend class SingletonHolder<DeltaTime>;
 	void start();
 	void now();
-	uint64_t getDelta();
+
+	double getDelta();
 };

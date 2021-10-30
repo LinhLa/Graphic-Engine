@@ -4,6 +4,7 @@
 #include "UIObject.h"
 #include "Configuration.h"
 #include "Render.h"
+#include "Renderer3D.h"
 
 #include "OriginProperty.h"
 #include "LayoutProperty.h"
@@ -51,10 +52,10 @@ void UIObject::onInit()
 
 void UIObject::onDraw()
 {
-	auto OriginMethod = GetPropertyMethodObj<OriginProperty>();
+	auto originMethod = GetPropertyMethodObj<OriginProperty>();
 	auto LayoutMethod = GetPropertyMethodObj<LayoutProperty>();
 	//<Stop draw on invisible
-	if (!OriginMethod->isVisible())
+	if (!originMethod->isVisible())
 	{
 		return;
 	}
@@ -66,9 +67,8 @@ void UIObject::onDraw()
 	GLRenderClipManipulator clipManipulator(parent_rect);
 #endif
 
-#if 0
 	//<Check clip area
-	if (OriginMethod->IsClip())
+	if (originMethod->IsClip())
 	{
 		//Ignore if clip area is not valid
 		if (!clipManipulator.HasIntersection())
@@ -81,20 +81,29 @@ void UIObject::onDraw()
 	//Check background color
 	if (IsPropertyExist(BACK_GROUND_COLOR))
 	{
-		SDL_Color color = OriginMethod->GetBackGroundColor();
+		SDL_Color color = originMethod->GetBackGroundColor();
 		if (IS_VALID_COLOR(color))
 	 	{
 	 		//Calculate Alpha
-	 		color.a = static_cast<uint8_t>((OriginMethod->GetOpacity() / 255.0F) * color.a);
-
+	 		color.a = static_cast<uint8_t>((originMethod->GetOpacity() / 255.0F) * color.a);
+		#ifndef OPENGL_RENDERING
 	 		//Create render manip
 			RenderDrawManipulator drawer(UIHelper::GetRenderer(), SDL_BLENDMODE_BLEND, color);
 
 			//Fill color
 			drawer.FillRect(parent_rect);
+		#else
+			glm::vec3 scale = LayoutMethod->GetLayoutScale();
+			Renderer3D::GetInstance()->DrawColor(
+				glm::vec2(static_cast<float>(parent_rect.x), static_cast<float>(parent_rect.y)),
+				glm::vec2(static_cast<float>(parent_rect.w), static_cast<float>(parent_rect.h)),
+				glm::vec2(scale.x, scale.y),
+				static_cast<float>(originMethod->GetAngle()),
+				glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f));
+		#endif
 		}
 	}
-#endif
+
 	//<broadcast signal on draw
 	OnSignal(ON_DRAW_SIGNAL, VoidType{});
 
@@ -119,9 +128,9 @@ void UIObject::onClean()
 
 void UIObject::onKeyInputEvent(SDL_Event& arg)
 {
-	auto OriginMethod = this->GetPropertyMethodObj<OriginProperty>();
+	auto originMethod = this->GetPropertyMethodObj<OriginProperty>();
 	auto LayoutMethod = this->GetPropertyMethodObj<LayoutProperty>();
-#ifndef OPENGL_RENDERING
+
 	SDL_Rect display_rect = LayoutMethod->GetLayoutInformation();
 	UIHelper::MOUSE_STATE state = UIHelper::onMouseEvent(arg, display_rect);
 
@@ -181,17 +190,13 @@ void UIObject::onKeyInputEvent(SDL_Event& arg)
 	}
 
 	//Broadcast event to child list if enable
-	if (OriginMethod->IsBroadCastEvent())
+	if (originMethod->IsBroadCastEvent())
 	{
 		for (auto &child : m_childList)
 		{
 			child->onKeyInputEvent(arg);
 		}
 	}
-#else
-
-
-#endif
 }
 
 std::string UIObject::getUrl() const

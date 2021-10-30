@@ -126,6 +126,7 @@ void Scene::LoadResource()
 	LoadVertexShaderList(json_value);
 	LoadShaderProgramList(json_value);
 	LoadMeshList(json_value);
+	LoadModel(json_value);
 #endif
 	LoadResourceList(m_UIObject_table, json_value);
 }

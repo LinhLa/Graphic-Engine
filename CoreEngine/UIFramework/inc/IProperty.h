@@ -29,6 +29,7 @@ enum PROPERTY_TYPE: int32_t
 	URL_SHADER,
 	URL_PROGRAM,
 	URL_MESH,
+	URL_MODEL,
 	ARRAY_INT,
 };
 
@@ -59,7 +60,6 @@ public:
 	virtual ~IProperty(){}
 	virtual std::string getPropertyName() const = 0;
 	virtual const std::type_info& getTypeInfo() const = 0;
-
 private:
 	template<typename U>
 	Property<U>* DynamicTypeCheck()
@@ -153,11 +153,8 @@ public:
 
 	void SetValue(T&& value)
 	{
-		if (!m_isAnimate)
-		{
-			m_value = value;
-			m_pSignalValueChange->onEvent(std::forward<T>(value));
-		}
+		m_value = value;
+		m_pSignalValueChange->onEvent(std::forward<T>(value));
 	}
 
 	T GetValue() const
@@ -174,11 +171,6 @@ public:
 	uint8_t GetType() const
 	{
 		return m_type;
-	}
-
-	void setAnimate(bool isAnimate)
-	{
-		m_isAnimate = isAnimate;
 	}
 
 	void setUpper(T upper)

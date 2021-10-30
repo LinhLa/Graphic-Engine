@@ -8,108 +8,93 @@
 #include <sstream>
 #include <iostream>
 
-#include "stb_image.h"
-
-Mesh::Mesh(const std::string& name, VertexDataPtr pVData):m_name(name)
+Mesh::Mesh(std::vector<VertexRecord> vertices, std::vector<unsigned int> indices, std::vector<TextureRecord> textures)
 {
-	m_pVData = pVData;
-	m_pVAO = VertexArrayObject::create();
-	if (pVData->sizeOfVertices() > 0)
-	{
-		m_pVBO = VertexBufferObject::create(GL_ARRAY_BUFFER, pVData);
-	}
+    this->vertices = vertices;
+    this->indices = indices;
+    this->textures = textures;
 
-	if (pVData->sizeOfIndices() > 0)
-	{
-		m_pEBO = ElementBufferObject::create(GL_ELEMENT_ARRAY_BUFFER, pVData);
-	}
+    setupMesh();
 }
 
 Mesh::~Mesh()
 {
 }
 
-void Mesh::enableAttribute()
+void Mesh::setupMesh()
 {
-	for(auto &att: m_AttributeArray)
-	{
-		att.second->set();
-		att.second->enable();
-	}
-}
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
 
-void Mesh::addAttribute(VertexAttributePtr pAttribute)
-{
-	if (pAttribute)
-	{
-		m_AttributeArray[pAttribute->getName()] = pAttribute;
-	}
-}
+    if (!indices.empty())
+    {
+        glGenBuffers(1, &EBO);
+    }
+    
+  
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(VertexRecord), &vertices[0], GL_STATIC_DRAW);  
 
-void Mesh::init()
-{
-	m_pVAO->gen();
-	if (m_pVBO)
-	{
-		m_pVBO->genBuffer();
-	}
+    if (!indices.empty())
+    {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    }
 
-	if (m_pEBO)
-	{
-		m_pEBO->genBuffer();
-	}
+    // vertex positions
+    glEnableVertexAttribArray(0);	
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexRecord), (void*)0);
+    // vertex normals
+    glEnableVertexAttribArray(1);	
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexRecord), (void*)(sizeof(VertexRecord::Position)));
+    // vertex texture coords
+    glEnableVertexAttribArray(2);	
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexRecord), (void*)(sizeof(VertexRecord::Position) + sizeof(VertexRecord::Normal)));
 
-	m_pVAO->bind();
-	if (m_pVBO)
-	{
-		m_pVBO->bindBuffer();
-	}
-
-	if (m_pEBO)
-	{
-		m_pEBO->bindBuffer();
-	}
-
-	enableAttribute();
-	m_pVAO->unbind();
-}
-
-void Mesh::draw()
-{
-	m_pVAO->bind();
-	if (m_pEBO)
-	{
-		glDrawElements(GL_TRIANGLES, m_pVData->countOfIndices(), GL_UNSIGNED_INT, 0);
-	}
-	else
-	{
-		glDrawArrays(GL_TRIANGLES, 0, m_pVData->countOfVertices());
-	}
-	m_pVAO->unbind();
-}
-
-std::string Mesh::getName() const
-{
-	return m_name;
+    glBindVertexArray(0);
 }
 
 void Mesh::debug()
 {
 	LOG_DEBUG(".................................................................");
-	LOG_DEBUG("name[%s]" , m_name.c_str());
-	m_pVAO->debug();
-	if (m_pVBO)
-	{
-		m_pVBO->debug();
-	}
-
-	if (m_pEBO)
-	{
-		m_pEBO->debug();
-	}
-	for(auto &att: m_AttributeArray)
-	{
-		att.second->debug();
-	}
+	LOG_DEBUG("VAO[%u]", VAO);
+	LOG_DEBUG("VBO[%u]", VBO);
+	LOG_DEBUG("EBO[%u]", EBO);
+    LOG_DEBUG("vertex count[%u]", vertices.size());
+    LOG_DEBUG("index count[%u]", indices.size());
 	LOG_DEBUG(".................................................................");
+}
+
+void Mesh::Draw(ShaderProgramPtr pShader)
+{
+	//unsigned int diffuseNr = 1;
+	//unsigned int specularNr = 1;
+	//for(unsigned int i = 0; i < textures.size(); i++)
+	//{
+ //       glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
+ //       // retrieve texture number (the N in diffuse_textureN)
+ //       std::string number;
+ //       std::string name = textures[i].type;
+ //       if(name == "texture_diffuse")
+ //       	number = std::to_string(diffuseNr++);
+ //       else if(name == "texture_specular")
+ //       	number = std::to_string(specularNr++);
+
+	//	glUniform1i(glGetUniformLocation(pShader->getID(), ("material." + name + number).c_str()), i);
+ //       glBindTexture(GL_TEXTURE_2D, textures[i].id);
+ //   }
+ //   glActiveTexture(GL_TEXTURE0);
+
+    // draw mesh
+    glBindVertexArray(VAO);
+    if (0U != EBO)
+    {
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    }
+    else
+    {
+        glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
+    }
+    glBindVertexArray(0);
 }

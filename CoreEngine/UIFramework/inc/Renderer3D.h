@@ -13,13 +13,11 @@
 
 #include "ShaderProgram.h"
 #include "GLTexture.h"
+#include "GLFrameBufferObject.h"
+
+#include "Model.h"
 #include "Mesh.h"
-
-#define TRANSFORM_MATRIX	"transform"
-#define MODEL_MATRIX		"model"
-#define VIEW_MATRIX  		"view"
-#define PROJECT_MATRIX  	"projection"
-
+#include "GLFont.h"
 
 class Renderer3D final : public SingletonHolder<Renderer3D>
 {
@@ -32,15 +30,27 @@ private:
 	glm::mat4  		m_ViewMatrix;
 	glm::mat4  		m_ProjectionMatrix;
 
+	SDL_FRect		m_clip_rect;
+	glm::vec2		m_scale;
+
 	void setUnifromMatrix(ShaderProgramPtr);
 	void setUniform(ShaderProgramPtr , std::vector<GLTexturePtr>& );
 	void bindTextureUnit(std::vector<GLTexturePtr>& );
 	void unbindTexture(std::vector<GLTexturePtr>& );
 
 public:
-	void DrawBackgroundColor(MeshPtr pTextureGeometry);
-	void DrawImage(std::vector<GLTexturePtr> textureList, ShaderProgramPtr pTextureProgram, MeshPtr pTextureGeometry);
-	void DrawGeometry(ShaderProgramPtr pShaderProgram, std::vector<GLTexturePtr>& list, MeshPtr pMesh);
+	void DrawText(
+		std::vector<CharacterPtr>,
+		glm::vec2 coordinator,
+		glm::vec2 scale,
+		float angle,
+		glm::vec2 origin,
+		float opacity,
+		glm::vec3 color);
+
+	void DrawColor(glm::vec2 coordinator, glm::vec2 size, glm::vec2 scale, float angle, glm::vec4 color);
+	void DrawImage(GLTexturePtr pTexture, glm::vec2 coordinator, glm::vec2 scale, float angle, glm::vec2 origin, float opacity, glm::vec4 color);
+	void DrawGeometry(ShaderProgramPtr pShaderProgram, std::vector<GLTexturePtr>& list, ModelPtr pModel);
 
 	glm::mat4 getModalMatrix() const;
 	glm::mat4 getViewMatrix() const;
@@ -49,4 +59,10 @@ public:
 	void setModalMatrix(glm::mat4);
 	void setViewMatrix(glm::mat4);
 	void setProjectionMatrix(glm::mat4);
+
+	void setRenderClipTarget(SDL_FRect);
+	SDL_FRect getRenderClipTarget() const;
+
+	void setRenderScale(float X, float Y);
+	void getRenderScale(float &X, float &Y) const;
 };

@@ -30,4 +30,16 @@ const std::string TEXT 				= std::string("TEXT");
 const std::string FONT_NAME 		= std::string("FONT_NAME");
 const std::string FONT_SIZE 		= std::string("FONT_SIZE");
 const std::string FONT_COLOR 		= std::string("FONT_COLOR");
+
 const std::string BLEND_INDENSITY	= std::string("BLEND_INDENSITY");
+const std::string CAM_POSITION		= std::string("CAM_POSITION");
+const std::string CAM_FRONT			= std::string("CAM_FRONT");
+const std::string CAM_TARGET		= std::string("CAM_TARGET");
+const std::string CAM_UP			= std::string("CAM_UP");
+const std::string CAM_PITCH			= std::string("CAM_PITCH");
+const std::string CAM_YAW			= std::string("CAM_YAW");
+const std::string CAM_SPEED			= std::string("CAM_SPEED");
+const std::string FOV				= std::string("FOV");
+const std::string NEAR_PLANE		= std::string("NEAR_PLANE");
+const std::string FAR_PLANE			= std::string("FAR_PLANE");
+const std::string CAMERA_TYPE		= std::string("CAMERA_TYPE");
