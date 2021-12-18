@@ -22,14 +22,17 @@ typedef std::list<UIObjectPtr> ObjectListType;
 class UIObject : public PropertyTable, public SignalTable, public PropertyMethodTable, public SignalMethodTable, public std::enable_shared_from_this<UIObject>
 {
 protected:
-	std::unordered_map<std::string, IPropertyPtr> m_propertyTable;
-protected:
 	const std::string m_name;
 
 	std::list<UIObjectPtr> m_childList;
-	UIObjectPtr m_pParentUIObject = nullptr;
+	std::weak_ptr<UIObject> m_pParentUIObject;
 
 	bool m_bleftMouseButtonDown = false;
+#ifdef OPENGL_RENDERING
+	glm::mat4 m_localTransform;
+	glm::mat4 m_worldTransform;
+#endif
+	
 public:
 	UIObject() = delete;
 	UIObject(std::string name);
@@ -49,4 +52,9 @@ public:
 	void onClean();
 
 	void onKeyInputEvent(SDL_Event&);
+#ifdef OPENGL_RENDERING
+	void updateWorldTransform();
+	void updateLocalTransform();
+	glm::mat4 worldTransform() const;
+#endif
 };

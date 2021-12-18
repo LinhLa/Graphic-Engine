@@ -1,4 +1,9 @@
 #include "stdafx.h"
+
+#include "imgui.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
+
 #include "Render.h"
 #include "Configuration.h"
 #include "Scene.h"
@@ -54,8 +59,9 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	//SDL_GL_SetAttribute(SDL_GL_RED_SIZE, Configuration::GetInstance()->r_size);
 	//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, Configuration::GetInstance()->g_size);
 	//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, Configuration::GetInstance()->b_size);
-	//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, Configuration::GetInstance()->depth_size);
-	//SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, Configuration::GetInstance()->double_buffer);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, Configuration::GetInstance()->depth_size);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, Configuration::GetInstance()->double_buffer);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, Configuration::GetInstance()->stencil_size);
 #else
 	//<Initialize SDL IMG
 	if (IMG_Init(IMG_INIT_PNG) < 0)
@@ -76,11 +82,14 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	WindowRender::GetInstance()->CreateWindow(title, xpos, ypos, width, height, flags);
 
 #ifdef OPENGL_RENDERING
+	
+	// Create an OpenGL context and associated to window.
+	m_glcontext = WindowRender::GetInstance()->CreateContext();
+	SDL_GL_MakeCurrent(WindowRender::GetInstance()->getWindow(), m_glcontext);
+
 	//<Set view port
 	glViewport(0, 0, width, height);
 
-	// Create an OpenGL context associated with the window.
-	m_glcontext = WindowRender::GetInstance()->CreateContext();
 
 	//Since we want the latest features, we have to set glewExperimental to true
 	glewExperimental = GL_TRUE;
@@ -98,6 +107,21 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	{
 		SDL_Log("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
+
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsClassic();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplSDL2_InitForOpenGL(WindowRender::GetInstance()->getWindow(), m_glcontext);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
 	glEnable(GL_SCISSOR_TEST);
 	glEnable(GL_BLEND);
@@ -131,6 +155,10 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 void Render::clean()
 {
 #ifdef OPENGL_RENDERING
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
+
 	//Destroy SDL_GLContext
 	m_glcontext ? SDL_GL_DeleteContext(m_glcontext) : false;
 #else
@@ -161,7 +189,7 @@ void Render::render()
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	//<Clear context
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 #else
 	//< clear the window
 	SDL_RenderClear(m_pRenderer);
@@ -172,6 +200,9 @@ void Render::render()
 	sdlevent.user.code = 0x02;
 	Scene::GetInstance()->onEvent(sdlevent);
 #ifdef OPENGL_RENDERING
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	//<Swap our buffer to display the current contents of buffer on screen
 	WindowRender::GetInstance()->SwapWindow();
 #else
@@ -185,7 +216,7 @@ bool Render::init()
 	Configuration *pConfig = Configuration::GetInstance();
 	int screen_height = pConfig->height & 0xFFFFFFFF;
 	int screen_width = pConfig->width & 0xFFFFFFFF;
-	uint32_t flags = SDL_WINDOW_SHOWN /*| SDL_WINDOW_BORDERLESS*/ | SDL_WINDOW_RESIZABLE;
+	uint32_t flags = SDL_WINDOW_SHOWN /*| SDL_WINDOW_BORDERLESS*/ | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
 #ifdef OPENGL_RENDERING
 	flags|= SDL_WINDOW_OPENGL;
 #endif

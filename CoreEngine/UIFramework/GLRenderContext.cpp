@@ -3,9 +3,11 @@
 #include <exception>
 #include <algorithm>
 #include "log.h"
-#include "Library.h"
-#include "Configuration.h"
 #include "Renderer3D.h"
+
+#include "GLFrameBufferObject.h"
+
+GLFrameBufferObjectPtr gFrameBufferObjectPtr = GLFrameBufferObject::create("frame buffer", 1024, 768);
 
 GLRender2DContext::GLRender2DContext(
 	GLTexturePtr pTexture,
@@ -30,7 +32,13 @@ GLRender2DContext::~GLRender2DContext() {}
 
 void GLRender2DContext::excute()
 {
-	//Render geometry
+	gFrameBufferObjectPtr->init();
+	// first pass
+	glBindFramebuffer(GL_FRAMEBUFFER, gFrameBufferObjectPtr->getID());
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT); // we're not using the stencil buffer now
+
+	//Render 2D image
 	Renderer3D::GetInstance()->DrawImage(
 		m_pTexture,
 		m_coordinator,
@@ -38,6 +46,16 @@ void GLRender2DContext::excute()
 		m_angle,
 		m_center,
 		m_opcity,
+		m_color);
+	// second pass
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default);
+	Renderer3D::GetInstance()->DrawImage(
+		gFrameBufferObjectPtr->getTexture(),
+		glm::vec2(0.0f, 0.0f),
+		glm::vec2(1.0f),
+		0.0f,
+		m_center,
+		1.0f,
 		m_color);
 };
 
@@ -49,7 +67,7 @@ GLRender3DContext::GLRender3DContext(
 	ShaderProgramPtr pProgram,
 	MaterialPtr pMaterial,
 	ModelPtr pModel,
-	CameraPtr pCamera):
+	CameraPtr pCamera) :
 	m_scale(scale), m_translate(translate), m_rotate(rotate), m_angle(angle)
 {
 	m_pShaderProgram = pProgram;
@@ -72,7 +90,7 @@ void GLRender3DContext::excute()
 	calculateMatrix();
 
 	//Render Geometry
-	Renderer3D::GetInstance()->DrawGeometry(m_pShaderProgram, m_TextureList, m_pModel);
+	Renderer3D::GetInstance()->DrawGeometry(m_pShaderProgram, m_pMaterial, m_pModel);
 }
 
 void GLRender3DContext::processTextureMap()
@@ -85,18 +103,14 @@ void GLRender3DContext::processTextureMap()
 	{
 		if (GL_SAMPLER_2D == pUniform->getType())
 		{
-			//for (auto itr = m_TextureList.begin(); itr != m_TextureList.end(); ++itr)
+			if (m_pMaterial->hasTextureMap(pUniform->getName()))
 			{
-				if (m_pMaterial->hasTextureMap(pUniform->getName()))
-				//if (0 == pUniform->get<std::string>().compare((*itr)->getName()))
-				{
-					auto pTexture = m_pMaterial->GetTexture(pUniform->getName());
-					list.push_back(pTexture);
+				auto pTexture = m_pMaterial->GetTexture(pUniform->getName());
+				list.push_back(pTexture);
 
-					//reset location
-					pTexture->setLocation(0U);
-					break;
-				}
+				//reset location
+				pTexture->setLocation(0U);
+				break;
 			}
 		}
 	}
@@ -115,17 +129,16 @@ void GLRender3DContext::calculateMatrix()
 	glm::mat4 ViewMatrix = glm::mat4(1.0f);
 
 	ModalMatrix = glm::translate(ModalMatrix, m_translate);
-	ModalMatrix = glm::rotate(ModalMatrix, glm::radians(m_angle), m_rotate);
+	if ((0.0001F < std::abs(m_angle)) && (glm::vec3(0.0F) != m_rotate))
+	{
+		ModalMatrix = glm::rotate(ModalMatrix, glm::radians(m_angle), m_rotate);
+	}
 	ModalMatrix = glm::scale(ModalMatrix, m_scale);
-
 	Renderer3D::GetInstance()->setModalMatrix(ModalMatrix);
 
 	ViewMatrix = m_pCamera->View();
 	Renderer3D::GetInstance()->setViewMatrix(ViewMatrix);
 
-	float width = static_cast<float>(Configuration::GetInstance()->width);
-	float height = static_cast<float>(Configuration::GetInstance()->height);
-
-	ProjectionMatrix = glm::perspective(glm::radians(m_pCamera->Zoom()), width / height, m_pCamera->NearPlane(), m_pCamera->FarPlane());
+	ProjectionMatrix = m_pCamera->projectionMatrix();
 	Renderer3D::GetInstance()->setProjectionMatrix(ProjectionMatrix);
 }

@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <SDL.h>
 #include <chrono>
+#include "WindowRender.h"
 
 Camera::Camera(GLPropertyPtr glProperty)
 {
@@ -21,6 +22,7 @@ Camera::Camera(GLPropertyPtr glProperty)
 
     m_Near      = glProperty->GetNearPlane();
     m_Far       = glProperty->GetFarPlane();
+    m_CamType   = glProperty->GetCameraType();
 }
 
 Camera::~Camera(){}
@@ -38,7 +40,7 @@ float Camera::FarPlane() const
 glm::mat4 Camera::View()
 {
     //Calculate view matrix
-    m_view = glm::lookAt(m_Pos , m_Pos + m_Front, m_Up);
+    m_view = glm::lookAt(m_Pos , m_Target, m_Up);
     return m_view;
 }
 
@@ -55,6 +57,29 @@ float Camera::Sensitivity() const
 float Camera::Speed() const
 {
     return m_Speed;
+}
+
+uint8_t Camera::CamType() const
+{
+    return m_CamType;
+}
+
+glm::mat4 Camera::projectionMatrix()
+{
+    glm::mat4 ProjectionMatrix = glm::mat4();
+    float width = static_cast<float>(WindowRender::GetInstance()->getWidth());
+    float height = static_cast<float>(WindowRender::GetInstance()->getHeight());
+    if (ORTHOGRAPHIC == m_CamType)
+    {
+        ProjectionMatrix = glm::ortho(0.0f, width, 0.0f, height, m_Near, m_Far);
+    }
+    else if (PERSPECTIVE == m_CamType)
+    {
+        ProjectionMatrix = glm::perspective(glm::radians(m_Zoom), width / height, m_Near, m_Far);
+    }
+    else {}
+
+    return ProjectionMatrix;
 }
 
 void Camera::demoRotateAround()

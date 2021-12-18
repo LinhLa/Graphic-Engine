@@ -27,21 +27,21 @@ int main(int argc, char* argv[])
 {
 	Application* app = Application::GetInstance();
 
-	//auto pPlayer = Player::create();
-	//pPlayer->addComponent(PlayerButton::create(pPlayer));
-	//pPlayer->addComponent(BackGround::create(pPlayer));
-	//pPlayer->addComponent(PlayerButton::create(pPlayer));
-	//pPlayer->addComponent(TimeSlide::create(pPlayer));
-	//pPlayer->addComponent(ProgressBar::create(pPlayer));
-	//pPlayer->addComponent(Speaker::create(pPlayer));
-	//pPlayer->addComponent(FullSizeSymbol::create(pPlayer));
+	auto pPlayer = Player::create();
+	pPlayer->addComponent(PlayerButton::create(pPlayer));
+	pPlayer->addComponent(BackGround::create(pPlayer));
+	pPlayer->addComponent(PlayerButton::create(pPlayer));
+	pPlayer->addComponent(TimeSlide::create(pPlayer));
+	pPlayer->addComponent(ProgressBar::create(pPlayer));
+	pPlayer->addComponent(Speaker::create(pPlayer));
+	pPlayer->addComponent(FullSizeSymbol::create(pPlayer));
 
-	//app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pPlayer.get(), &Player::init);
-	//app->bind(Application::KEY_INPUT_SIGNAL, pPlayer.get(), &Player::onKeyInputEvent);
+	app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pPlayer.get(), &Player::init);
+	app->bind(Application::KEY_INPUT_SIGNAL, pPlayer.get(), &Player::onKeyInputEvent);
 
-	auto pCube3D = Cube3D::create();
-	app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pCube3D.get(), &Cube3D::init);
-	app->bind(Application::KEY_INPUT_SIGNAL, pCube3D.get(), &Cube3D::onKeyInputEvent);
+	//auto pCube3D = Cube3D::create();
+	//app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pCube3D.get(), &Cube3D::init);
+	//app->bind(Application::KEY_INPUT_SIGNAL, pCube3D.get(), &Cube3D::onKeyInputEvent);
 
 	app->init();
 	app->start();

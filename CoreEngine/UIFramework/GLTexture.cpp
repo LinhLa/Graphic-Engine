@@ -48,6 +48,15 @@ GLTexture::GLTexture(const std::string& name, GLenum target, int w, int h, GLint
 	glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
+GLTexture::GLTexture(const std::string& name, GLuint textureID):m_name(name), m_textureID(textureID), m_target(GL_TEXTURE_2D)
+{
+	glBindTexture(m_target, m_textureID);
+	glGetTexLevelParameteriv(m_target, 0, GL_TEXTURE_WIDTH, &m_width);
+	glGetTexLevelParameteriv(m_target, 0, GL_TEXTURE_HEIGHT, &m_height);
+	glGetTexLevelParameteriv(m_target, 0, GL_TEXTURE_INTERNAL_FORMAT, &m_iformat);
+	glBindTexture(m_target, 0U);
+}
+
 /**
  * @brief      Initializes the object.
  */

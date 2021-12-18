@@ -44,6 +44,9 @@ public:
 	void SetCenterPoint(SDL_Point point);
 	SDL_Point GetCenterPoint() const;
 
+	void SetPivotPoint(glm::vec3 pivot);
+	glm::vec3 GetPivotPoint() const;
+
 	void SetFlip(SDL_RendererFlip);
 	SDL_RendererFlip GetFlip() const;
 

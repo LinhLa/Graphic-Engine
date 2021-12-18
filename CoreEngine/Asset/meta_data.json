@@ -8,8 +8,9 @@
 	"Model_list": [
 		{
 			"name": "Cube",
-			"position": [-0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, 0.5, -0.5],
-			"uv": [0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+			"position": [ -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5],
+			"uv": [0.0 , 0.0 , 1.0 , 0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 ,  0.0 , 0.0 , 1.0 , 0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 ,  1.0 , 0.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 ,  1.0 , 0.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 ,  0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , 0.0 , 1.0 ,  0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , 0.0 , 1.0],
+			"normal":[0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0]
 		},
 		{
 			"name": "Quad",
@@ -53,6 +54,10 @@
 		{
 			"name": "Text",
 			"shader": ["TextVex", "TextFrag"]
+		},
+		{
+			"name": "LightShading",
+			"shader": ["LightShadingVex", "LightShadingFrag"]
 		}
 	],
 	"VertexShader_list": [{
@@ -78,6 +83,10 @@
 		{
 			"name": "TextVex",
 			"source": "TextVex.glsl"
+		},
+		{
+			"name":"LightShadingVex",
+			"source":"LightShadingVex.glsl"
 		}
 	],
 	"FragmentShader_list": [{
@@ -103,10 +112,42 @@
 		{
 			"name": "TextFrag",
 			"source": "TextFrag.glsl"
+		},
+		{
+			"name": "LightShadingFrag",
+			"source": "LightShadingFrag.glsl"
 		}
 	],
-	"3D_asset_list": ["cube.dae", "sphere.dae","Cup_Made_By_Tyro_Smith.dae"],
+	"3D_asset_list": ["monkey.dae","cube.dae", "sphere.dae","Cup_Made_By_Tyro_Smith.dae","earch.dae", "my_sphere.dae"],
 	"texture_list": [
+		{
+			"texture_name": "specular",
+			"texture_path": "specular.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_CLAMP_TO_BORDER",
+				"wrap_t": "GL_CLAMP_TO_BORDER"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
+		{
+			"texture_name": "diffuse",
+			"texture_path": "diffuse.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": {
+				"wrap_s": "GL_CLAMP_TO_BORDER",
+				"wrap_t": "GL_CLAMP_TO_BORDER"
+			},
+			"filter": {
+				"minifying": "GL_NEAREST",
+				"magnifying": "GL_NEAREST"
+			}
+		},
 		{
 			"texture_name": "transparent_window",
 			"texture_path": "blending_transparent_window.png",
@@ -252,54 +293,13 @@
 			"target": "GL_TEXTURE_2D"
 		}
 	],
-	"property_type_list": {
-		"name": "STRING",
-		"index": "INT",
-		"size": "INT",
-		"type": "STRING",
-		"normalized": "BOOL",
-		"stride": "INT",
-		"offset": "INT",
-		"indices": "ARRAY_INT",
-		"usage": "STRING",
-		"transform": "VEC3",
-		"rotate": "VEC3",
-		"scale": "VEC3",
-		"w": "FLOAT",
-		"h": "FLOAT",
-		"visible": "BOOL",
-		"angle": "FLOAT",
-		"center_point": "VEC2",
-		"fore_ground_color": "VEC3",
-		"opacity": "FLOAT",
-		"flip": "INT",
-		"isclip": "BOOL",
-		"text": "STRING",
-		"font_name": "STRING",
-		"point_size": "INT",
-		"font_color": "VEC3",
-		"program": "URL_PROGRAM",
-		"mesh": "URL_MESH",
-		"model":"URL_MODEL",
-		"blend_indensity": "FLOAT",
-		"texture_name": "URL_TEXTURE",
-		"progress": "FLOAT",
-		"foregroundColor": "VEC4",
-		"backgroundColor": "VEC4",
-		"texture1": "URL_TEXTURE",
-		"texture2": "URL_TEXTURE",
-		"Surface colour": "VEC4",
-		"Transparency":"FLOAT",
-		"Refraction":"FLOAT",
-		"Specular":"FLOAT",
-		"Reflection":"FLOAT"
-	},
+	"property_type_list": {},
 	"resources_list": [{
 			"resource_name": "3D Cube",
 			"type": "6",
 			"layout": {
 				"transform": [0.0, 0.0, 0.0],
-				"rotate": [0.9, 0.9, 1.0],
+				"rotate": [1.0, 0.0, 0.0],
 				"scale": [0.5, 0.5, 0.5],
 				"x": 150,
 				"y": 150,
@@ -308,7 +308,7 @@
 			},
 			"origin_property": {
 				"visible": true,
-				"angle": 45.0,
+				"angle": 0.0,
 				"center_point": {
 					"x": 0,
 					"y": 0
@@ -318,34 +318,32 @@
 				"isclip": false
 			},
 			"gl_property": {
-				"model": "cube",
+				"model": "sphere",
 				"program": "Cube",
 				"blend_indensity": 1.0,
-				"cam position": [0.0, 0.0, 5.0],
-				"cam front": [0.0, 0.0, -1.0],
-				"cam target": [0.0, 0.0, 0.0],
-				"cam up": [0.0, 1.0, 0.0],
-				"cam target":[0.0, 0.0, 0.0],
-				"near plane":0.1,
-				"far plane":100,
+				"cam_position": [0.0, 0.0, 5.0],
+				"cam_front": [0.0, 0.0, -1.0],
+				"cam_target": [0.0, 0.0, 0.0],
+				"cam_up": [0.0, 1.0, 0.0],
+				"near_plane":0.1,
+				"far_plane":100,
 				"fov" : 45,
-				"camera":"ortho"
+				"camera":"perspective"
 			},
-			"material_property": [{
-					"property_name": "progress",
-					"value": "0.0",
-					"upper": "100.0",
-					"lower": "-100.0"
-				},
-				{
-					"property_name": "texture1",
-					"value": "container"
-				},
-				{
-					"property_name": "texture2",
-					"value": "transparent_window"
-				}
-			]
+			"material_property":
+			{
+				"light.color": [0.8, 1.0, 0.0],
+				"light.ambient": [0.2, 0.2, 0.2],
+				"light.diffuse": [0.5, 0.5, 0.5],
+				"light.specular": [1.0, 1.0, 1.0],
+				"light.position": [0.0, 0.0, 5.0],
+ 				"material.ambient": [0.2, 0.1, 0.06],
+				"material.diffuse": [0.4, 0.2, 0.1],
+				"material.specular": [1.0, 0.7, 0.2],
+				"material.diffuseMap": "diffuse",
+				"material.specularMap": "specular",
+				"material.shininess": 16
+			}
 		},
 		{
 			"texture_name": "landscape.png",
@@ -419,6 +417,7 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
+				"pivot_point":[0.0,0.0,0.0],
 				"center_point": {
 					"x": 420,
 					"y": 415

@@ -4,28 +4,32 @@
 #include <gl\glu.h>
 
 #include <string>
-#include <list>
-
-#include "GLTypeDictionary.h"
-#include "GLTexture.h"
-
 #include "creator.h"
+
+#include "GLTexture.h"
 
 class GLFrameBufferObject: public creator<GLFrameBufferObject>
 {
 private:
 	std::string	m_name;
-	GLuint		m_fbo = 0;
-	GLTexturePtr m_pTexture = nullptr;
+	unsigned int m_framebuffer = 0U;
+	unsigned int m_rbo = 0U;
 
+	int m_width = 0;
+	int m_height = 0;
+
+	bool m_bInit = false;
+	GLTexturePtr m_pTexture = nullptr;
 protected:
 	friend class creator<GLFrameBufferObject>;
-	GLFrameBufferObject(std::string, GLTexturePtr);
+	GLFrameBufferObject(std::string, int width, int height);
 public:
 	~GLFrameBufferObject();
 	void init();
 	std::string getName() const;
 	GLuint getID() const;
+	GLuint getTextureID() const;
+	GLTexturePtr getTexture();
 };
 
 typedef std::shared_ptr<GLFrameBufferObject> GLFrameBufferObjectPtr;

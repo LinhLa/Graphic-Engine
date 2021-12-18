@@ -41,10 +41,15 @@ void Scene::onEvent(SDL_Event& event)
 				switch(event.user.code)
 				{
 					case INIT:
-					object->onInit();
-					break;
+					{
+						object->onInit();
+						break;
+					}
 					case RENDER:
-					object->onDraw();
+					{
+						object->onDraw();
+						break;
+					}
 					default:
 					break;
 				}

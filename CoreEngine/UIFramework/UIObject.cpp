@@ -9,6 +9,7 @@
 #include "OriginProperty.h"
 #include "LayoutProperty.h"
 #include "GLProperty.h"
+#include "MaterialProperty.h"
 
 #include "KeyInputSignalMethod.h"
 #include "UIObjectSignalMethod.h"
@@ -28,6 +29,7 @@ UIObject::UIObject(std::string name) :m_name(name)
 {
 #ifdef OPENGL_RENDERING
 	AddPropertyMethodObj(GLProperty::create(dynamic_cast<PropertyTable*>(this)));
+	AddPropertyMethodObj(MaterialProperty::create(dynamic_cast<PropertyTable*>(this)));
 #endif
 	AddPropertyMethodObj(OriginProperty::create(dynamic_cast<PropertyTable*>(this)));
 	AddPropertyMethodObj(LayoutProperty::create(dynamic_cast<PropertyTable*>(this)));
@@ -44,7 +46,7 @@ void UIObject::onInit()
 	//<broadcast signal on init
 	OnSignal(ON_INIT_SIGNAL, VoidType{});
 
-	for (auto &child : m_childList)
+	for (auto& child : m_childList)
 	{
 		child->onInit();
 	}
@@ -83,16 +85,16 @@ void UIObject::onDraw()
 	{
 		SDL_Color color = originMethod->GetBackGroundColor();
 		if (IS_VALID_COLOR(color))
-	 	{
-	 		//Calculate Alpha
-	 		color.a = static_cast<uint8_t>((originMethod->GetOpacity() / 255.0F) * color.a);
-		#ifndef OPENGL_RENDERING
-	 		//Create render manip
+		{
+			//Calculate Alpha
+			color.a = static_cast<uint8_t>((originMethod->GetOpacity() / 255.0F) * color.a);
+#ifndef OPENGL_RENDERING
+			//Create render manip
 			RenderDrawManipulator drawer(UIHelper::GetRenderer(), SDL_BLENDMODE_BLEND, color);
 
 			//Fill color
 			drawer.FillRect(parent_rect);
-		#else
+#else
 			glm::vec3 scale = LayoutMethod->GetLayoutScale();
 			Renderer3D::GetInstance()->DrawColor(
 				glm::vec2(static_cast<float>(parent_rect.x), static_cast<float>(parent_rect.y)),
@@ -100,15 +102,18 @@ void UIObject::onDraw()
 				glm::vec2(scale.x, scale.y),
 				static_cast<float>(originMethod->GetAngle()),
 				glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f));
-		#endif
+#endif
 		}
 	}
+
+	//update transform matrix
+	updateWorldTransform();
 
 	//<broadcast signal on draw
 	OnSignal(ON_DRAW_SIGNAL, VoidType{});
 
 	//<Draw child list
-	for (auto &child : m_childList)
+	for (auto& child : m_childList)
 	{
 		//draw
 		child->onDraw();
@@ -120,7 +125,7 @@ void UIObject::onClean()
 	//<broadcast signal on clean
 	OnSignal(ON_CLEAN_SIGNAL, VoidType{});
 
-	for (auto &child : m_childList)
+	for (auto& child : m_childList)
 	{
 		child->onClean();
 	}
@@ -192,7 +197,7 @@ void UIObject::onKeyInputEvent(SDL_Event& arg)
 	//Broadcast event to child list if enable
 	if (originMethod->IsBroadCastEvent())
 	{
-		for (auto &child : m_childList)
+		for (auto& child : m_childList)
 		{
 			child->onKeyInputEvent(arg);
 		}
@@ -201,11 +206,12 @@ void UIObject::onKeyInputEvent(SDL_Event& arg)
 
 std::string UIObject::getUrl() const
 {
-	if (!m_pParentUIObject)
+	auto parent = m_pParentUIObject.lock();
+	if (!parent)
 	{
 		return std::string();
 	}
-	return m_pParentUIObject->getUrl() + std::string("/") + m_name;
+	return parent->getUrl() + std::string("/") + m_name;
 }
 
 std::string UIObject::getName() const
@@ -215,13 +221,21 @@ std::string UIObject::getName() const
 
 void UIObject::moveTo(UIObjectPtr parent)
 {
-	auto result = m_pParentUIObject->getChild(m_name);
-	if (result && parent && m_pParentUIObject)
+	if (parent)
 	{
-		parent->addChild(result);
-		m_pParentUIObject = parent;
-		m_pParentUIObject->removeChild(m_name);
+		auto current_parent = m_pParentUIObject.lock();
+		if (current_parent)
+		{
+			parent->addChild(shared_from_this());
+			m_pParentUIObject = parent;
+			current_parent->removeChild(m_name);
+		}
+		else
+		{
+			parent->addChild(shared_from_this());
+		}
 	}
+	else {}
 }
 
 void UIObject::addChild(UIObjectPtr child)
@@ -246,7 +260,7 @@ void UIObject::removeChild(std::string m_name)
 
 UIObjectPtr UIObject::getChild(std::string m_name)
 {
-	for (auto &child : m_childList)
+	for (auto& child : m_childList)
 	{
 		if (child->getName() == m_name)
 		{
@@ -255,3 +269,38 @@ UIObjectPtr UIObject::getChild(std::string m_name)
 	}
 	return nullptr;
 }
+
+#ifdef OPENGL_RENDERING
+void UIObject::updateWorldTransform()
+{
+	auto parent = this->m_pParentUIObject.lock();
+	this->updateLocalTransform();
+	if (parent != nullptr)
+	{
+		m_worldTransform = parent->worldTransform() * m_localTransform;
+	}
+	else
+	{
+		m_worldTransform = glm::mat4() * m_localTransform;
+	}
+}
+void UIObject::updateLocalTransform()
+{
+	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
+	auto scale = layoutMethod->GetLayoutScale();
+	auto rotation = layoutMethod->GetRotation();
+	auto position = layoutMethod->GetLayoutTransform();
+	auto transform = glm::mat4();
+	transform = glm::translate(transform, position);
+	transform = glm::rotate(transform, rotation.y, glm::vec3(0.0, 1.0, 0.0));
+	transform = glm::rotate(transform, rotation.x, glm::vec3(1.0, 0.0, 0.0));
+	transform = glm::rotate(transform, rotation.z, glm::vec3(0.0, 0.0, 1.0));
+	transform = glm::scale(transform, scale);
+	m_localTransform = transform;
+}
+
+glm::mat4 UIObject::worldTransform() const
+{
+	return m_worldTransform;
+}
+#endif

@@ -48,6 +48,7 @@ private:
 protected:
 	GLTexture(const std::string& name, const std::string& path, GLenum target);
 	GLTexture(const std::string& name, GLenum target, int w, int h, GLint format);
+	GLTexture(const std::string& name, GLuint textureID = 0U);
 public:
 	virtual ~GLTexture();
 	friend class creator<GLTexture>;

@@ -7,6 +7,7 @@
 #include "OriginProperty.h"
 #include "LayoutProperty.h"
 #include "GLProperty.h"
+#include "MaterialProperty.h"
 
 #include "UIHelper.h"
 #include "GLRenderContext.h"
@@ -15,6 +16,7 @@
 #include "SignalDefine.h"
 
 #include "Camera.h"
+#include "Renderer3D.h"
 
 Node3D::Node3D(std::string name):UIObject(name)
 {
@@ -34,21 +36,21 @@ void Node3D::onInit(VoidType&&)
 
 void Node3D::onDraw(VoidType&&)
 {
-	auto originMethod = GetPropertyMethodObj<OriginProperty>();
-	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
-	auto glProperty = GetPropertyMethodObj<GLProperty>();
-
+	auto originMethod	= GetPropertyMethodObj<OriginProperty>();
+	auto layoutMethod	= GetPropertyMethodObj<LayoutProperty>();
+	auto glProperty		= GetPropertyMethodObj<GLProperty>();
+	auto materialProperty = GetPropertyMethodObj<MaterialProperty>();
 	//update uniform
-	m_pShaderProgram->setUniformFromUIObject(m_pMaterial);
+	m_pShaderProgram->setUniform(m_pMaterial);
 
 	//get layout display
 	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
 
-	//get center point
-	SDL_Point centerPoint = originMethod->GetCenterPoint();
+	//get pivot point
+	glm::vec3 pivotPoint = originMethod->GetPivotPoint();
 
 	//<Create render context
-	auto context = GLRender3DContext::create(
+	/*auto context = GLRender3DContext::create(
 		layoutMethod->GetLayoutScale(),
 		layoutMethod->GetLayoutTransform(),
 		layoutMethod->GetRotation(),
@@ -58,7 +60,15 @@ void Node3D::onDraw(VoidType&&)
 		m_pModel,
 		Camera::create(glProperty));
 	
-	context->excute();
+	context->excute();*/
+
+	//<set world matrix, view matrix, projection matrix
+	auto pCamera = Camera::create(glProperty);
+	Renderer3D::GetInstance()->setModalMatrix(m_worldTransform);
+	Renderer3D::GetInstance()->setViewMatrix(pCamera->View());
+	Renderer3D::GetInstance()->setProjectionMatrix(pCamera->projectionMatrix());
+	//Render Geometry
+	Renderer3D::GetInstance()->DrawGeometry(m_pShaderProgram, m_pMaterial, m_pModel);
 }
 
 void Node3D::onClean(VoidType&&)
@@ -87,5 +97,5 @@ void Node3D::SetModel(const std::string& name)
 void Node3D::SetMaterial(const std::string& name)
 {
 	m_pMaterial = Library::GetInstance()->get<Material>(name);
-	m_pShaderProgram->syncUniformToUIObject(m_pMaterial);
+	m_pShaderProgram->syncUniform(m_pMaterial);
 }

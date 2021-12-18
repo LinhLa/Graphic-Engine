@@ -95,7 +95,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);$(IMGUI_BACKEND);$(IMGUI_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,7 +116,7 @@ $(SDL_IMAGE)\lib\x86</AdditionalLibraryDirectories>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;OPENGL_RENDERING_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);$(IMGUI_BACKEND);$(IMGUI_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,6 +172,14 @@ $(SDL_TTF)\lib\x64
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\imgui-1.85\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\imgui-1.85\backends\imgui_impl_sdl.h" />
+    <ClInclude Include="..\imgui-1.85\imconfig.h" />
+    <ClInclude Include="..\imgui-1.85\imgui.h" />
+    <ClInclude Include="..\imgui-1.85\imgui_internal.h" />
+    <ClInclude Include="..\imgui-1.85\imstb_rectpack.h" />
+    <ClInclude Include="..\imgui-1.85\imstb_textedit.h" />
+    <ClInclude Include="..\imgui-1.85\imstb_truetype.h" />
     <ClInclude Include=".\UIFramework\inc\Animation.h" />
     <ClInclude Include=".\UIFramework\inc\Font.h" />
     <ClInclude Include=".\inc\Configuration.h" />
@@ -216,7 +224,9 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\GLRenderManipulator.h" />
     <ClInclude Include="UIFramework\inc\GLTexture.h" />
     <ClInclude Include="UIFramework\inc\GLTypeDictionary.h" />
+    <ClInclude Include="UIFramework\inc\ImGuiShader.h" />
     <ClInclude Include="UIFramework\inc\Material.h" />
+    <ClInclude Include="UIFramework\inc\MaterialProperty.h" />
     <ClInclude Include="UIFramework\inc\Mesh.h" />
     <ClInclude Include="UIFramework\inc\AnimationKeyFrame.h" />
     <ClInclude Include="UIFramework\inc\AnimationProperty.h" />
@@ -254,6 +264,13 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\WindowRender.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\imgui-1.85\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\imgui-1.85\backends\imgui_impl_sdl.cpp" />
+    <ClCompile Include="..\imgui-1.85\imgui.cpp" />
+    <ClCompile Include="..\imgui-1.85\imgui_demo.cpp" />
+    <ClCompile Include="..\imgui-1.85\imgui_draw.cpp" />
+    <ClCompile Include="..\imgui-1.85\imgui_tables.cpp" />
+    <ClCompile Include="..\imgui-1.85\imgui_widgets.cpp" />
     <ClCompile Include=".\UIFramework\Animation.cpp" />
     <ClCompile Include=".\UIFramework\Font.cpp" />
     <ClCompile Include="3D Cube\Cube3D.cpp" />
@@ -319,7 +336,9 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="UIFramework\GLRenderManipulator.cpp" />
     <ClCompile Include="UIFramework\GLTexture.cpp" />
     <ClCompile Include="UIFramework\GLTypeDictionary.cpp" />
+    <ClCompile Include="UIFramework\ImGuiShader.cpp" />
     <ClCompile Include="UIFramework\Material.cpp" />
+    <ClCompile Include="UIFramework\MaterialProperty.cpp" />
     <ClCompile Include="UIFramework\Mesh.cpp" />
     <ClCompile Include="UIFramework\AnimationKeyFrame.cpp" />
     <ClCompile Include="UIFramework\AnimationProperty.cpp" />

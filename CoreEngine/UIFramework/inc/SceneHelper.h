@@ -6,7 +6,7 @@
 typedef std::unordered_map<std::string, UIObjectPtr> UIObjectTableType;
 void LoadPropertyTypeList(picojson::value& json_value);
 void LoadGLProperty(picojson::object& o_glProperty, Node3DPtr pObject);
-void LoadMaterialPropertyList(picojson::array& o_array, Node3DPtr pObject);
+void LoadMaterialPropertyList(picojson::object& o_glMaterial, Node3DPtr pObject);
 void LoadTextureList(picojson::value& json_value);
 void LoadFragmentShaderList(picojson::value& json_value);
 void LoadVertexShaderList(picojson::value& json_value);

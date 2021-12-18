@@ -129,6 +129,8 @@ void WindowRender::onWindowEvent(SDL_Event& e)
 		case SDL_WINDOWEVENT_SIZE_CHANGED:
 			m_scaleX = float(e.window.data1) / m_width;
 			m_scaleY = float(e.window.data2) / m_height;
+			m_width = e.window.data1;
+			m_height = e.window.data2;
 #ifdef OPENGL_RENDERING
 			glViewport(0, 0, e.window.data1, e.window.data2);
 #else

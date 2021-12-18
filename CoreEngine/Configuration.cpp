@@ -77,6 +77,7 @@ void Configuration::loadConfig(const char* file)
 
 	inipp::extract(ini.sections["OpenGL"]["depth_size"], depth_size);
 	inipp::extract(ini.sections["OpenGL"]["double_buffer"], double_buffer);
+	inipp::extract(ini.sections["OpenGL"]["stencil_size"], stencil_size);
 
 	LOG_DEBUG("Version[%s]", version);
 	LOG_DEBUG("Application[%s]", app_name);
@@ -97,6 +98,7 @@ void Configuration::loadConfig(const char* file)
 	LOG_DEBUG("g_size[%d]", g_size);
 	LOG_DEBUG("Depth size[%d]", depth_size);
 	LOG_DEBUG("Double buffer[%d]", double_buffer);
+	LOG_DEBUG("Stencil size[%d]", stencil_size);
 }
 
 Configuration::~Configuration() {}

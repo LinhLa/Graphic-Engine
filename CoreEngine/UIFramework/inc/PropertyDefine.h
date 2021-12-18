@@ -6,6 +6,7 @@ extern const std::string OPACITY;
 extern const std::string IS_CLIP;
 extern const std::string ANGLE;
 extern const std::string CENTER_POINT;
+extern const std::string PIVOT_POINT;
 extern const std::string FLIP;
  
 extern const std::string FORE_GROUND_COLOR;

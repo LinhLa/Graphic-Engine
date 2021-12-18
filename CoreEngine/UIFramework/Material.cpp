@@ -1,22 +1,17 @@
 #include "stdafx.h"
 #include "Material.h"
 
-//PBR texture map
-const std::string ALBEDO_MAP = std::string("Albedo");
-const std::string NORMAL_MAP = std::string("Normal");
-const std::string ROUGHNESS_MAP = std::string("Roughness");
-const std::string METALNESS_MAP = std::string("Metalness");
-const std::string SPECULAR_MAP = std::string("Specular");
-const std::string HEIGHT_MAP = std::string("Height");
-const std::string AMBIENT_OCCLUSION_MAP = std::string("Ambient occlusion");
-const std::string OPACITY_MAP = std::string("Opacity");
-const std::string REFRACTION_MAP = std::string("Refraction");
-const std::string SELF_ILLUMINATION_MAP = std::string("Self illumination");
-
-//Non PBR texture map
-const std::string DIFFUSE_MAP = std::string("Diffuse");
-const std::string BUMP_MAP = std::string("Bump");
-const std::string REFLECTION_MAP = std::string("Reflection");
+const std::string LIGHT_COLOR = std::string("light.color");
+const std::string LIGHT_AMBIENT = std::string("light.ambient");
+const std::string LIGHT_DIFFUSE = std::string("light.diffuse");
+const std::string LIGHT_SPECULAR = std::string("light.specular");
+const std::string LIGHT_POSITION = std::string("light.position");
+const std::string MATERIAL_AMBIENT = std::string("material.ambient");
+const std::string MATERIAL_DIFFUSE = std::string("material.diffuse");
+const std::string MATERIAL_SPECULAR = std::string("material.specular");
+const std::string MATERIAL_DIFFUSE_MAP = std::string("material.diffuseMap");
+const std::string MATERIAL_SPECULAR_MAP = std::string("material.specularMap");
+const std::string MATERIAL_SHININESS = std::string("material.shininess");
 
 Material::Material(std::string name):m_name(name)
 {

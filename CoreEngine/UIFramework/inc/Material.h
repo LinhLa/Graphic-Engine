@@ -7,25 +7,21 @@
 #include "IProperty.h"
 #include "GLTexture.h"
 
-extern const std::string ALBEDO_MAP;
-extern const std::string NORMAL_MAP;
-extern const std::string ROUGHNESS_MAP;
-extern const std::string METALNESS_MAP;
-extern const std::string SPECULAR_MAP;
-extern const std::string HEIGHT_MAP;
-extern const std::string AMBIENT_OCCLUSION_MAP;
-extern const std::string OPACITY_MAP;
-extern const std::string REFRACTION_MAP;
-extern const std::string SELF_ILLUMINATION_MAP;
-
-extern const std::string DIFFUSE_MAP;
-extern const std::string BUMP_MAP;
-extern const std::string REFLECTION_MAP;
+extern const std::string LIGHT_COLOR;
+extern const std::string LIGHT_AMBIENT;
+extern const std::string LIGHT_DIFFUSE;
+extern const std::string LIGHT_SPECULAR;
+extern const std::string LIGHT_POSITION;
+extern const std::string MATERIAL_AMBIENT;
+extern const std::string MATERIAL_DIFFUSE;
+extern const std::string MATERIAL_SPECULAR;
+extern const std::string MATERIAL_DIFFUSE_MAP;
+extern const std::string MATERIAL_SPECULAR_MAP;
+extern const std::string MATERIAL_SHININESS;
 
 class Material: public creator<Material>, public PropertyTable
 {
 protected:
-	std::unordered_map<std::string, IPropertyPtr> m_propertyTable;
 	std::unordered_map<std::string, GLTexturePtr> m_TextureList;
 	const std::string m_name;
 

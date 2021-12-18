@@ -38,28 +38,3 @@ public:
 //
 //	int FillRect(SDL_Rect);
 //};
-
-/**
- * @brief      This class describes a render target manipulator.
- */
-class GLRenderTargetManipulator
-{
-private:
-	GLFrameBufferObjectPtr	m_pFrameBuffer = nullptr;
-public:
-	GLRenderTargetManipulator(GLFrameBufferObjectPtr pFrameBuffer = nullptr);
-	~GLRenderTargetManipulator();
-};
-
-/**
- * @brief      This class describes a render scale manipulator for different resolution
- */
-class GLRenderScaleManipulator
-{
-private:
-	float        m_scaleX = 1.0F;
-    float        m_scaleY = 1.0F;
-public:
-	GLRenderScaleManipulator(float scaleX = 1.0F, float scaleY = 1.0F);
-	~GLRenderScaleManipulator();
-};

@@ -2,7 +2,6 @@
 #include <Node3D.h>
 
 #define CUBE_3D_URL 	"3D Cube"
-
 class Cube3D final: public creator<Cube3D>, public std::enable_shared_from_this<Cube3D>
 {
 private:
@@ -12,7 +11,7 @@ private:
 	void onMouseScroll(float yoffset);
 	void onMouseMove();
 	void setCamRotation(float xoffset, float yoffset);
-	void lookAt();
+	void lookAtMe();
 protected:
 	Cube3D();
 public:

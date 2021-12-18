@@ -27,11 +27,19 @@ OriginProperty& OriginProperty::operator=(const OriginProperty& rhs)
 
 void OriginProperty::init()
 {
-	m_PropertyTable->AddProperty(VISIBLE, Property<bool>::create(VISIBLE));
-	m_PropertyTable->AddProperty(IS_CLIP, Property<bool>::create(IS_CLIP));
-	m_PropertyTable->AddProperty(ANGLE, Property<double>::create(ANGLE));
+	m_PropertyTable->AddProperty(VISIBLE, Property<bool>::create(VISIBLE, true, BOOL));
+	m_PropertyTable->AddProperty(IS_CLIP, Property<bool>::create(IS_CLIP, true, BOOL));
+	m_PropertyTable->AddProperty(ANGLE, Property<float>::create(ANGLE, 0.0F, FLOAT));
 
 	m_PropertyTable->AddProperty(IS_BROADCAST_EVENT, Property<bool>::create(IS_BROADCAST_EVENT));
+
+	m_PropertyTable->AddProperty(OPACITY, Property<uint8_t>::create(OPACITY, 255, UINT8));
+	m_PropertyTable->AddProperty(CENTER_POINT, Property<SDL_Point>::create(CENTER_POINT));
+	m_PropertyTable->AddProperty(PIVOT_POINT, Property<glm::vec3>::create(PIVOT_POINT, glm::vec3(0.0F), VEC3));
+	m_PropertyTable->AddProperty(FLIP, Property<SDL_RendererFlip>::create(FLIP));
+
+	m_PropertyTable->AddProperty(FORE_GROUND_COLOR, Property<SDL_Color>::create(FORE_GROUND_COLOR));
+	m_PropertyTable->AddProperty(BACK_GROUND_COLOR, Property<SDL_Color>::create(BACK_GROUND_COLOR));
 
 	//<Set default value
 	SetVisible(true);
@@ -39,14 +47,6 @@ void OriginProperty::init()
 	SetAngle(0.0);
 	SetBroadCastEvent(false);
 
-	m_PropertyTable->AddProperty(OPACITY, Property<uint8_t>::create(OPACITY));
-	m_PropertyTable->AddProperty(CENTER_POINT, Property<SDL_Point>::create(CENTER_POINT));
-	m_PropertyTable->AddProperty(FLIP, Property<SDL_RendererFlip>::create(FLIP));
-
-	m_PropertyTable->AddProperty(FORE_GROUND_COLOR, Property<SDL_Color>::create(FORE_GROUND_COLOR));
-	m_PropertyTable->AddProperty(BACK_GROUND_COLOR, Property<SDL_Color>::create(BACK_GROUND_COLOR));
-	
-	m_PropertyTable->AddProperty(OPACITY, Property<uint8_t>::create(OPACITY));
 	SetOpacity(SDL_ALPHA_OPAQUE);
 	SetFlip(SDL_RendererFlip::SDL_FLIP_NONE);
 	SetForeGroundColor(SDL_Color{0,0,0,0});
@@ -75,12 +75,12 @@ bool OriginProperty::IsClip() const
 
 void OriginProperty::SetAngle(double angle)
 {
-	m_PropertyTable->SetPropertyValue<double>(ANGLE, angle);
+	m_PropertyTable->SetPropertyValue<float>(ANGLE, angle);
 }
 
 double OriginProperty::GetAngle() const
 {
-	return m_PropertyTable->GetPropertyValue<double>(ANGLE);
+	return m_PropertyTable->GetPropertyValue<float>(ANGLE);
 }
 
 void OriginProperty::SetBroadCastEvent(bool flag)
@@ -117,6 +117,16 @@ void OriginProperty::SetCenterPoint(SDL_Point point)
 SDL_Point OriginProperty::GetCenterPoint() const
 {
 	return m_PropertyTable->GetPropertyValue<SDL_Point>(CENTER_POINT);
+}
+
+void OriginProperty::SetPivotPoint(glm::vec3 pivot)
+{
+	m_PropertyTable->SetPropertyValue<glm::vec3>(PIVOT_POINT, pivot);
+}
+
+glm::vec3 OriginProperty::GetPivotPoint() const
+{
+	return m_PropertyTable->GetPropertyValue<glm::vec3>(PIVOT_POINT);
 }
 
 void OriginProperty::SetFlip(SDL_RendererFlip flip)

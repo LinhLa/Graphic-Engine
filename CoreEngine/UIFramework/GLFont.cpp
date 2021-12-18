@@ -125,16 +125,7 @@ void GLFont::renderTexture(
     glm::vec2 pivot,
     glm::vec4 color)
 {
-    // init frame buffer object
-    if (!m_pFramebufferObj)
-    {
-        m_pFramebufferObj = GLFrameBufferObject::create("fbo default", pTexture);
-        m_pFramebufferObj->init();
-    }
-
-    // Render to texture
-   // GLRenderTargetManipulator glRenderTargetObj(m_pFramebufferObj);
-    Renderer3D::GetInstance()->DrawText(m_CharacterList, coordinator, scale, angle, pivot, color.a, glm::vec3(color.r, color.g, color.b));
+    Renderer3D::GetInstance()->DrawText2D(m_CharacterList, coordinator, scale, angle, pivot, color.a, glm::vec3(color.r, color.g, color.b));
 }
 
 void GLFont::cleanUp()

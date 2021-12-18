@@ -30,9 +30,9 @@ public:
 	int32_t r_size = 8;
 	int32_t b_size = 8;
 	int32_t g_size = 8;
-	int32_t depth_size = 32;
+	int32_t depth_size = 24;
 	int32_t	double_buffer = 1;
-
+	uint32_t stencil_size = 8;
 	void loadConfig(const char* file);
 protected:
 	friend class SingletonHolder<Configuration>;

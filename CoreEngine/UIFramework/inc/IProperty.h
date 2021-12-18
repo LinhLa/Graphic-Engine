@@ -13,23 +13,23 @@
 #include <SDL.h>
 #include <glm/glm.hpp>
 
+class ImGuiShader;
+
+
 enum PROPERTY_TYPE: int32_t
 {
 	UNDEFINE = 0U,
 	INT,
+	UINT8,
+	CAMERA_VIEW_TYPE,
 	FLOAT,
 	BOOL,
 	STRING,
-	GLM_VEC4,
-	GLM_VEC3,
+	VEC4_COLOR,
+	VEC3_COLOR,
 	VEC4,
 	VEC3,
 	VEC2,
-	URL_TEXTURE,
-	URL_SHADER,
-	URL_PROGRAM,
-	URL_MESH,
-	URL_MODEL,
 	ARRAY_INT,
 };
 
@@ -50,6 +50,9 @@ extern const std::map<std::string, uint8_t> property_type_map;
  */
 template<class T> class Property;
 
+class IProperty;
+typedef std::shared_ptr<IProperty> IPropertyPtr;
+
 /**
  * @brief      This class describes a property interface.
  */
@@ -60,6 +63,9 @@ public:
 	virtual ~IProperty(){}
 	virtual std::string getPropertyName() const = 0;
 	virtual const std::type_info& getTypeInfo() const = 0;
+	virtual int32_t GetType() const = 0;
+	virtual IPropertyPtr clone() = 0;
+	virtual void SetValue(IPropertyPtr pProperty) = 0;
 private:
 	template<typename U>
 	Property<U>* DynamicTypeCheck()
@@ -113,7 +119,6 @@ public:
 	}
 };
 
-typedef std::shared_ptr<IProperty> IPropertyPtr;
 /**
  * @brief      This class describes a property.
  *
@@ -132,6 +137,7 @@ private:
 public:
 	std::shared_ptr<Signal<T>> 	m_pSignalValueChange;
 protected:
+	friend class Property<T>;
 	Property(std::string name, T&& value = T{}, int32_t uType = UNDEFINE) :m_property_name(name), m_value(value), m_type(uType)
 	{
 		m_pSignalValueChange = Signal<T>::create();
@@ -151,6 +157,29 @@ public:
 		return typeid(T);
 	}
 
+	IPropertyPtr clone() override
+	{
+		auto p = Property<T>::create(m_property_name);
+		p->m_value = m_value;
+		p->m_upper = m_upper;
+		p->m_lower = m_lower;
+		p->m_type = m_type;
+		return p;
+	}
+
+	void SetValue(IPropertyPtr pProperty) override
+	{
+		auto p = std::dynamic_pointer_cast<Property<T>>(pProperty);
+		if (nullptr != p)
+		{
+			p->m_value = m_value;
+		}
+		else
+		{
+			LOG_DEBUG("type mismatch Source[%s] Target[%s]", m_property_name.c_str(), p->m_property_name.c_str());
+		}
+	}
+
 	void SetValue(T&& value)
 	{
 		m_value = value;
@@ -168,7 +197,7 @@ public:
 		visitor.accept(this);
 	}
 
-	uint8_t GetType() const
+	int32_t GetType() const
 	{
 		return m_type;
 	}
@@ -182,6 +211,27 @@ public:
 	{
 		m_lower = lower;
 	}
+
+	void getUpper() const
+	{
+		return m_upper;
+	}
+
+	void getLower() const
+	{
+		return m_lower;
+	}
+
+	T* getPointer()
+	{
+		return &m_value;
+	}
+
+	T& getRef()
+	{
+		return m_value;
+	}
+
 };
 
 /**
@@ -192,6 +242,8 @@ class PropertyTable
 protected:
 	std::unordered_map<std::string, IPropertyPtr> m_propertyTable;
 	PropertyTable();
+
+	friend class ImGuiShader;
 public:
 	virtual ~PropertyTable();
 

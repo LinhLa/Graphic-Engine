@@ -28,32 +28,18 @@ GLProperty& GLProperty::operator=(const GLProperty& rhs)
 
 void GLProperty::init()
 {
-	m_PropertyTable->AddProperty(BLEND_INDENSITY, Property<float>::create(BLEND_INDENSITY));
-	m_PropertyTable->AddProperty(CAM_POSITION, Property<glm::vec3>::create(CAM_POSITION));
-	m_PropertyTable->AddProperty(CAM_TARGET, Property<glm::vec3>::create(CAM_TARGET));
-	m_PropertyTable->AddProperty(CAM_FRONT, Property<glm::vec3>::create(CAM_FRONT));
-	m_PropertyTable->AddProperty(CAM_UP, Property<glm::vec3>::create(CAM_UP));
-	m_PropertyTable->AddProperty(CAM_PITCH, Property<float>::create(CAM_PITCH));
-	m_PropertyTable->AddProperty(CAM_YAW, Property<float>::create(CAM_YAW));
-	m_PropertyTable->AddProperty(CAM_YAW, Property<float>::create(CAM_SPEED));
-	m_PropertyTable->AddProperty(FOV, Property<float>::create(FOV));
-	m_PropertyTable->AddProperty(NEAR_PLANE, Property<float>::create(NEAR_PLANE));
-	m_PropertyTable->AddProperty(FAR_PLANE, Property<float>::create(FAR_PLANE));
-	m_PropertyTable->AddProperty(CAMERA_TYPE, Property<uint8_t>::create(CAMERA_TYPE));
-
-	//<Set default value
-	m_PropertyTable->SetPropertyValue<float>(BLEND_INDENSITY, std::move(1.0F));
-	m_PropertyTable->SetPropertyValue<glm::vec3>(CAM_POSITION, std::move(glm::vec3(0.0F, 0.0F, 3.0F)));
-	m_PropertyTable->SetPropertyValue<glm::vec3>(CAM_FRONT, std::move(glm::vec3(0.0F, 0.0F, -1.0F)));
-	m_PropertyTable->SetPropertyValue<glm::vec3>(CAM_TARGET, std::move(glm::vec3(0.0F)));
-	m_PropertyTable->SetPropertyValue<glm::vec3>(CAM_UP, std::move(glm::vec3(0.0F, 0.1F, 0.0F)));
-	m_PropertyTable->SetPropertyValue<float>(CAM_PITCH, std::move(0.0F));
-	m_PropertyTable->SetPropertyValue<float>(CAM_YAW, std::move(-90.0F));
-	m_PropertyTable->SetPropertyValue<float>(FOV, std::move(45.0F));
-	m_PropertyTable->SetPropertyValue<float>(NEAR_PLANE, std::move(0.1F));
-	m_PropertyTable->SetPropertyValue<float>(FAR_PLANE, std::move(100.0F));
-	m_PropertyTable->SetPropertyValue<float>(CAM_SPEED, std::move(2.5F));
-	m_PropertyTable->SetPropertyValue<uint8_t>(CAMERA_TYPE, std::move(ORTHOGRAPHIC));
+	m_PropertyTable->AddProperty(BLEND_INDENSITY, Property<float>::create(BLEND_INDENSITY, 1.0F, FLOAT));
+	m_PropertyTable->AddProperty(CAM_POSITION, Property<glm::vec3>::create(CAM_POSITION, glm::vec3(0.0F, 0.0F, 3.0F), VEC3));
+	m_PropertyTable->AddProperty(CAM_TARGET, Property<glm::vec3>::create(CAM_TARGET, glm::vec3(0.0F), VEC3));
+	m_PropertyTable->AddProperty(CAM_FRONT, Property<glm::vec3>::create(CAM_FRONT, glm::vec3(0.0F, 0.0F, -1.0F), VEC3));
+	m_PropertyTable->AddProperty(CAM_UP, Property<glm::vec3>::create(CAM_UP, glm::vec3(0.0F, 1.0F, 0.0F), VEC3));
+	m_PropertyTable->AddProperty(CAM_PITCH, Property<float>::create(CAM_PITCH, 0.0F, FLOAT));
+	m_PropertyTable->AddProperty(CAM_YAW, Property<float>::create(CAM_YAW, 0.0F, FLOAT));
+	m_PropertyTable->AddProperty(CAM_SPEED, Property<float>::create(CAM_SPEED, 2.5F, FLOAT));
+	m_PropertyTable->AddProperty(FOV, Property<float>::create(FOV, 45.0F, FLOAT));
+	m_PropertyTable->AddProperty(NEAR_PLANE, Property<float>::create(NEAR_PLANE, 0.1F, FLOAT));
+	m_PropertyTable->AddProperty(FAR_PLANE, Property<float>::create(FAR_PLANE, 100.0F, FLOAT));
+	m_PropertyTable->AddProperty(CAMERA_TYPE, Property<uint8_t>::create(CAMERA_TYPE, ORTHOGRAPHIC, CAMERA_VIEW_TYPE));
 }
 
 float GLProperty::GetBlendIndensity() const

@@ -16,6 +16,10 @@
 #include "AnimationTimeLine.h"
 #include "time_suffix.h"
 
+#include "ImGuiShader.h"
+#include "Library.h"
+#include "Material.h"
+
 #define CLOCKS_PER_MILISECOND (CLOCKS_PER_SEC / 1000)
 using namespace UIHelper;
 
@@ -36,7 +40,7 @@ void Cube3D::onKeyInputEvent(SDL_Event &&arg)
 	}
 	else if (SDL_MOUSEMOTION == arg.type)
 	{
-		onMouseMove();
+		//onMouseMove();
 	}
 	else if (SDL_MOUSEBUTTONDOWN == arg.type)
 	{
@@ -45,6 +49,10 @@ void Cube3D::onKeyInputEvent(SDL_Event &&arg)
 	{
 		onKeyPress();
 	}
+
+	auto pMaterial = Library::GetInstance()->get<Material>(CUBE_3D_URL);
+	ImGuiShader::GetInstance()->setProperty(pMaterial);
+	ImGuiShader::GetInstance()->setProperty(m_pCube3D);
 }
 void Cube3D::onKeyPress()
 {
@@ -56,6 +64,8 @@ void Cube3D::onKeyPress()
 	auto cameraUp		= glProperty->GetCamUp();
 	auto cameraFront	= glProperty->GetCamFront();
 	
+	bool bLookAtMe = false;
+
 	if (currentKeyStates[SDL_SCANCODE_W])
 	{
 		cameraPos += cameraSpeed * cameraFront;
@@ -76,33 +86,41 @@ void Cube3D::onKeyPress()
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 	}
 
-	lookAt();
-	const float radius = 0.1F;
+	float radius = glm::distance(cameraPos, glm::vec3(0.0f));
 	if (currentKeyStates[SDL_SCANCODE_LEFT])
 	{
-		cameraPos.x = sin(45.0F) * radius;
-		cameraPos.z = cos(45.0F) * radius;
+		bLookAtMe = true;
+		cameraPos.x = -cos(45.0F) * radius;
+		cameraPos.z = -sin(45.0F) * radius;
 	}
 
 	if (currentKeyStates[SDL_SCANCODE_RIGHT])
 	{
-		cameraPos.x = sin(-45.0F) * radius;
-		cameraPos.z = cos(-45.0F) * radius;
+		bLookAtMe = true;
+		cameraPos.x = cos(45.0F) * radius;
+		cameraPos.z = sin(45.0F) * radius;
 	}
 
 	if (currentKeyStates[SDL_SCANCODE_UP])
 	{
-		cameraPos.y = sin(-45.0F) * radius;
+		bLookAtMe = true;
+		cameraPos.y = sin(45.0F) * radius;
 		cameraPos.z = cos(-45.0F) * radius;
 	}
 
 	if (currentKeyStates[SDL_SCANCODE_DOWN])
 	{
+		bLookAtMe = true;
 		cameraPos.y = sin(45.0F) * radius;
 		cameraPos.z = cos(45.0F) * radius;
 	}
 
 	glProperty->SetCamPos(cameraPos);
+
+	if (bLookAtMe)
+	{
+		lookAtMe();
+	}
 }
 
 void Cube3D::onMouseMove()
@@ -159,6 +177,9 @@ void Cube3D::init(VoidType&& dummy)
 	LOG_DEBUG("");
 	AcquireResource();
 	Scene::GetInstance()->AddToSceneGraph(m_pCube3D);
+	auto pMaterial = Library::GetInstance()->get<Material>(CUBE_3D_URL);
+	ImGuiShader::GetInstance()->importProperty(pMaterial);
+	ImGuiShader::GetInstance()->importProperty(m_pCube3D);
 }
 
 void Cube3D::AcquireResource()
@@ -199,7 +220,7 @@ void Cube3D::setCamRotation(float xoffset, float yoffset)
 	glProperty->SetCamYaw(yaw);
 }
 
-void Cube3D::lookAt()
+void Cube3D::lookAtMe()
 {
 	auto glProperty = m_pCube3D->GetPropertyMethodObj<GLProperty>();
 	auto cameraPos		= glProperty->GetCamPos();

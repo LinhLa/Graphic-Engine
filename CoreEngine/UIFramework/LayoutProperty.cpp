@@ -24,10 +24,10 @@ LayoutProperty& LayoutProperty::operator=(const LayoutProperty& rhs)
 
 void LayoutProperty::init()
 {
-	m_PropertyTable->AddProperty(X_COORDINATOR, Property<int>::create(X_COORDINATOR));
-	m_PropertyTable->AddProperty(Y_COORDINATOR, Property<int>::create(Y_COORDINATOR));
-	m_PropertyTable->AddProperty(SCALE_X, Property<float>::create(SCALE_X));
-	m_PropertyTable->AddProperty(SCALE_Y, Property<float>::create(SCALE_Y));
+	m_PropertyTable->AddProperty(X_COORDINATOR, Property<int>::create(X_COORDINATOR, 0.0F, INT));
+	m_PropertyTable->AddProperty(Y_COORDINATOR, Property<int>::create(Y_COORDINATOR, 0.0F, INT));
+	m_PropertyTable->AddProperty(SCALE_X, Property<float>::create(SCALE_X, 1.0F, FLOAT));
+	m_PropertyTable->AddProperty(SCALE_Y, Property<float>::create(SCALE_Y, 1.0F, FLOAT));
 
 	//<Set default value
 	SDL_Rect window_rect = UIHelper::GetWindowRect();
@@ -35,16 +35,16 @@ void LayoutProperty::init()
 	SetLayoutScaleX(1.0F);
 	SetLayoutScaleY(1.0F);
 
-	m_PropertyTable->AddProperty(TRANS_VECTOR, Property<glm::vec3>::create(TRANS_VECTOR));
-	m_PropertyTable->AddProperty(ROTATE_VECTOR, Property<glm::vec3>::create(ROTATE_VECTOR));
-	m_PropertyTable->AddProperty(SCALE_VECTOR, Property<glm::vec3>::create(SCALE_VECTOR));
+	m_PropertyTable->AddProperty(TRANS_VECTOR, Property<glm::vec3>::create(TRANS_VECTOR, glm::vec3(0.0F), VEC3));
+	m_PropertyTable->AddProperty(ROTATE_VECTOR, Property<glm::vec3>::create(ROTATE_VECTOR, glm::vec3(0.0F, 0.0F, 1.0F), VEC3));
+	m_PropertyTable->AddProperty(SCALE_VECTOR, Property<glm::vec3>::create(SCALE_VECTOR, glm::vec3(1.0F), VEC3));
 
 	SetLayoutTransform(glm::vec3(0.0F, 0.0F, 0.0F));
 	SetRotation(glm::vec3(0.0F, 0.0F, 1.0F));
 	SetLayoutScale(glm::vec3(1.0F, 1.0F, 0.0F));
 
-	m_PropertyTable->AddProperty(LAYOUT_WIDTH, Property<int>::create(LAYOUT_WIDTH));
-	m_PropertyTable->AddProperty(LAYOUT_HEIGHT, Property<int>::create(LAYOUT_HEIGHT));
+	m_PropertyTable->AddProperty(LAYOUT_WIDTH, Property<int>::create(LAYOUT_WIDTH, 0, INT));
+	m_PropertyTable->AddProperty(LAYOUT_HEIGHT, Property<int>::create(LAYOUT_HEIGHT, 0, INT));
 }
 
 int LayoutProperty::GetLayoutWidth() const

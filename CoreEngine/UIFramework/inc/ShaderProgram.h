@@ -15,9 +15,13 @@ private:
 	std::string m_name;
 	GLuint  	m_ProgramID  = 0;
 	GLint		m_textureUnitCount = 0;
-	ShaderProgram(const std::string&);
+
 	std::vector<IUniformPtr>	m_UniformList;
 	std::vector<AttributePtr>	m_AttributeList;
+
+	ShaderPtr 	m_pFragment = nullptr;
+	ShaderPtr   m_pVertex = nullptr;
+	ShaderProgram(const std::string&);
 public:
 	friend class creator<ShaderProgram>;
 	~ShaderProgram();
@@ -36,8 +40,8 @@ public:
 	GLuint  getID() const;
 	GLint   getTextureUnitCount() const;
 	std::string getName() const;
-	void syncUniformToUIObject(std::shared_ptr<PropertyTable> pObject);
-	void setUniformFromUIObject(std::shared_ptr<PropertyTable> pObject);
+	void syncUniform(std::shared_ptr<PropertyTable> pObject);
+	void setUniform(std::shared_ptr<PropertyTable> pObject);
 };
 
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;

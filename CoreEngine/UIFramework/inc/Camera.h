@@ -37,6 +37,8 @@ private:
         float m_Zoom = ZOOM;
         float m_Speed = SPEED;
         float m_Sensitivity = SENSITIVITY;
+
+        uint8_t m_CamType = ORTHOGRAPHIC;
 protected:
         friend class creator<Camera>;
         Camera(GLPropertyPtr);
@@ -49,6 +51,8 @@ public:
         float Zoom() const;
         float Sensitivity() const;
         float Speed() const;
+        uint8_t CamType() const;
+        glm::mat4 projectionMatrix();
         void demoRotateAround();
 };
 

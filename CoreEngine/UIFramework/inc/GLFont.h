@@ -5,7 +5,6 @@
 #include "creator.h"
 #include <glm/glm.hpp>
 
-#include "GLFrameBufferObject.h"
 #include "GLTexture.h"
 
 class Character final: public creator<Character>
@@ -37,7 +36,6 @@ class GLFont final: public creator<GLFont>
 private:
 	std::vector<CharacterPtr> m_CharacterList;
 
-	GLFrameBufferObjectPtr	m_pFramebufferObj = nullptr;
 	FT_Library			m_ft = nullptr;
 	FT_Face				m_face = nullptr;
 

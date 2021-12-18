@@ -24,6 +24,16 @@ void ShaderProgram::attachShader(ShaderPtr pShader)
 	if (pShader)
 	{
 		glAttachShader(m_ProgramID, pShader->getId());
+
+		if (GL_FRAGMENT_SHADER == pShader->type())
+		{
+			m_pFragment = pShader;
+		}
+		else if (GL_VERTEX_SHADER == pShader->type())
+		{
+			m_pVertex = pShader;
+		}
+		else{}
 	}
 }
 
@@ -208,7 +218,7 @@ GLint ShaderProgram::getTextureUnitCount() const
 	return m_textureUnitCount;
 }
 
-void ShaderProgram::syncUniformToUIObject(std::shared_ptr<PropertyTable> pObject)
+void ShaderProgram::syncUniform(std::shared_ptr<PropertyTable> pObject)
 {
 	if(!pObject)
 	{
@@ -226,7 +236,7 @@ void ShaderProgram::syncUniformToUIObject(std::shared_ptr<PropertyTable> pObject
 	}
 }
 
-void ShaderProgram::setUniformFromUIObject(std::shared_ptr<PropertyTable> pObject)
+void ShaderProgram::setUniform(std::shared_ptr<PropertyTable> pObject)
 {
 	if(!pObject)
 	{

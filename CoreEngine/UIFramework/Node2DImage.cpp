@@ -15,6 +15,7 @@
 #include "SignalDefine.h"
 
 #include "GLRenderContext.h"
+#include "Renderer3D.h"
 
 Node2DImage::Node2DImage(std::string name):UIObject(name)
 {
@@ -118,6 +119,14 @@ void Node2DImage::onDraw(VoidType&&)
 		SDL_FLIP_NONE);
 
 	context->excute();
+
+	//<set world matrix, view matrix, projection matrix
+	Renderer3D::GetInstance()->setModalMatrix(m_worldTransform);
+	Renderer3D::GetInstance()->setViewMatrix(glm::mat4());
+	Renderer3D::GetInstance()->setProjectionMatrix(pCamera->projectionMatrix());
+	//Render Geometry
+	Renderer3D::GetInstance()->DrawImage(m_pTexture, m_pMaterial, m_pModel);
+	Renderer3D::DrawImage(GLTexturePtr pTexture, glm::vec2 coordinator, glm::vec2 scale, float angle, glm::vec2 origin, float opacity, glm::vec4 color)
 #endif
 }
 

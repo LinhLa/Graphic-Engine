@@ -23,6 +23,8 @@
 
 #include "TaskPoolInstance.h"
 
+#include "ImGuiShader.h"
+
 const std::string Application::POST_LOAD_RESOURCE_SIGNAL = "POST_LOAD_RESOURCE_SIGNAL";
 const std::string Application::PRE_RENDER_SIGNAL = "PRE_RENDER_SIGNAL";
 const std::string Application::POST_RENDER_SIGNAL = "POST_RENDER_SIGNAL";
@@ -103,6 +105,7 @@ void Application::start()
 
 	///<Render loop
 	bool bQuit = false;
+
 	while (!bQuit)
 	{
 		///<Event handler
@@ -110,6 +113,9 @@ void Application::start()
 
 		while (/*SDL_WaitEvent*/SDL_PollEvent(&event))///<Handle events on queue: use SDL_WaitEvent to optimize CPU performance
 		{
+			// without it you won't have keyboard input and other things
+			ImGuiShader::GetInstance()->ProcessEvent(event);
+
 			SDL_Event *sdlEvent;
 			switch (event.type)
 			{
@@ -157,6 +163,12 @@ void Application::start()
 
 		///<Run service dispatcher
 		//TODO:: Move to service thread ServiceMgr::GetInstance()->dispatch();
+
+		// Start the Dear ImGui frame
+		ImGuiShader::GetInstance()->StartNewFrame();
+
+		// Show demo
+		ImGuiShader::GetInstance()->Show();
 
 		///<Play animation timeline
 		AnimationTimeLine::GetInstance()->onPlay();
