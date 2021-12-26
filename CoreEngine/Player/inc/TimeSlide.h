@@ -7,7 +7,7 @@
 class TimeSlide final : public IPlayerComponent, public creator<TimeSlide>
 {
 private:
-	PlayerPtr 		m_pOwner = nullptr;
+	std::weak_ptr<Player> 		m_pOwner;
 	NodeText2DPtr	m_pHours = nullptr;
 	NodeText2DPtr	m_pMinutes = nullptr;
 	NodeText2DPtr	m_pSeconds = nullptr;

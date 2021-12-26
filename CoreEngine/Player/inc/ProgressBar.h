@@ -7,7 +7,7 @@
 class ProgressBar final : public IPlayerComponent, public creator<ProgressBar>
 {
 private:
-	PlayerPtr 		m_pOwner = nullptr;
+	std::weak_ptr<Player> 		m_pOwner;
 	Node2DImagePtr	m_pSlider = nullptr;
 	Node2DImagePtr	m_pElapsedTime = nullptr;
 	Node2DImagePtr	m_pScrubbingBar = nullptr;

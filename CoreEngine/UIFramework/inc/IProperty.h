@@ -14,9 +14,9 @@
 #include <glm/glm.hpp>
 
 class ImGuiShader;
+class AnimationProperty;
 
-
-enum PROPERTY_TYPE: int32_t
+enum PROPERTY_TYPE : int32_t
 {
 	UNDEFINE = 0U,
 	INT,
@@ -34,7 +34,7 @@ enum PROPERTY_TYPE: int32_t
 };
 
 
-class PropertyType final: public creator<PropertyType>
+class PropertyType final : public creator<PropertyType>
 {
 public:
 	friend class creator<PropertyType>;
@@ -56,11 +56,11 @@ typedef std::shared_ptr<IProperty> IPropertyPtr;
 /**
  * @brief      This class describes a property interface.
  */
-class IProperty: public std::enable_shared_from_this<IProperty>
+class IProperty : public std::enable_shared_from_this<IProperty>
 {
 public:
-	IProperty(){}
-	virtual ~IProperty(){}
+	IProperty() {}
+	virtual ~IProperty() {}
 	virtual std::string getPropertyName() const = 0;
 	virtual const std::type_info& getTypeInfo() const = 0;
 	virtual int32_t GetType() const = 0;
@@ -84,7 +84,7 @@ private:
 		{
 			throw std::logic_error("invalid_argument");
 		}
-		return dynamic_cast<Property<U> const *>(this);
+		return dynamic_cast<Property<U> const*>(this);
 	}
 
 public:
@@ -125,7 +125,7 @@ public:
  * @tparam     T     { description }
  */
 template<class T>
-class Property final: public IProperty, public creator<Property<T>>
+class Property final : public IProperty, public creator<Property<T>>
 {
 private:
 	std::string 	m_property_name;
@@ -133,7 +133,6 @@ private:
 	T				m_upper;
 	T				m_lower;
 	int32_t 		m_type = 0;
-	bool 			m_isAnimate = false;
 public:
 	std::shared_ptr<Signal<T>> 	m_pSignalValueChange;
 protected:
@@ -143,7 +142,7 @@ protected:
 		m_pSignalValueChange = Signal<T>::create();
 	}
 public:
-	virtual ~Property(){}
+	virtual ~Property() {}
 
 	friend class creator<Property<T>>;
 
@@ -244,6 +243,7 @@ protected:
 	PropertyTable();
 
 	friend class ImGuiShader;
+	friend class AnimationProperty;
 public:
 	virtual ~PropertyTable();
 
@@ -296,7 +296,7 @@ public:
 		auto itr = m_propertyTable.find(property_name);
 		if (itr != m_propertyTable.end())
 		{
-			itr->second->Visitor<U,V>(std::forward<V>(visitor));
+			itr->second->Visitor<U, V>(std::forward<V>(visitor));
 		}
 		else
 		{

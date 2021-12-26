@@ -10,16 +10,21 @@ TimeLinePlayback::TimeLinePlayback(UIObjectPtr pObject, AnimationPropertyPtr pAn
 	}
 }
 
-TimeLinePlayback::~TimeLinePlayback(){}
+TimeLinePlayback::~TimeLinePlayback()
+{}
 
 void TimeLinePlayback::onPlay()
 {
-	if (!m_timer.isStarted())
+	auto pObject = m_pObject.lock();
+	if (!isStarted())
 	{
-		m_timer.start();
+		start();
 	}
-	std::chrono::milliseconds currentTime(m_timer.getMiliseconds());
-	m_pAnimationProperty->onAnimation(currentTime, m_pObject);
+	std::chrono::milliseconds currentTime(getMiliseconds());
+	if (pObject)
+	{
+		m_pAnimationProperty->onAnimation(currentTime, pObject);
+	}
 }
 
 bool TimeLinePlayback::end()

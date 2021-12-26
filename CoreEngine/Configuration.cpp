@@ -36,14 +36,6 @@ void Configuration::loadConfig(const char* file)
 	memcpy_s(app_name, sizeof(app_name), str_return.data(), str_return.size());
 	app_name[sizeof(app_name) - 1] = 0;
 
-	inipp::extract(ini.sections["Log"]["level"], log_level);
-
-	inipp::extract(ini.sections["Graphic"]["fullscreen"], full_screen);
-
-	inipp::extract(ini.sections["Graphic"]["heigh"], height);
-
-	inipp::extract(ini.sections["Graphic"]["width"], width);
-
 	inipp::extract(ini.sections["Memory"]["pool_size"], pool_size);
 	inipp::extract(ini.sections["Memory"]["chunk_size"], chunk_size);
 
@@ -67,38 +59,44 @@ void Configuration::loadConfig(const char* file)
 	memcpy_s(shader_bin, sizeof(shader_bin), str_return.data(), str_return.size());
 	shader_bin[sizeof(shader_bin) - 1] = 0;
 
+	inipp::extract(ini.sections["Log"]["level"], log_level);
+
 	inipp::extract(ini.sections["Graphic"]["fps"], fps);
+	inipp::extract(ini.sections["Graphic"]["fullscreen"], full_screen);
+	inipp::extract(ini.sections["Graphic"]["heigh"], height);
+	inipp::extract(ini.sections["Graphic"]["width"], width);
+	inipp::extract(ini.sections["Graphic"]["vsync"], vsync);
+	inipp::extract(ini.sections["Graphic"]["msaa"], msaa);
 
 	inipp::extract(ini.sections["OpenGL"]["major_version"], major_verion);
 	inipp::extract(ini.sections["OpenGL"]["minor_version"], minor_version);
 	inipp::extract(ini.sections["OpenGL"]["r_size"], r_size);
 	inipp::extract(ini.sections["OpenGL"]["b_size"], b_size);
 	inipp::extract(ini.sections["OpenGL"]["g_size"], g_size);
+	inipp::extract(ini.sections["OpenGL"]["a_size"], a_size);
 
 	inipp::extract(ini.sections["OpenGL"]["depth_size"], depth_size);
 	inipp::extract(ini.sections["OpenGL"]["double_buffer"], double_buffer);
 	inipp::extract(ini.sections["OpenGL"]["stencil_size"], stencil_size);
+	inipp::extract(ini.sections["OpenGL"]["msaa_buffer"], msaa_buffer);
+	inipp::extract(ini.sections["OpenGL"]["msaa_sample"], msaa_sample);
 
-	LOG_DEBUG("Version[%s]", version);
-	LOG_DEBUG("Application[%s]", app_name);
+	LOG_DEBUG("Application[%s] Version[%s]", app_name, version);
 	LOG_DEBUG("log level[%d]", log_level);
 	LOG_DEBUG("Dimension[%dx%d]", width, height);
 	LOG_DEBUG("Data file[%s]", data_file);
 	LOG_DEBUG("Asset path[%s]", asset_path);
 	LOG_DEBUG("Font path[%s]", font_path);
 	LOG_DEBUG("Shader path[%s]", shader_path);
-	LOG_DEBUG("Shader bin path[%s]", shader_bin);
+	LOG_DEBUG("Shader binary path[%s]", shader_bin);
 	
 	LOG_DEBUG("Frame rate[%d]", fps);
 
-	LOG_DEBUG("major_verion[%d]", major_verion);
-	LOG_DEBUG("minor_version[%d]", minor_version);
-	LOG_DEBUG("r_size[%d]", r_size);
-	LOG_DEBUG("b_size[%d]", b_size);
-	LOG_DEBUG("g_size[%d]", g_size);
-	LOG_DEBUG("Depth size[%d]", depth_size);
-	LOG_DEBUG("Double buffer[%d]", double_buffer);
-	LOG_DEBUG("Stencil size[%d]", stencil_size);
+	LOG_DEBUG("GL_verion[#%d.%d]", major_verion, minor_version);
+	LOG_DEBUG("MSAA[%s] Buffer[%d] Sample[%d]", msaa? "ON":"OFF", msaa_buffer, msaa_sample);
+	LOG_DEBUG("r_size[%d] b_size[%d] g_size[%d] a_size[%d] ", r_size, b_size, g_size, a_size);
+	LOG_DEBUG("Depth buffer[%d] Double buffer[%d] Stencil buffer[%d]", depth_size, double_buffer, stencil_size);
+
 }
 
 Configuration::~Configuration() {}

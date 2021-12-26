@@ -5,7 +5,7 @@
 class FullSizeSymbol final : public IPlayerComponent, public creator<FullSizeSymbol>
 {
 private:
-	PlayerPtr 		m_pOwner = nullptr;
+	std::weak_ptr<Player> 		m_pOwner;
 	Node2DImagePtr	m_pSpeaker = nullptr;
 	Node2DImagePtr	m_pFullSize = nullptr;
 

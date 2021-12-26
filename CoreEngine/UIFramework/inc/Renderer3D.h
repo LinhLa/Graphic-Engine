@@ -36,17 +36,9 @@ private:
 	void unbindTexture(std::vector<GLTexturePtr>& );
 
 public:
-	void DrawText2D(
-		std::vector<CharacterPtr>,
-		glm::vec2 coordinator,
-		glm::vec2 scale,
-		float angle,
-		glm::vec2 origin,
-		float opacity,
-		glm::vec3 color);
-
-	void DrawColor(glm::vec2 coordinator, glm::vec2 size, glm::vec2 scale, float angle, glm::vec4 color);
-	void DrawImage(GLTexturePtr pTexture, glm::vec2 coordinator, glm::vec2 scale, float angle, glm::vec2 origin, float opacity, glm::vec4 color);
+	void DrawText2D(std::vector<CharacterPtr>,float opacity,glm::vec3 color);
+	void DrawColor(glm::vec2 size, glm::vec4 color);
+	void DrawImage(GLTexturePtr pTexture, float opacity, glm::vec4 color);
 	void DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial, ModelPtr pModel);
 
 	glm::mat4 getModalMatrix() const;

@@ -27,8 +27,11 @@ BackGround::~BackGround() {}
 void BackGround::init()
 {
 	pSignal_timeSlide = Signal<int64_t>::create();
-	auto pPlayerButton = m_pOwner->getComponent<PlayerButton>();
-	pPlayerButton->pSignal_state->bind(this, &BackGround::onPlayButtonChangeState);
+	auto pPlayerButton = m_pOwner.lock()->getComponent<PlayerButton>();
+	if (pPlayerButton)
+	{
+		pPlayerButton->pSignal_state->bind(this, &BackGround::onPlayButtonChangeState);
+	}
 }
 
 void BackGround::onPlay()
@@ -47,12 +50,24 @@ void BackGround::onPlay()
 	}
 
 	auto pLayout = m_pLanscape->GetPropertyMethodObj<LayoutProperty>();
+#ifdef OPENGL_RENDERING
+	auto transform = pLayout->GetLayoutTransform();
+	auto size = pLayout->GetLayoutSize();
+	SDL_Rect rect = toSDLRect(transform, size);
+#else
 	SDL_Rect rect = pLayout->GetLayoutInformation();
+#endif
+	
 	if (0 == direction)
 	{
 		if (rect.x - 3 > -663)
 		{
+#ifdef OPENGL_RENDERING
+			transform.x = rect.x - 3 ;
+			pLayout->SetLayoutTransform(transform);
+#else
 			pLayout->SetLayoutPosition(rect.x - 3, rect.y);
+#endif			
 		}
 		else
 		{
@@ -63,7 +78,12 @@ void BackGround::onPlay()
 	{
 		if (rect.x + 3 < 0)
 		{
+#ifdef OPENGL_RENDERING
+			transform.x = rect.x + 3;
+			pLayout->SetLayoutTransform(transform);
+#else
 			pLayout->SetLayoutPosition(rect.x + 3, rect.y);
+#endif	
 		}
 		else
 		{

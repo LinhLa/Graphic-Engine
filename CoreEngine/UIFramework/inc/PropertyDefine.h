@@ -8,7 +8,15 @@ extern const std::string ANGLE;
 extern const std::string CENTER_POINT;
 extern const std::string PIVOT_POINT;
 extern const std::string FLIP;
- 
+
+extern const std::string ALIGNMENT_HORIZONTAL;
+extern const std::string ALIGNMENT_VERIZONTAL;
+extern const std::string ALIGNMENT_CENTER;
+extern const std::string ALIGNMENT_TOP;
+extern const std::string ALIGNMENT_BOTTOM;
+extern const std::string ALIGNMENT_LEFT;
+extern const std::string ALIGNMENT_RIGHT;
+
 extern const std::string FORE_GROUND_COLOR;
 extern const std::string BACK_GROUND_COLOR;
 extern const std::string IS_BROADCAST_EVENT;
@@ -44,5 +52,3 @@ extern const std::string FOV;
 extern const std::string NEAR_PLANE;
 extern const std::string FAR_PLANE;
 extern const std::string CAMERA_TYPE;
-
-#define IS_VALID_COLOR(color)		(0 != color.r && 0 != color.g && 0 != color.b && 0 != color.a)

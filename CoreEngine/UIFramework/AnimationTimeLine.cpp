@@ -13,6 +13,10 @@ void AnimationTimeLine::onPlay()
 		{
 			playbackItr = m_playbackList.erase(playbackItr);
 		}
+		else if ((*playbackItr)->isPaused())
+		{
+			//do nothing
+		}
 		else
 		{
 			(*playbackItr)->onPlay();

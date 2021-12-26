@@ -299,7 +299,7 @@
 			"type": "6",
 			"layout": {
 				"transform": [0.0, 0.0, 0.0],
-				"rotate": [1.0, 0.0, 0.0],
+				"rotate": [0.0, 0.0, 0.0],
 				"scale": [0.5, 0.5, 0.5],
 				"x": 150,
 				"y": 150,
@@ -309,11 +309,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 0,
-					"y": 0
-				},
-				"opacity": 255,
+				"pivot_point":[0.0,0.0,0.0],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			},
@@ -350,6 +347,7 @@
 			"resource_name": "landscape",
 			"type": "0",
 			"layout": {
+				"transform": [0.0, 0.0, 0.0],
 				"x": 0,
 				"y": 0,
 				"w": 1197,
@@ -358,11 +356,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 0,
-					"y": 0
-				},
-				"opacity": 255,
+				"center_point":[598.5,222.5],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			}
@@ -371,6 +366,7 @@
 			"resource_name": "hh",
 			"type": "2",
 			"layout": {
+				"transform": [394.0, 409.0, 0.0],
 				"x": 394,
 				"y": 409,
 				"w": 12,
@@ -379,36 +375,24 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 420,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point":[420,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false,
-				"fore_ground_color": {
-					"r": 0,
-					"g": 0,
-					"b": 0,
-					"alpha": 0
-				}
+				"fore_ground_color": [1.0,1.0,1.0,1.0]
 			},
 			"text_property": {
 				"text": "00",
 				"font_name": "arial.ttf",
 				"point_size": 10,
-				"font_color": {
-					"r": 255,
-					"g": 255,
-					"b": 255,
-					"alpha": 255
-				}
+				"font_color": [1.0,1.0,1.0]
 			}
 		},
 		{
 			"resource_name": "colon_h",
 			"type": "2",
 			"layout": {
+				"transform": [406.0, 409.0, 0.0],
 				"x": 406,
 				"y": 409,
 				"w": 5,
@@ -417,37 +401,24 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"pivot_point":[0.0,0.0,0.0],
-				"center_point": {
-					"x": 420,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point": [420,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false,
-				"fore_ground_color": {
-					"r": 0,
-					"g": 0,
-					"b": 0,
-					"alpha": 0
-				}
+				"fore_ground_color":[0.0,0.0,0.0,0.0]
 			},
 			"text_property": {
 				"text": ":",
 				"font_name": "arial.ttf",
 				"point_size": 10,
-				"font_color": {
-					"r": 255,
-					"g": 255,
-					"b": 255,
-					"alpha": 255
-				}
+				"font_color":  [1.0,1.0,1.0]
 			}
 		},
 		{
 			"resource_name": "mm",
 			"type": "2",
 			"layout": {
+				"transform": [411.0, 409.0, 0.0],
 				"x": 411,
 				"y": 409,
 				"w": 12,
@@ -456,36 +427,24 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 420,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point":[420,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false,
-				"fore_ground_color": {
-					"r": 0,
-					"g": 0,
-					"b": 0,
-					"alpha": 0
-				}
+				"fore_ground_color": [1.0,1.0,1.0,1.0]
 			},
 			"text_property": {
 				"text": "00",
 				"font_name": "arial.ttf",
 				"point_size": 10,
-				"font_color": {
-					"r": 255,
-					"g": 255,
-					"b": 255,
-					"alpha": 255
-				}
+				"font_color": [1.0,1.0,1.0]
 			}
 		},
 		{
 			"resource_name": "colon_m",
 			"type": "2",
 			"layout": {
+				"transform": [423.0, 409.0, 0.0],
 				"x": 423,
 				"y": 409,
 				"w": 5,
@@ -494,37 +453,24 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 420,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point": [420,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false,
-				"fore_ground_color": {
-					"r": 0,
-					"g": 0,
-					"b": 0,
-					"alpha": 0
-				}
+				"fore_ground_color": [1.0,1.0,1.0,1.0]
 			},
 			"text_property": {
 				"text": ":",
 				"font_name": "arial.ttf",
 				"point_size": 10,
-				"font_color": {
-					"r": 255,
-					"g": 255,
-					"b": 255,
-					"alpha": 255
-				}
+				"font_color":  [1.0,1.0,1.0]
 			}
 		},
 		{
 			"resource_name": "ss",
 			"type": "2",
 			"layout": {
-				"scale": [1.0, 1.0, 1.0],
+				"transform": [428.0, 409.0, 0.0],
 				"x": 428,
 				"y": 409,
 				"w": 12,
@@ -533,36 +479,24 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 420,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point":[420,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false,
-				"fore_ground_color": {
-					"r": 0,
-					"g": 0,
-					"b": 0,
-					"alpha": 0
-				}
+				"fore_ground_color": [1.0,1.0,1.0,1.0]
 			},
 			"text_property": {
 				"text": "00",
 				"font_name": "arial.ttf",
 				"point_size": 10,
-				"font_color": {
-					"r": 255,
-					"g": 255,
-					"b": 255,
-					"alpha": 255
-				}
+				"font_color": [1.0,1.0,1.0]
 			}
 		},
 		{
 			"resource_name": "colon_s",
 			"type": "2",
 			"layout": {
+				"transform": [440.0, 409.0, 0.0],
 				"x": 440,
 				"y": 409,
 				"w": 5,
@@ -571,36 +505,24 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 420,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point":[420,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false,
-				"fore_ground_color": {
-					"r": 0,
-					"g": 0,
-					"b": 0,
-					"alpha": 0
-				}
+				"fore_ground_color": [1.0,1.0,1.0,1.0]
 			},
 			"text_property": {
 				"text": ":",
 				"font_name": "arial.ttf",
 				"point_size": 10,
-				"font_color": {
-					"r": 255,
-					"g": 255,
-					"b": 255,
-					"alpha": 255
-				}
+				"font_color": [1.0,1.0,1.0]
 			}
 		},
 		{
 			"resource_name": "ms",
 			"type": "2",
 			"layout": {
+				"transform": [445.0, 409.0, 0.0],
 				"x": 445,
 				"y": 409,
 				"w": 12,
@@ -609,30 +531,17 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 420,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point": [420,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false,
-				"fore_ground_color": {
-					"r": 0,
-					"g": 0,
-					"b": 0,
-					"alpha": 0
-				}
+				"fore_ground_color": [1.0,1.0,1.0,1.0]
 			},
 			"text_property": {
 				"text": "00",
 				"font_name": "arial.ttf",
 				"point_size": 10,
-				"font_color": {
-					"r": 255,
-					"g": 255,
-					"b": 255,
-					"alpha": 255
-				}
+				"font_color": [1.0,1.0,1.0]
 			}
 		},
 		{
@@ -640,6 +549,7 @@
 			"resource_name": "play_button",
 			"type": "0",
 			"layout": {
+				"transform": [30.0, 401.0, 0.0],
 				"x": 30,
 				"y": 401,
 				"w": 24,
@@ -648,13 +558,12 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 42,
-					"y": 416
-				},
-				"opacity": 255,
+				"center_point":[42,416],
+				"opacity": 1.0,
 				"flip": 0,
-				"isclip": false
+				"isclip": false,
+				"alignment horizontal":"right",
+				"alignment verizontal":"center"
 			}
 		},
 		{
@@ -662,6 +571,7 @@
 			"resource_name": "playbutton_background",
 			"type": "0",
 			"layout": {
+				"transform": [12.0, 387.0, 0.0],
 				"x": 12,
 				"y": 387,
 				"w": 57,
@@ -670,13 +580,12 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 40,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point":[40,415],
+				"opacity": 1.0,
 				"flip": 0,
-				"isclip": false
+				"isclip": false,
+				"alignment horizontal":"left",
+				"alignment verizontal":"bottom"
 			}
 		},
 		{
@@ -684,6 +593,7 @@
 			"resource_name": "player_background",
 			"type": "0",
 			"layout": {
+				"transform": [0.0, 396.0, 0.0],
 				"x": 0,
 				"y": 396,
 				"w": 534,
@@ -692,11 +602,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 40,
-					"y": 415
-				},
-				"opacity": 255,
+				"center_point": [40,415],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			}
@@ -706,6 +613,7 @@
 			"resource_name": "scrubbing_bar",
 			"type": "0",
 			"layout": {
+				"transform": [81.0, 414.0, 0.0],
 				"x": 81,
 				"y": 414,
 				"w": 300,
@@ -714,11 +622,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 267,
-					"y": 416
-				},
-				"opacity": 255,
+				"center_point":[267,416],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			}
@@ -728,6 +633,7 @@
 			"resource_name": "elapsed_time",
 			"type": "0",
 			"layout": {
+				"transform": [81.0, 414.0, 0.0],
 				"x": 81,
 				"y": 414,
 				"w": 138,
@@ -736,11 +642,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 231,
-					"y": 416
-				},
-				"opacity": 255,
+				"center_point": [231,416],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			}
@@ -750,6 +653,7 @@
 			"resource_name": "fullsize",
 			"type": "0",
 			"layout": {
+				"transform": [505.0, 410.0, 0.0],
 				"x": 505,
 				"y": 410,
 				"w": 11,
@@ -758,11 +662,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 150,
-					"y": 416
-				},
-				"opacity": 255,
+				"center_point": [150,416],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			}
@@ -772,6 +673,7 @@
 			"resource_name": "speaker",
 			"type": "0",
 			"layout": {
+				"transform": [470.0, 412.0, 0.0],
 				"x": 470,
 				"y": 412,
 				"w": 14,
@@ -780,11 +682,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 510,
-					"y": 416
-				},
-				"opacity": 255,
+				"center_point":[510,416],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			}
@@ -794,6 +693,7 @@
 			"resource_name": "slider",
 			"type": "0",
 			"layout": {
+				"transform": [212.0, 409.0, 0.0],
 				"x": 212,
 				"y": 409,
 				"w": 16,
@@ -802,11 +702,8 @@
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
-				"center_point": {
-					"x": 477,
-					"y": 417
-				},
-				"opacity": 255,
+				"center_point":[477,417],
+				"opacity": 1.0,
 				"flip": 0,
 				"isclip": false
 			}

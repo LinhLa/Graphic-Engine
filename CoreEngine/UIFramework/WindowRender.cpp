@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "WindowRender.h"
 #include "Configuration.h"
-
+#include "Scene.h"
+#include "PropertyDefine.h"
 WindowRender::WindowRender() {}
 
 WindowRender::~WindowRender() {}
@@ -112,9 +113,21 @@ bool WindowRender::hasKeyboardFocus() const
 
 bool WindowRender::isMinimized() const
 {
-	return m_bMinimized;
+	auto flags = SDL_GetWindowFlags(m_pWindow);
+	return (flags & SDL_WINDOW_MINIMIZED);
 }
 
+bool WindowRender::isMaximinzed() const
+{
+	auto flags = SDL_GetWindowFlags(m_pWindow);
+	return (flags & SDL_WINDOW_MAXIMIZED);
+}
+
+bool WindowRender::isFullScreen() const
+{
+	auto flags = SDL_GetWindowFlags(m_pWindow);
+	return (flags & SDL_WINDOW_FULLSCREEN);
+}
 
 void WindowRender::onWindowEvent(SDL_Event& e)
 {
@@ -123,16 +136,23 @@ void WindowRender::onWindowEvent(SDL_Event& e)
 	{
 		//Caption update flag
 		bool updateCaption = false;
+#ifdef OPENGL_RENDERING
+		auto pRoot = Scene::GetInstance()->GetRoot();
+		auto scale = pRoot->GetPropertyValue<glm::vec3>(SCALE_VECTOR);
+#endif
 		switch (e.window.event)
 		{
 			//Get new dimensions and repaint on window size change
 		case SDL_WINDOWEVENT_SIZE_CHANGED:
-			m_scaleX = float(e.window.data1) / m_width;
-			m_scaleY = float(e.window.data2) / m_height;
+			m_scaleX = float(e.window.data1) / Configuration::GetInstance()->width;
+			m_scaleY = float(e.window.data2) / Configuration::GetInstance()->height;
 			m_width = e.window.data1;
 			m_height = e.window.data2;
 #ifdef OPENGL_RENDERING
 			glViewport(0, 0, e.window.data1, e.window.data2);
+			scale.x = m_scaleX;
+			scale.y = m_scaleY;
+			pRoot->SetPropertyValue<glm::vec3>(SCALE_VECTOR, scale);
 #else
 			SDL_RenderSetScale(m_pRenderer, m_scaleX, m_scaleY);
 #endif
@@ -164,19 +184,8 @@ void WindowRender::onWindowEvent(SDL_Event& e)
 			updateCaption = true;
 			break;
 
-			//Window minimized
-		case SDL_WINDOWEVENT_MINIMIZED:
-			m_bMinimized = true;
-			break;
-
-			//Window maxized
-		case SDL_WINDOWEVENT_MAXIMIZED:
-			m_bMinimized = false;
-			break;
-
 			//Window restored
 		case SDL_WINDOWEVENT_RESTORED:
-			m_bMinimized = false;
 			break;
 		}
 		//Update window caption with new data
@@ -190,16 +199,13 @@ void WindowRender::onWindowEvent(SDL_Event& e)
 	//Enter exit full screen on return key
 	else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
 	{
-		if (m_bFullScreen)
+		if (isFullScreen())
 		{
 			SDL_SetWindowFullscreen(m_pWindow, SDL_FALSE);
-			m_bFullScreen = false;
 		}
 		else
 		{
 			SDL_SetWindowFullscreen(m_pWindow, SDL_TRUE);
-			m_bFullScreen = true;
-			m_bMinimized = false;
 		}
 	}
 }

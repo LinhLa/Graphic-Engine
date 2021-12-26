@@ -16,7 +16,7 @@ private:
 	uint8_t	m_currentState = PLAY;
 	std::string		m_textureArray[TOTAL];
 
-	PlayerPtr 		m_pOwner = nullptr;
+	std::weak_ptr<Player> 		m_pOwner;
 	Node2DImagePtr	m_pPlaybuttonBackground = nullptr;
 	Node2DImagePtr	m_PlayButton = nullptr;
 

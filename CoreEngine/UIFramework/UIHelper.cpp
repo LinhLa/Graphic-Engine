@@ -101,6 +101,6 @@ namespace UIHelper
 	SDL_Rect GetWindowRect()
 	{
 		Configuration *pConfig = Configuration::GetInstance();
-		return SDL_Rect{ 0, 0, pConfig->height, pConfig->width };
+		return SDL_Rect{ 0, 0, pConfig->width, pConfig->height };
 	}
 }

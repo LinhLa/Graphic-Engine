@@ -117,15 +117,9 @@ bool GLFont::OpenFont(const char* fontName, int32_t pointSize)
 	return true;
 }
 
-void GLFont::renderTexture(
-    GLTexturePtr	pTexture,
-    glm::vec2 coordinator,
-    glm::vec2 scale,
-    float angle,
-    glm::vec2 pivot,
-    glm::vec4 color)
+std::vector<CharacterPtr> GLFont::getCharacterList()
 {
-    Renderer3D::GetInstance()->DrawText2D(m_CharacterList, coordinator, scale, angle, pivot, color.a, glm::vec3(color.r, color.g, color.b));
+    return m_CharacterList;
 }
 
 void GLFont::cleanUp()

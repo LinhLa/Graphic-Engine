@@ -24,13 +24,13 @@ Speaker::~Speaker() {}
 
 void Speaker::init()
 {
-	m_pOwner->getFocus()->addComponent(shared_from_this());
+	m_pOwner.lock()->getFocus()->addComponent(shared_from_this());
 }
 
 void Speaker::AcquireResource()
 {
 	m_pSpeaker = Scene::GetInstance()->LookupUIObject<Node2DImage>(SPEAKER_SYMBOL);
-	auto pPlayer = m_pOwner->getPlayer();
+	auto pPlayer = m_pOwner.lock()->getPlayer();
 	pPlayer->addChild(m_pSpeaker);
 }
 
@@ -42,8 +42,13 @@ void Speaker::onKeyInputEvent(SDL_Event& arg)
 
 void Speaker::FocusIn()
 {
+#ifdef OPENGL_RENDERING
+	IKeyFramePtr keyframeList = AnimationKeyFrame<float>::create();
+	keyframeList->addSplineKeyframe<float>(0_ms, 500_ms, 0.0f, 1.0f);
+#else
 	IKeyFramePtr keyframeList = AnimationKeyFrame<uint8_t>::create();
 	keyframeList->addSplineKeyframe<uint8_t>(0_ms, 500_ms, 0, 255);
+#endif
 
 	AnimationPropertyPtr opacityAnimation = AnimationProperty::create();
 	opacityAnimation->addEntry(OPACITY, keyframeList);

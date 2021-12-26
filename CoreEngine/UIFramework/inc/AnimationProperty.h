@@ -17,7 +17,6 @@ public:
 
 	void onAnimation(std::chrono::milliseconds, UIObjectPtr);
 	void addEntry(std::string, IKeyFramePtr);
-
 	bool isEnd();
 };
 

@@ -7,8 +7,7 @@
 #include <gl\glu.h>
 
 #include "log.h"
-#include "Renderer3D.h"
-
+#include "WindowRender.h"
 #include <stdexcept>
 
 #define IS_VALID_RECT(rect)		(0 != rect.x && 0 != rect.y && 0 != rect.h && 0 != rect.w)
@@ -17,17 +16,41 @@
 #define SDL_INT2FLOAT(r) (SDL_FRect{INT2FLOAT(r.x), INT2FLOAT(r.y), INT2FLOAT(r.w), INT2FLOAT(r.h)})
 #define SDL_FLOAT2INT(r) (SDL_Rect{FLOAT2INT(r.x), FLOAT2INT(r.y), FLOAT2INT(r.w), FLOAT2INT(r.h)})
 
-GLRenderClipManipulator::GLRenderClipManipulator(const SDL_Rect& target): m_clip_target(target)
+static glm::vec4 flipY(glm::vec4 box)
 {
-	GLfloat fbox[4];
-	glGetFloatv(GL_SCISSOR_BOX, fbox);
-	m_render_area.x = FLOAT2INT(fbox[0]);
-	m_render_area.y = FLOAT2INT(fbox[1]);
-	m_render_area.w = FLOAT2INT(fbox[2]);
-	m_render_area.h = FLOAT2INT(fbox[3]);
-	if (!IS_VALID_RECT(m_render_area))
+	auto screenHeight = static_cast<float>(WindowRender::GetInstance()->getHeight());
+	auto windowHeight = box[3];
+	box.y = screenHeight - windowHeight - box.y;
+	return box;
+}
+
+static bool isValidRect(glm::vec4 box)
+{
+	return (0.0f != box[2] || 0.0f != box[3]);
+}
+
+static glm::vec4 toGLMVEC4(SDL_Rect rect)
+{
+	return glm::vec4(
+		rect.x,
+		rect.y,
+		rect.w,
+		rect.h
+	);
+}
+
+static SDL_Rect toSDLRECT(glm::vec4 box)
+{
+	return {FLOAT2INT(box[0]), FLOAT2INT(box[1]), FLOAT2INT(box[2]), FLOAT2INT(box[3])};
+}
+
+GLRenderClipManipulator::GLRenderClipManipulator(const glm::vec4& target): m_clip_target(target)
+{
+	glGetFloatv(GL_SCISSOR_BOX, glm::value_ptr(m_render_area));
+	m_render_area = flipY(m_render_area);
+	if (!isValidRect(m_render_area))
 	{
-		m_render_area = UIHelper::GetWindowRect();
+		m_render_area = toGLMVEC4(UIHelper::GetWindowRect());
 	}
 }
 
@@ -35,25 +58,34 @@ GLRenderClipManipulator::~GLRenderClipManipulator()
 {
 	if (m_bSetClipTarget)
 	{
-		glScissor(m_render_area.x, m_render_area.y, m_render_area.w, m_render_area.h);
+		auto box = flipY(m_render_area);
+		glScissor(box[0], box[1], box[2], box[3]);
 	}
 }
 
 bool GLRenderClipManipulator::HasIntersection()
 {
-	return (SDL_TRUE == SDL_HasIntersection(&m_clip_target, &m_render_area));
+	auto clip_target = toSDLRECT(m_clip_target);
+	auto render_area = toSDLRECT(m_render_area);
+	return (SDL_TRUE == SDL_HasIntersection(&clip_target, &render_area));
 }
 
-bool GLRenderClipManipulator::GetIntersection(SDL_Rect &sdlResult)
+bool GLRenderClipManipulator::GetIntersection(glm::vec4&result)
 {
-	return (SDL_TRUE == SDL_IntersectRect(&m_clip_target, &m_render_area, &sdlResult));
+	auto clip_target = toSDLRECT(m_clip_target);
+	auto render_area = toSDLRECT(m_render_area);
+	SDL_Rect sdlResult;
+	auto ret = SDL_IntersectRect(&clip_target, &render_area, &sdlResult);
+	result = toGLMVEC4(sdlResult);
+	return ret;
 }
 
 void GLRenderClipManipulator::SetRenderClipTarget()
 {
 	if (!m_bSetClipTarget)
 	{
-		glScissor(m_clip_target.x, m_clip_target.y, m_clip_target.w, m_clip_target.h);
+		auto box = flipY(m_clip_target);
+		glScissor(box[0], box[1], box[2], box[3]);
 	}
 	m_bSetClipTarget = true;
 }

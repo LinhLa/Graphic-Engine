@@ -22,6 +22,8 @@
 #define LAND_SCAPE				"landscape"
 #define BACK_GROUND 			"background"
 
+SDL_Rect toSDLRect(glm::vec3 transform, glm::vec2 size);
+
 class Player final: public creator<Player>, public std::enable_shared_from_this<Player>, public Component<IPlayerComponent>
 {
 private:
@@ -29,8 +31,7 @@ private:
 	const std::string FADE_IN_PROGRESS = "FADE_IN_PROGRESS";
 
 	FocusPtr			m_pFocus = nullptr;
-	EmptyNodePtr		m_pPlayer = nullptr;
-	Node2DImagePtr		m_pPlayerBackground = nullptr;
+	std::weak_ptr<EmptyNode> m_pPlayer;
 
 	void AcquireResource();
 	void PrepareAnimation();

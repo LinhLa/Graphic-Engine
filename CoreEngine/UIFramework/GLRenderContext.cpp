@@ -39,24 +39,24 @@ void GLRender2DContext::excute()
 	glClear(GL_COLOR_BUFFER_BIT); // we're not using the stencil buffer now
 
 	//Render 2D image
-	Renderer3D::GetInstance()->DrawImage(
+	/*Renderer3D::GetInstance()->DrawImage(
 		m_pTexture,
 		m_coordinator,
 		m_scale,
 		m_angle,
 		m_center,
 		m_opcity,
-		m_color);
+		m_color);*/
 	// second pass
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default);
-	Renderer3D::GetInstance()->DrawImage(
+	/*Renderer3D::GetInstance()->DrawImage(
 		gFrameBufferObjectPtr->getTexture(),
 		glm::vec2(0.0f, 0.0f),
 		glm::vec2(1.0f),
 		0.0f,
 		m_center,
 		1.0f,
-		m_color);
+		m_color);*/
 };
 
 GLRender3DContext::GLRender3DContext(

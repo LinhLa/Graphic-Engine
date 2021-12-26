@@ -29,7 +29,7 @@ PlayerButton::~PlayerButton() {}
 
 void PlayerButton::init()
 {
-	m_pOwner->getFocus()->addComponent(shared_from_this());
+	m_pOwner.lock()->getFocus()->addComponent(shared_from_this());
 
 	m_textureArray[PLAY] = STR_PLAY_PAUSE;
 	m_textureArray[PAUSE] = STR_PLAY_ARROW;
@@ -44,7 +44,7 @@ void PlayerButton::AcquireResource()
 	m_pPlaybuttonBackground = Scene::GetInstance()->LookupUIObject<Node2DImage>(PLAY_BUTTON_BACKGROUND);
 	m_PlayButton = Scene::GetInstance()->LookupUIObject<Node2DImage>(PLAY_BUTTON);
 	m_PlayButton->SetTexture(m_textureArray[m_currentState]);
-	auto pPlayer = m_pOwner->getPlayer();
+	auto pPlayer = m_pOwner.lock()->getPlayer();
 	pPlayer->addChild(m_pPlaybuttonBackground);
 	pPlayer->addChild(m_PlayButton);
 }
@@ -57,8 +57,13 @@ void PlayerButton::FocusIn()
 
 void PlayerButton::PlayButtonFadeIn()
 {
+#ifdef OPENGL_RENDERING
+	IKeyFramePtr keyframeList = AnimationKeyFrame<float>::create();
+	keyframeList->addSplineKeyframe<float>(0_ms, 500_ms, 0.0f, 1.0f);
+#else
 	IKeyFramePtr keyframeList = AnimationKeyFrame<uint8_t>::create();
 	keyframeList->addSplineKeyframe<uint8_t>(0_ms, 500_ms, 0, 255);
+#endif
 
 	AnimationPropertyPtr opacityAnimation = AnimationProperty::create();
 	opacityAnimation->addEntry(OPACITY, keyframeList);
@@ -72,8 +77,8 @@ void PlayerButton::PlayButtonZoomIn()
 {
 	IKeyFramePtr keyframeList = AnimationKeyFrame<float>::create();
 	keyframeList->addSplineKeyframe<float>(0_ms, 500_ms, 0.8F, 1.0F);
-
 	AnimationPropertyPtr zoomAnimation = AnimationProperty::create();
+
 	zoomAnimation->addEntry(SCALE_X, keyframeList);
 	zoomAnimation->addEntry(SCALE_Y, keyframeList);
 
@@ -88,7 +93,14 @@ void PlayerButton::onKeyInputEvent(SDL_Event& arg)
 	if (SDL_MOUSEBUTTONDOWN == arg.type)
 	{
 		auto layoutMethod = m_PlayButton->GetPropertyMethodObj<LayoutProperty>();
+#ifdef OPENGL_RENDERING
+		auto transform = layoutMethod->GetLayoutTransform();
+		auto size = layoutMethod->GetLayoutSize();
+		SDL_Rect display_rect = toSDLRect(transform, size);
+#else
 		SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
+#endif
+		
 		UIHelper::MOUSE_STATE state = UIHelper::onMouseEvent(arg, display_rect);
 		switch (state)
 		{

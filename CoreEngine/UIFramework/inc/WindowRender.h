@@ -18,8 +18,7 @@ private:
 	SDL_Renderer *m_pRenderer = nullptr;
 	int m_width = 0;
 	int m_height = 0;
-	bool m_bMinimized = false;
-	bool m_bFullScreen = false;
+
 	bool m_bKeyboardFocus = false;
 	bool m_bMouseFocus = false;
 
@@ -56,6 +55,8 @@ public:
 	bool hasMouseFocus() const;
 	bool hasKeyboardFocus() const;
 	bool isMinimized() const;
+	bool isMaximinzed() const;
+	bool isFullScreen() const;
 
 	void onWindowEvent(SDL_Event& e);
 };

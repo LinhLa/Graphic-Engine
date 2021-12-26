@@ -1,5 +1,5 @@
 #include "stdafx.h"
-
+#include "utils.h"
 #include <base_define.h>
 #include <Node2DImage.h>
 #include "Library.h"
@@ -23,17 +23,26 @@ Node2DImage::Node2DImage(std::string name):UIObject(name)
 	bind(ON_DRAW_SIGNAL, this, &Node2DImage::onDraw);
 
 	//<set flag ui update on foreground color changed
-	std::function<void(SDL_Color&&)> sdlColorCallback = [&](SDL_Color&& value) {m_bUIChanged = true; };
-	BindPropertySignal(FORE_GROUND_COLOR, sdlColorCallback);
+#ifdef OPENGL_RENDERING
+	std::function<void(glm::vec4&&)> onColorForeground = [&](glm::vec4&& value) {m_bUIChanged = true; };
+#else
+	std::function<void(SDL_Color&&)> onColorForeground = [&](SDL_Color&& value) {m_bUIChanged = true; };
+#endif
+	
+	BindPropertySignal(FORE_GROUND_COLOR, onColorForeground);
 
 	//<set flag ui update on scale
-	std::function<void(float&&)> floatCallback = [&](float&& value) {m_bUIChanged = true;	};
-	BindPropertySignal(SCALE_X, floatCallback);
-	BindPropertySignal(SCALE_Y, floatCallback);
+	std::function<void(float&&)> onScale = [&](float&& value) {m_bUIChanged = true;	};
+	BindPropertySignal(SCALE_X, onScale);
+	BindPropertySignal(SCALE_Y, onScale);
 
 	//set flag ui update on alpha changed
-	std::function<void(uint8_t&&)> u8Callback = [&](uint8_t&& value) {m_bUIChanged = true;	};
-	BindPropertySignal(OPACITY, u8Callback);
+#ifdef OPENGL_RENDERING
+	std::function<void(float&&)> onOpacityUpdate = [&](float&& value) {m_bUIChanged = true; };
+#else
+	std::function<void(uint8_t&&)> onOpacityUpdate = [&](uint8_t&& value) {m_bUIChanged = true;	};
+#endif
+	BindPropertySignal(OPACITY, onOpacityUpdate);
 }
 
 Node2DImage::~Node2DImage() {}
@@ -54,11 +63,15 @@ void Node2DImage::onDraw(VoidType&&)
 	//get layout display
 #ifndef OPENGL_RENDERING
 	SDL_Rect sdlResult{0, 0, m_pTexture->GetWidth(), m_pTexture->GetHeight()};
-#endif
-	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
 
 	//get center point
-	SDL_Point centerPoint  = originMethod->GetCenterPoint();
+	SDL_Point centerPoint = originMethod->GetCenterPoint();
+
+	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
+#endif
+
+	//get center point
+	auto centerPoint = originMethod->GetCenterPoint();
 
 	if (true == m_bUIChanged)
 	{
@@ -76,13 +89,9 @@ void Node2DImage::onDraw(VoidType&&)
 		if (IsPropertyExist(FORE_GROUND_COLOR))
 		{
 			SDL_Color color = originMethod->GetForeGroundColor();
-			if (IS_VALID_COLOR(color))
-			{
-
-				//clone texture
-				m_pTextureToRender = m_pTexture->Clone(UIHelper::GetRenderer());
-				TextureManipulator(m_pTextureToRender).ColorKey(color);
-			}
+			//clone texture
+			m_pTextureToRender = m_pTexture->Clone(UIHelper::GetRenderer());
+			TextureManipulator(m_pTextureToRender).ColorKey(color);
 		}
 
 		//set opacity
@@ -100,33 +109,11 @@ void Node2DImage::onDraw(VoidType&&)
 #else
 
 	//get foreground color
-	SDL_Color color = originMethod->GetForeGroundColor();
-	glm::vec4 foregroundColor = glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f);
-	if (!IS_VALID_COLOR(color))
-	{
-		foregroundColor = glm::vec4(1.0f);
-	}
-
-	//<Render
-	auto context = GLRender2DContext::create(
-		m_pTexture,
-		glm::vec2(static_cast<float>(display_rect.x), static_cast<float>(display_rect.y)),
-		glm::vec2(layoutMethod->GetLayoutScaleX(), layoutMethod->GetLayoutScaleY()),
-		foregroundColor,
-		static_cast<float>(originMethod->GetAngle()),
-		originMethod->GetOpacity() / 255.0f,
-		glm::vec2(centerPoint.x, centerPoint.y),
-		SDL_FLIP_NONE);
-
-	context->excute();
-
-	//<set world matrix, view matrix, projection matrix
+	auto foregroundColor = originMethod->GetForeGroundColor();
+	//<set world matrix
 	Renderer3D::GetInstance()->setModalMatrix(m_worldTransform);
-	Renderer3D::GetInstance()->setViewMatrix(glm::mat4());
-	Renderer3D::GetInstance()->setProjectionMatrix(pCamera->projectionMatrix());
-	//Render Geometry
-	Renderer3D::GetInstance()->DrawImage(m_pTexture, m_pMaterial, m_pModel);
-	Renderer3D::DrawImage(GLTexturePtr pTexture, glm::vec2 coordinator, glm::vec2 scale, float angle, glm::vec2 origin, float opacity, glm::vec4 color)
+	//Render image
+	Renderer3D::GetInstance()->DrawImage(m_pTexture, originMethod->GetOpacity(), foregroundColor);
 #endif
 }
 

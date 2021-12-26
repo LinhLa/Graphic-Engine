@@ -66,7 +66,7 @@ uint8_t Camera::CamType() const
 
 glm::mat4 Camera::projectionMatrix()
 {
-    glm::mat4 ProjectionMatrix = glm::mat4();
+    glm::mat4 ProjectionMatrix = glm::mat4(1.0F);
     float width = static_cast<float>(WindowRender::GetInstance()->getWidth());
     float height = static_cast<float>(WindowRender::GetInstance()->getHeight());
     if (ORTHOGRAPHIC == m_CamType)

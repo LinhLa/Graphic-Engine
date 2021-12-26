@@ -2,21 +2,25 @@
 #include <SDL.h>
 #include "GLFrameBufferObject.h"
 #include <string>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 /**
  * @brief      This class describes a render clip manipulator.
  */
 class GLRenderClipManipulator
 {
 private:
-	SDL_Rect m_clip_target;
-	SDL_Rect m_render_area;
+	glm::vec4 m_clip_target;
+	glm::vec4 m_render_area;
 	bool	 m_bSetClipTarget = false;
 public:
-	GLRenderClipManipulator(const SDL_Rect& target);
+	GLRenderClipManipulator(const glm::vec4& target);
 	~GLRenderClipManipulator();
 
 	bool HasIntersection();
-	bool GetIntersection(SDL_Rect&);
+	bool GetIntersection(glm::vec4&);
 
 	void SetRenderClipTarget();
 };

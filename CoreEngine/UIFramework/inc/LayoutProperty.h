@@ -25,23 +25,15 @@ public:
 	LayoutProperty& operator=(const LayoutProperty& rhs);
 	void init() override;
 
-	int 	GetLayoutWidth() const;
-	void 	SetLayoutWidth(int value);
+#ifdef OPENGL_RENDERING
+	void onMoveX(float&& x);
+	void onMoveY(float&& y);
 
-	int 	GetLayoutHeight() const;
-	void 	SetLayoutHeight(int value);
+	void onScaleX(float&& x);
+	void onScaleY(float&& y);
 
-	void SetLayoutScaleX(float);
-	float GetLayoutScaleX() const;
-
-	void SetLayoutScaleY(float);
-	float GetLayoutScaleY() const;
-
-	void SetLayoutPosition(int x, int y);
-	SDL_Point GetLayoutPosition() const;
-
-	void SetLayoutInformation(const SDL_Rect& r);
-	SDL_Rect GetLayoutInformation() const;
+	void SetLayoutSize(glm::vec2);
+	glm::vec2 GetLayoutSize() const;
 
 	void SetLayoutTransform(glm::vec3 pos);
 	glm::vec3 GetLayoutTransform() const;
@@ -51,6 +43,27 @@ public:
 
 	void SetLayoutScale(glm::vec3);
 	glm::vec3 GetLayoutScale() const;
+#else
+
+	void SetLayoutScaleX(float);
+	float GetLayoutScaleX() const;
+
+	void SetLayoutScaleY(float);
+	float GetLayoutScaleY() const;
+
+	int 	GetLayoutWidth() const;
+	void 	SetLayoutWidth(int value);
+
+	int 	GetLayoutHeight() const;
+	void 	SetLayoutHeight(int value);
+
+	void SetLayoutPosition(int x, int y);
+	SDL_Point GetLayoutPosition() const;
+
+	void SetLayoutInformation(const SDL_Rect& r);
+	SDL_Rect GetLayoutInformation() const;
+#endif
+
 };
 
 typedef std::shared_ptr<LayoutProperty> LayoutPropertyPtr;

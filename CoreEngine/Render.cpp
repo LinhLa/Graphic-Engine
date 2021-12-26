@@ -8,6 +8,15 @@
 #include "Configuration.h"
 #include "Scene.h"
 
+static void SDL_CHECK(int result, std::string comment = "")
+{
+	if (result < 0)
+	{
+		SDL_Log("%s SDL_Error: % s\n", comment.c_str(), SDL_GetError());
+		_ASSERT(false);
+	}
+}
+
 /* Draw a Gimpish background pattern to show transparency in the image */
 static void draw_background(SDL_Renderer *renderer, int w, int h)
 {
@@ -44,48 +53,44 @@ Render::~Render(){}
 bool Render::initWindow(const char* title, int xpos, int ypos, const int& width, const int& height, int flags)
 {
 	//<Initialize SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		SDL_Log("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-		_ASSERT(false);
-	}
-
+	SDL_CHECK(SDL_Init(SDL_INIT_VIDEO), "SDL could not initialize!");
+	auto pConfig = Configuration::GetInstance();
+	auto pWindowRender = WindowRender::GetInstance();
 #ifdef OPENGL_RENDERING
 	//Initialize OpenGL context
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, Configuration::GetInstance()->major_verion);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, Configuration::GetInstance()->minor_version);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); //  Should be used in conjunction with the SDL_GL_CONTEXT_MAJOR_VERSION and SDL_GL_CONTEXT_MINOR_VERSION attributes
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, pConfig->major_verion));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, pConfig->minor_version));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE)); //  Should be used in conjunction with the SDL_GL_CONTEXT_MAJOR_VERSION and SDL_GL_CONTEXT_MINOR_VERSION attributes
 
-	//SDL_GL_SetAttribute(SDL_GL_RED_SIZE, Configuration::GetInstance()->r_size);
-	//SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, Configuration::GetInstance()->g_size);
-	//SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, Configuration::GetInstance()->b_size);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, Configuration::GetInstance()->depth_size);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, Configuration::GetInstance()->double_buffer);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, Configuration::GetInstance()->stencil_size);
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_RED_SIZE, pConfig->r_size));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, pConfig->g_size));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, pConfig->b_size));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, pConfig->a_size));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, pConfig->depth_size));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, pConfig->double_buffer ? 1 : 0));
+	SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, pConfig->stencil_size));
+
+	if (pConfig->msaa)
+	{
+		SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, pConfig->msaa_buffer));
+		SDL_CHECK(SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, pConfig->msaa_sample));
+	}
 #else
 	//<Initialize SDL IMG
-	if (IMG_Init(IMG_INIT_PNG) < 0)
-	{
-		SDL_Log("SDL IMG could not initialize! SDL_Error: %s\n", SDL_GetError());
-		_ASSERT(false);
-	}
+	SDL_CHECK(IMG_Init(IMG_INIT_PNG, "SDL IMG could not initialize!");
 
 	//Initialize the truetype font API.
-	if (TTF_Init() < 0)
-	{
-		SDL_Log("%s", TTF_GetError());
-		_ASSERT(false);
-	}
+	SDL_CHECK(TTF_Init());
 #endif
 
 	//<Create window
-	WindowRender::GetInstance()->CreateWindow(title, xpos, ypos, width, height, flags);
+	pWindowRender->CreateWindow(title, xpos, ypos, width, height, flags);
 
 #ifdef OPENGL_RENDERING
 	
 	// Create an OpenGL context and associated to window.
-	m_glcontext = WindowRender::GetInstance()->CreateContext();
-	SDL_GL_MakeCurrent(WindowRender::GetInstance()->getWindow(), m_glcontext);
+	m_glcontext = pWindowRender->CreateContext();
+	SDL_GL_MakeCurrent(pWindowRender->getWindow(), m_glcontext);
 
 	//<Set view port
 	glViewport(0, 0, width, height);
@@ -103,10 +108,13 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	}
 
 	//Use Vsync
-	if (SDL_GL_SetSwapInterval(1) < 0)
+	if (pConfig->vsync)
 	{
-		SDL_Log("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+		SDL_CHECK(SDL_GL_SetSwapInterval(1), "Warning: Unable to set VSync!");
 	}
+
+	SDL_CHECK(SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"), "Warning: Linear texture filtering not enabled :");
+	SDL_CHECK(SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_SCALING, "1"), "Warning: Mouse relative scaling not enabled :");
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -120,35 +128,30 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
     //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplSDL2_InitForOpenGL(WindowRender::GetInstance()->getWindow(), m_glcontext);
+    ImGui_ImplSDL2_InitForOpenGL(pWindowRender->getWindow(), m_glcontext);
     ImGui_ImplOpenGL3_Init("#version 330");
 
 	glEnable(GL_SCISSOR_TEST);
 	glEnable(GL_BLEND);
+	glEnable(GL_STENCIL_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_MULTISAMPLE);
 #else
 	//<Get window render
-	m_pRenderer = WindowRender::GetInstance()->CreateRenderer(-1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
+	m_pRenderer = pWindowRender->CreateRenderer(-1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
 
 	//<Set render blend mode
-	if (0 < SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_NONE))
-	{
-		SDL_Log("SDL_SetRenderDrawBlendMode() failed: %s\n", SDL_GetError());
-		_ASSERT(false);
-	}
+	SDL_CHECK(SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_NONE), "SDL_SetRenderDrawBlendMode() failed");
 
 	//<Set Render color
-	if (-1 == SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 255))
-	{
-		SDL_Log("SDL_SetRenderDrawColor() failed: %s\n", SDL_GetError());
-		_ASSERT(false);
-	}
+	SDL_CHECK(SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, 255), "SDL_SetRenderDrawColor() failed:");
 
 	//<Get window surface
-	m_pScreenSurface = WindowRender::GetInstance()->GetWindowSurface();
+	m_pScreenSurface = pWindowRender->GetWindowSurface();
 
 #endif
-	WindowRender::GetInstance()->ShowWindow();
+	pWindowRender->ShowWindow();
 	return true;
 }
 
@@ -221,7 +224,7 @@ bool Render::init()
 	flags|= SDL_WINDOW_OPENGL;
 #endif
 
-	bool bResult = initWindow(Configuration::GetInstance()->app_name,
+	bool bResult = initWindow(pConfig->app_name,
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		screen_width,

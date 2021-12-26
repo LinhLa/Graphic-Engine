@@ -4,11 +4,10 @@
 #include "Timer.h"
 #include "AnimationProperty.h"
 #include "UIObject.h"
-class TimeLinePlayback: public creator<TimeLinePlayback>
+class TimeLinePlayback: public creator<TimeLinePlayback>, public Timer
 {
 private:
-	Timer m_timer;
-	UIObjectPtr m_pObject;
+	std::weak_ptr<UIObject> m_pObject;
 	AnimationPropertyPtr m_pAnimationProperty;
 protected:
 	TimeLinePlayback(UIObjectPtr, AnimationPropertyPtr);

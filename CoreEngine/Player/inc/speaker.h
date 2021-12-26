@@ -5,7 +5,7 @@
 class Speaker final : public IPlayerComponent, public creator<Speaker>
 {
 private:
-	PlayerPtr 		m_pOwner = nullptr;
+	std::weak_ptr<Player> 		m_pOwner;
 	Node2DImagePtr	m_pSpeaker = nullptr;
 
 protected:

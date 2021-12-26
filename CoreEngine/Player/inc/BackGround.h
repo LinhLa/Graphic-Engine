@@ -6,7 +6,7 @@
 class BackGround final : public IPlayerComponent, public creator<BackGround>
 {
 private:
-	PlayerPtr 		m_pOwner = nullptr;
+	std::weak_ptr<Player> 		m_pOwner;
 	Node2DImagePtr	m_pLanscape = nullptr;
 	uint32_t		m_timerID = 0;
 

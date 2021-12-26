@@ -48,13 +48,8 @@ public:
 
 	bool loadFont(const char*);
 	bool OpenFont(const char*, int32_t );
-	void renderTexture(
-		GLTexturePtr	pTexture,
-		glm::vec2 coordinator,
-		glm::vec2 scale,
-		float angle,
-		glm::vec2 pivot,
-		glm::vec4 color);
+
+	std::vector<CharacterPtr> getCharacterList();
 };
 
 typedef std::shared_ptr<GLFont> GLFontPtr;

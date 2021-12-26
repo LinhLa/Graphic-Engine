@@ -14,20 +14,26 @@
 #include "SignalDefine.h"
 
 #include "GLRenderContext.h"
-
+#include "Renderer3D.h"
 NodeText2D::NodeText2D(std::string name):UIObject(name)
 {
 	AddPropertyMethodObj(TextProperty::create(dynamic_cast<PropertyTable*>(this)));
 
 	std::function<void(std::string&&)> onTextUpdate = [&](std::string&&) {m_bFontChanged = m_bUIChanged = true; };
 	std::function<void(int32_t&&)> onFontSizeUpdate = [&](int32_t&&) {m_bFontChanged = m_bUIChanged = true; };
+#ifdef OPENGL_RENDERING
+	std::function<void(glm::vec4&&)> onColorUpdate = [&](glm::vec4&& value) {m_bUIChanged = true; };
+	std::function<void(glm::vec3&&)> onFontColorUpdate = [&](glm::vec3&& value) {m_bUIChanged = true; };
+#else
 	std::function<void(SDL_Color&&)> onColorUpdate = [&](SDL_Color&&) {m_bFontChanged = m_bUIChanged = true; };
-
+	std::function<void(SDL_Color&&)> onFontColorUpdate = [&](SDL_Color&&) {m_bFontChanged = m_bUIChanged = true; };
+#endif
+	
 	//<on text propert changed
 	BindPropertySignal(TEXT, onTextUpdate);
 	BindPropertySignal(FONT_NAME, onTextUpdate);
 	BindPropertySignal(FONT_SIZE, onFontSizeUpdate);
-	BindPropertySignal(FONT_COLOR, onColorUpdate);
+	BindPropertySignal(FONT_COLOR, onFontColorUpdate);
 
 	//<on foreground color changed
 	BindPropertySignal(FORE_GROUND_COLOR, onColorUpdate);
@@ -41,7 +47,11 @@ NodeText2D::NodeText2D(std::string name):UIObject(name)
 	BindPropertySignal(SCALE_Y, onScaleUpdate);
 
 	//<on alpha changed
+#ifdef OPENGL_RENDERING
+	std::function<void(float&&)> onOpacityUpdate = [&](float&& value) {m_bUIChanged = true; };
+#else
 	std::function<void(uint8_t&&)> onOpacityUpdate = [&](uint8_t&& value) {m_bUIChanged = true;	};
+#endif
 	BindPropertySignal(OPACITY, onOpacityUpdate);
 
 	//<create texture to render GLTexture(const std::string& name, GLenum target, int w, int h, GLint format);
@@ -109,11 +119,17 @@ void NodeText2D::onDraw(VoidType&&)
 	UpdateFont();
 #ifndef OPENGL_RENDERING
 	SDL_Rect sdlResult{ 0, 0, m_pFont->GetWidth(), m_pFont->GetHeight() };
-#endif
-	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
 
 	//get center point
 	SDL_Point centerPoint = originMethod->GetCenterPoint();
+
+	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
+
+	//get center point
+	auto centerPoint = originMethod->GetCenterPoint();
+
+#endif
+
 
 	if (true == m_bUIChanged)
 	{
@@ -131,10 +147,7 @@ void NodeText2D::onDraw(VoidType&&)
 		if (IsPropertyExist(FORE_GROUND_COLOR))
 		{
 			SDL_Color color = OriginMethod->GetForeGroundColor();
-			if (IS_VALID_COLOR(color))
-			{
-				TextureManipulator(m_pFont).ColorKey(color);
-			}
+			TextureManipulator(m_pFont).ColorKey(color);
 		}
 
 		//set alpha
@@ -149,33 +162,13 @@ void NodeText2D::onDraw(VoidType&&)
 	context->excute(m_pFont);
 #else
 	//get font color
-	SDL_Color color = TextMethod->GetColor();
+	auto color = TextMethod->GetColor();
 
-	//get layout scale
-	auto scale = layoutMethod->GetLayoutScale();
+	//<set world matrix
+	Renderer3D::GetInstance()->setModalMatrix(m_worldTransform);
 
-	//<load texture
-	m_pGLFont->renderTexture(
-		m_pTexture,
-		glm::vec2(static_cast<float>(display_rect.x), static_cast<float>(display_rect.y)),
-		glm::vec2(scale.x, scale.y),
-		static_cast<float>(originMethod->GetAngle()),
-		glm::vec2(static_cast<float>(centerPoint.x), static_cast<float>(centerPoint.y)),
-		glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f)
-	);
-
-	//<Render
-	auto context = GLRender2DContext::create(
-		m_pTexture,
-		glm::vec2(0.0f),
-		glm::vec2(1.0f),
-		glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f),
-		0.0f,
-		1.0f,
-		glm::vec2(centerPoint.x, centerPoint.y),
-		SDL_FLIP_NONE);
-
-	//context->excute();
+	//Render image
+	Renderer3D::GetInstance()->DrawText2D(m_pGLFont->getCharacterList(), originMethod->GetOpacity(), color);
 #endif
 }
 

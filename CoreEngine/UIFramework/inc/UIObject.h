@@ -43,6 +43,7 @@ public:
 	std::string getName() const;
 
 	void moveTo(UIObjectPtr);
+	void setParent(UIObjectPtr);
 	void addChild(UIObjectPtr);
 	void removeChild(std::string m_name);
 	UIObjectPtr getChild(std::string m_name);
@@ -56,5 +57,9 @@ public:
 	void updateWorldTransform();
 	void updateLocalTransform();
 	glm::mat4 worldTransform() const;
+private:
+	void updateLocalTransform2D();
+	void updateLocalTransform3D();
+	glm::vec3 getOscillation(int, int, glm::vec2, glm::vec3);
 #endif
 };

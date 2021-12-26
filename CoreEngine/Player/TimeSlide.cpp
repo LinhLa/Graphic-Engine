@@ -27,10 +27,13 @@ TimeSlide::~TimeSlide() {}
 
 void TimeSlide::init()
 {
-	m_pOwner->getFocus()->addComponent(shared_from_this());
+	m_pOwner.lock()->getFocus()->addComponent(shared_from_this());
 
-	auto pBackGround = m_pOwner->getComponent<BackGround>();
-	pBackGround->pSignal_timeSlide->bind(this, &TimeSlide::onTimeSlideChange);
+	auto pBackGround = m_pOwner.lock()->getComponent<BackGround>();
+	if (pBackGround)
+	{
+		pBackGround->pSignal_timeSlide->bind(this, &TimeSlide::onTimeSlideChange);
+	}
 }
 
 void TimeSlide::AcquireResource()
@@ -42,7 +45,7 @@ void TimeSlide::AcquireResource()
 	m_pColonArray[0] = Scene::GetInstance()->LookupUIObject<NodeText2D>("colon_h");
 	m_pColonArray[1] = Scene::GetInstance()->LookupUIObject<NodeText2D>("colon_m");
 	m_pColonArray[2] = Scene::GetInstance()->LookupUIObject<NodeText2D>("colon_s");
-	auto pPlayer = m_pOwner->getPlayer();
+	auto pPlayer = m_pOwner.lock()->getPlayer();
 	pPlayer->addChild(m_pHours);
 	pPlayer->addChild(m_pMinutes);
 	pPlayer->addChild(m_pSeconds);

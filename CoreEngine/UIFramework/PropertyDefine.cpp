@@ -8,7 +8,14 @@ const std::string ANGLE 				= std::string("angle");
 const std::string CENTER_POINT 			= std::string("center_point");
 const std::string PIVOT_POINT			= std::string("pivot_point");
 const std::string FLIP 					= std::string("flip");
- 
+const std::string ALIGNMENT_HORIZONTAL = std::string("alignment horizontal");
+const std::string ALIGNMENT_VERIZONTAL = std::string("alignment verizontal");
+const std::string ALIGNMENT_CENTER		= std::string("center");
+const std::string ALIGNMENT_TOP			= std::string("top");
+const std::string ALIGNMENT_BOTTOM		= std::string("bottom");
+const std::string ALIGNMENT_LEFT		= std::string("left");
+const std::string ALIGNMENT_RIGHT		= std::string("right");
+
 const std::string FORE_GROUND_COLOR 	= std::string("fore_ground_color");
 const std::string BACK_GROUND_COLOR 	= std::string("back_ground_color");
 const std::string IS_BROADCAST_EVENT 	= std::string("IS_BROADCAST_EVENT");

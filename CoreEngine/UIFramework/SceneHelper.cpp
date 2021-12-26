@@ -530,62 +530,44 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 			auto layoutMethod = pObject->GetPropertyMethodObj<LayoutProperty>();
 
 			//<Set layout width and height
+#ifdef OPENGL_RENDERING
+			glm::vec2 size(o_layout[LAYOUT_WIDTH].get<double>(), o_layout[LAYOUT_HEIGHT].get<double>());
+			layoutMethod->SetLayoutSize(size);
+#else
 			layoutMethod->SetLayoutWidth(DOUBLE2INT(o_layout[LAYOUT_WIDTH].get<double>()));
 			layoutMethod->SetLayoutHeight(DOUBLE2INT(o_layout[LAYOUT_HEIGHT].get<double>()));
+#endif
 
 			//<Set layout coordinator (X,Y)
+#ifndef OPENGL_RENDERING
 			layoutMethod->SetLayoutPosition(
 				DOUBLE2INT(o_layout[X_COORDINATOR].get<double>()),
 				DOUBLE2INT(o_layout[Y_COORDINATOR].get<double>()));
+#endif
 
+#ifdef OPENGL_RENDERING
 			//<Set layout transform
 			if (o_layout.end() != o_layout.find(TRANSFORM))
 			{
-				glm::vec3 vTransform;
-				std::vector<float> vec3;
 				picojson::array o_vec3_list = o_layout[TRANSFORM].get<picojson::array>();
-				for (picojson::value item : o_vec3_list)
-				{
-					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
-				}
-				vTransform.x = vec3[0];
-				vTransform.y = vec3[1];
-				vTransform.z = vec3[2];
-				layoutMethod->SetLayoutTransform(vTransform);
+				layoutMethod->SetLayoutTransform(GLMVec3(o_vec3_list));
 			}
 
 			//<Set layout rotation
 			if (o_layout.end() != o_layout.find(ROTATE))
 			{
-				glm::vec3 vRotate;
-				std::vector<float> vec3;
 				picojson::array o_vec3_list = o_layout[ROTATE].get<picojson::array>();
-				for (picojson::value item : o_vec3_list)
-				{
-					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
-				}
-				vRotate.x = vec3[0];
-				vRotate.y = vec3[1];
-				vRotate.z = vec3[2];
-				layoutMethod->SetRotation(vRotate);
+				layoutMethod->SetRotation(GLMVec3(o_vec3_list));
 			}
 
 			//<Set layout scale
 			if (o_layout.end() != o_layout.find(SCALE))
 			{
-				glm::vec3 vScale;
-				std::vector<float> vec3;
 				picojson::array o_vec3_list = o_layout[SCALE].get<picojson::array>();
-				for (picojson::value item : o_vec3_list)
-				{
-					vec3.push_back(DOUBLE2FLOAT(item.get<double>()));
-				}
-				vScale.x = vec3[0];
-				vScale.y = vec3[1];
-				vScale.z = vec3[2];
-				layoutMethod->SetLayoutScale(vScale);
+				layoutMethod->SetLayoutScale(GLMVec3(o_vec3_list));
 			}
 		}
+#endif
 
 		//<set origin property
 		if (snull != iter->get(ORIGINAL_PROPERTY))
@@ -596,14 +578,22 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 			picojson::object o_origin_property = iter->get(ORIGINAL_PROPERTY).get<picojson::object>();
 
 			//Visible
-			originMethod->SetVisible(o_origin_property[VISIBLE].get<bool>());
-
+			if (snull != o_origin_property[VISIBLE])
+			{
+				originMethod->SetVisible(o_origin_property[VISIBLE].get<bool>());
+			}
+			
 			//Center point
-			picojson::object o_center_point = o_origin_property[CENTER_POINT].get<picojson::object>();
-			originMethod->SetCenterPoint(
-				DOUBLE2INT(o_center_point[X_COORDINATOR].get<double>()),
-				DOUBLE2INT(o_center_point[Y_COORDINATOR].get<double>()));
-
+			if (snull != o_origin_property[CENTER_POINT])
+			{
+				picojson::array o_vec2_list = o_origin_property[CENTER_POINT].get<picojson::array>();
+#ifdef OPENGL_RENDERING
+				originMethod->SetCenterPoint(GLMVec2(o_vec2_list));
+#else
+				auto center_point = GLMVec2(o_vec2_list);
+				originMethod->SetCenterPoint(center_point.x, center_point.y);
+#endif
+			}
 			//Pivot point
 			if (snull != o_origin_property[PIVOT_POINT])
 			{
@@ -611,15 +601,41 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 				originMethod->SetPivotPoint(GLMVec3(o_vec3_list));
 			}
 
-			//Flip, Opacity, Angle, Clip
+			//Flip, Opacity, Angle, Clip, Aligment
 			originMethod->SetFlip(SDL_RendererFlip(DOUBLE2INT(o_origin_property[FLIP].get<double>())));
+#ifdef OPENGL_RENDERING
+			originMethod->SetOpacity(o_origin_property[OPACITY].get<double>());
+#else
 			originMethod->SetOpacity(DOUBLE2INT(o_origin_property[OPACITY].get<double>()));
-			originMethod->SetAngle(o_origin_property[ANGLE].get<double>());
-			originMethod->SetClip(o_origin_property[ISCLIP].get<bool>());
+#endif
+			if (snull != o_origin_property[ANGLE])
+			{
+				originMethod->SetAngle(o_origin_property[ANGLE].get<double>());
+			}
+			
+			if (snull != o_origin_property[ISCLIP])
+			{
+				originMethod->SetClip(o_origin_property[ISCLIP].get<bool>());
+			}
 
+			if (snull != o_origin_property[ALIGNMENT_HORIZONTAL])
+			{
+				auto aligment = gMapAligment.at(o_origin_property[ALIGNMENT_HORIZONTAL].get<std::string>());
+				originMethod->SetAlignHorizontal(aligment);
+			}
+
+			if (snull != o_origin_property[ALIGNMENT_VERIZONTAL])
+			{
+				auto aligment = gMapAligment.at(o_origin_property[ALIGNMENT_VERIZONTAL].get<std::string>());
+				originMethod->SetAlignVerizontal(aligment);
+			}
 			//Foreground color
 			if (o_origin_property.end() != o_origin_property.find(FORE_GROUND_COLOR))
 			{
+#ifdef OPENGL_RENDERING
+				picojson::array o_vec4_list = o_origin_property[FORE_GROUND_COLOR].get<picojson::array>();
+				originMethod->SetForeGroundColor(GLMVec4(o_vec4_list));
+#else
 				picojson::object o_foreground = o_origin_property[FORE_GROUND_COLOR].get<picojson::object>();
 				SDL_Color color = {
 					DOUBLE2UINT8(o_foreground[RED].get<double>()),
@@ -628,11 +644,16 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 					DOUBLE2UINT8(o_foreground[ALPHA].get<double>())
 				};
 				originMethod->SetForeGroundColor(color);
+#endif
 			}
 
 			//Background color
 			if (o_origin_property.end() != o_origin_property.find(BACK_GROUND_COLOR))
 			{
+#ifdef OPENGL_RENDERING
+				picojson::array o_vec4_list = o_origin_property[BACK_GROUND_COLOR].get<picojson::array>();
+				originMethod->SetBackGroundColor(GLMVec4(o_vec4_list));
+#else
 				picojson::object o_background = o_origin_property[BACK_GROUND_COLOR].get<picojson::object>();
 				SDL_Color color = {
 					DOUBLE2UINT8(o_background[RED].get<double>()),
@@ -641,6 +662,8 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 					DOUBLE2UINT8(o_background[ALPHA].get<double>())
 				};
 				originMethod->SetBackGroundColor(color);
+#endif
+				
 			}
 		}
 
@@ -654,13 +677,17 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 			textMethod->SetText(o_text_property[TEXT].get<std::string>().c_str());
 			textMethod->SetFontName(o_text_property[FONT_NAME].get<std::string>().c_str());
 			textMethod->SetFontSize(DOUBLE2INT(o_text_property[FONT_SIZE].get<double>()));
-
+#ifdef OPENGL_RENDERING
+			picojson::array o_vec3_list = o_text_property[FONT_COLOR].get<picojson::array>();
+			textMethod->SetColor(GLMVec3(o_vec3_list));
+#else
 			picojson::object o_fontColor = o_text_property[FONT_COLOR].get<picojson::object>();
 			textMethod->SetColor(
 				DOUBLE2INT(o_fontColor[RED].get<double>()),
 				DOUBLE2INT(o_fontColor[GREEN].get<double>()),
 				DOUBLE2INT(o_fontColor[BLUE].get<double>()),
 				DOUBLE2INT(o_fontColor[ALPHA].get<double>()));
+#endif
 		}
 
 		if (NODE_3D == type)

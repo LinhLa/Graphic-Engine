@@ -43,9 +43,6 @@ void Node3D::onDraw(VoidType&&)
 	//update uniform
 	m_pShaderProgram->setUniform(m_pMaterial);
 
-	//get layout display
-	SDL_Rect display_rect = layoutMethod->GetLayoutInformation();
-
 	//get pivot point
 	glm::vec3 pivotPoint = originMethod->GetPivotPoint();
 

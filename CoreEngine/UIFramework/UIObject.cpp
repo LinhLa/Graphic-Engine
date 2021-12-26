@@ -23,6 +23,8 @@
 #include "UIHelper.h"
 #include "Library.h"
 
+#include <glm/gtx/string_cast.hpp>
+
 using namespace UIHelper;
 
 UIObject::UIObject(std::string name) :m_name(name)
@@ -62,10 +64,16 @@ void UIObject::onDraw()
 		return;
 	}
 
-	SDL_Rect parent_rect = LayoutMethod->GetLayoutInformation();
+	//update transform matrix
+	updateWorldTransform();
+
 #ifndef OPENGL_RENDERING
+	SDL_Rect parent_rect = LayoutMethod->GetLayoutInformation();
 	RenderClipManipulator clipManipulator(UIHelper::GetRenderer(), parent_rect);
 #else
+	auto size = LayoutMethod->GetLayoutSize();
+	auto transform = LayoutMethod->GetLayoutTransform();
+	glm::vec4 parent_rect(transform.x, transform.y, size.x, size.y);
 	GLRenderClipManipulator clipManipulator(parent_rect);
 #endif
 
@@ -83,31 +91,29 @@ void UIObject::onDraw()
 	//Check background color
 	if (IsPropertyExist(BACK_GROUND_COLOR))
 	{
+#ifndef OPENGL_RENDERING
 		SDL_Color color = originMethod->GetBackGroundColor();
-		if (IS_VALID_COLOR(color))
+		if (OriginProperty::isValidColor(color))
 		{
 			//Calculate Alpha
 			color.a = static_cast<uint8_t>((originMethod->GetOpacity() / 255.0F) * color.a);
-#ifndef OPENGL_RENDERING
+
 			//Create render manip
 			RenderDrawManipulator drawer(UIHelper::GetRenderer(), SDL_BLENDMODE_BLEND, color);
 
 			//Fill color
 			drawer.FillRect(parent_rect);
-#else
-			glm::vec3 scale = LayoutMethod->GetLayoutScale();
-			Renderer3D::GetInstance()->DrawColor(
-				glm::vec2(static_cast<float>(parent_rect.x), static_cast<float>(parent_rect.y)),
-				glm::vec2(static_cast<float>(parent_rect.w), static_cast<float>(parent_rect.h)),
-				glm::vec2(scale.x, scale.y),
-				static_cast<float>(originMethod->GetAngle()),
-				glm::vec4(color.r / 255.0f, color.g / 255.0f, color.b / 255.0f, color.a / 255.0f));
-#endif
 		}
+#else
+		auto color = originMethod->GetBackGroundColor();
+		if (OriginProperty::isValidColor(color))
+		{
+			Renderer3D::GetInstance()->DrawColor(
+				LayoutMethod->GetLayoutSize(),
+				color);
+		}
+#endif
 	}
-
-	//update transform matrix
-	updateWorldTransform();
 
 	//<broadcast signal on draw
 	OnSignal(ON_DRAW_SIGNAL, VoidType{});
@@ -135,8 +141,14 @@ void UIObject::onKeyInputEvent(SDL_Event& arg)
 {
 	auto originMethod = this->GetPropertyMethodObj<OriginProperty>();
 	auto LayoutMethod = this->GetPropertyMethodObj<LayoutProperty>();
-
+#ifdef OPENGL_RENDERING
+	auto pos = LayoutMethod->GetLayoutTransform();
+	auto size = LayoutMethod->GetLayoutSize();
+	SDL_Rect display_rect = { pos.x, pos.y, size.x, size.y };
+#else
 	SDL_Rect display_rect = LayoutMethod->GetLayoutInformation();
+#endif
+	
 	UIHelper::MOUSE_STATE state = UIHelper::onMouseEvent(arg, display_rect);
 
 	//Get mouse position
@@ -226,16 +238,21 @@ void UIObject::moveTo(UIObjectPtr parent)
 		auto current_parent = m_pParentUIObject.lock();
 		if (current_parent)
 		{
-			parent->addChild(shared_from_this());
-			m_pParentUIObject = parent;
 			current_parent->removeChild(m_name);
 		}
 		else
-		{
-			parent->addChild(shared_from_this());
-		}
+		{}
+		parent->addChild(shared_from_this());
+		m_pParentUIObject = parent;
 	}
 	else {}
+}
+void UIObject::setParent(UIObjectPtr parent)
+{
+	if (parent)
+	{
+		m_pParentUIObject = parent;
+	}
 }
 
 void UIObject::addChild(UIObjectPtr child)
@@ -243,6 +260,7 @@ void UIObject::addChild(UIObjectPtr child)
 	if (child)
 	{
 		m_childList.push_back(child);
+		child->setParent(shared_from_this());
 	}
 }
 
@@ -281,20 +299,70 @@ void UIObject::updateWorldTransform()
 	}
 	else
 	{
-		m_worldTransform = glm::mat4() * m_localTransform;
+		m_worldTransform = glm::mat4(1.0f) * m_localTransform;
 	}
+	LOG_OFF("Node[%s] Transform: %s", m_name.c_str(), glm::to_string(m_worldTransform).c_str());
 }
 void UIObject::updateLocalTransform()
 {
+	switch (getType())
+	{
+		case NODE_2D_IMAGE_TYPE:
+		case NODE_2D_BUTTON_TYPE:
+		case NODE_2D_TEXT_TYPE:
+		case NODE_2D_VIEWPORT_TYPE:
+		case EMPTY_NODE:
+		case STACK_LAYOUT_2D:
+		{
+			updateLocalTransform2D();
+			break;
+		}
+		case NODE_3D:
+		{
+			updateLocalTransform3D();
+			break;
+		}
+	default:
+		break;
+	}
+}
+
+void UIObject::updateLocalTransform2D()
+{
 	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
+	auto originMethod = GetPropertyMethodObj<OriginProperty>();
+	auto size = layoutMethod->GetLayoutSize();
+	auto angle = originMethod->GetAngle();
+	auto scale = layoutMethod->GetLayoutScale();
+	auto position = layoutMethod->GetLayoutTransform();
+	auto center_point = originMethod->GetCenterPoint();
+	auto transform = glm::mat4(1.0f);
+
+	auto alignment_verizontal = originMethod->GetAlignVerizontal();
+	auto alignment_horizontal = originMethod->GetAlignHorizontal();
+
+	glm::vec3 oscillation = getOscillation(alignment_verizontal, alignment_horizontal, size, scale);
+
+	transform = glm::translate(transform, position + oscillation);
+	transform = glm::rotate(transform, glm::radians(angle), glm::vec3(center_point.x, center_point.y, 1.0));
+	transform = glm::scale(transform, scale);
+	m_localTransform = transform;
+}
+
+void UIObject::updateLocalTransform3D()
+{
+	auto layoutMethod = GetPropertyMethodObj<LayoutProperty>();
+	auto originMethod = GetPropertyMethodObj<OriginProperty>();
+
+	auto pivot_point = originMethod->GetPivotPoint();
 	auto scale = layoutMethod->GetLayoutScale();
 	auto rotation = layoutMethod->GetRotation();
 	auto position = layoutMethod->GetLayoutTransform();
-	auto transform = glm::mat4();
+	auto transform = glm::mat4(1.0f);
 	transform = glm::translate(transform, position);
-	transform = glm::rotate(transform, rotation.y, glm::vec3(0.0, 1.0, 0.0));
-	transform = glm::rotate(transform, rotation.x, glm::vec3(1.0, 0.0, 0.0));
-	transform = glm::rotate(transform, rotation.z, glm::vec3(0.0, 0.0, 1.0));
+	transform = glm::rotate(transform, glm::radians(rotation.y), glm::vec3(0.0, 1.0, 0.0));
+	transform = glm::rotate(transform, glm::radians(rotation.x), glm::vec3(1.0, 0.0, 0.0));
+	transform = glm::rotate(transform, glm::radians(rotation.z), glm::vec3(0.0, 0.0, 1.0));
 	transform = glm::scale(transform, scale);
 	m_localTransform = transform;
 }
@@ -302,5 +370,22 @@ void UIObject::updateLocalTransform()
 glm::mat4 UIObject::worldTransform() const
 {
 	return m_worldTransform;
+}
+
+glm::vec3 UIObject::getOscillation(int alignment_verizontal, int alignment_horizontal, glm::vec2 size, glm::vec3 scale)
+{
+	std::map<int, glm::vec3> sMapOscillation =
+	{
+		{ALGIN_CENTER + ALGIN_CENTER, glm::vec3((size.x - (size.x * scale.x)) / 2.0,(size.y - (size.y * scale.y)) / 2.0,0.0f)},
+		{ALGIN_TOP + ALGIN_LEFT, glm::vec3(0.0f)},
+		{ALGIN_TOP + ALGIN_CENTER, glm::vec3((size.x - (size.x * scale.x)) / 2.0, 0.0f, 0.0f)},
+		{ALGIN_TOP + ALGIN_RIGHT, glm::vec3(size.x - (size.x * scale.x), 0.0f, 0.0f)},
+		{ALGIN_CENTER + ALGIN_LEFT, glm::vec3(0.0f, (size.y - (size.y * scale.y)) / 2.0, 0.0f)},
+		{ALGIN_CENTER + ALGIN_RIGHT, glm::vec3(size.x - (size.x * scale.x), (size.y - (size.y * scale.y)) / 2.0, 0.0f)},
+		{ALGIN_BOTTOM + ALGIN_LEFT, glm::vec3(0.0f, size.y - (size.y * scale.y), 0.0f)},
+		{ALGIN_BOTTOM + ALGIN_CENTER, glm::vec3((size.x - (size.x * scale.x)) / 2.0, size.y - (size.y * scale.y), 0.0f)},
+		{ALGIN_BOTTOM + ALGIN_RIGHT, glm::vec3(size.x - (size.x * scale.x), size.y - (size.y * scale.y), 0.0f)}
+	};
+	return sMapOscillation.at(alignment_verizontal + alignment_horizontal);
 }
 #endif

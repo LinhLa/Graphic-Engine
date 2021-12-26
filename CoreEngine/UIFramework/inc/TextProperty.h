@@ -34,10 +34,15 @@ public:
 
 	void SetFontSize(int32_t);
 	int32_t GetFontSize() const;
-
+#ifndef OPENGL_RENDERING 
 	void SetColor(uint8_t, uint8_t, uint8_t, uint8_t);
 	void SetColor(SDL_Color);
 	SDL_Color GetColor() const;
+#else
+	void SetColor(glm::vec3);
+	glm::vec3 GetColor() const;
+#endif
+	
 };
 
 typedef std::shared_ptr<TextProperty> TextPropertyPtr;

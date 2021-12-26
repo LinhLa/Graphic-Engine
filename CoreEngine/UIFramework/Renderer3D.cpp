@@ -108,21 +108,24 @@ Renderer3D::Renderer3D() :m_ModalMatrix(1.0f), m_ViewMatrix(1.0f), m_ProjectionM
 
 Renderer3D::~Renderer3D() {}
 
-void Renderer3D::DrawColor(glm::vec2 coordinator, glm::vec2 size, glm::vec2 scale, float angle, glm::vec4 color)
+void Renderer3D::DrawColor(glm::vec2 size, glm::vec4 color)
 {
+	glDisable(GL_DEPTH_TEST);
 	// Camera matrix
-	m_ViewMatrix = glm::mat4(1.0f);
-
-	// Model matrix : an identity matrix (model will be at the origin)
-	m_ModalMatrix = glm::mat4(1.0f);
+	m_ViewMatrix = glm::lookAt(
+		glm::vec3(0, 0, 100), // Camera is at (0,0,100), in World Space
+		glm::vec3(0, 0, 0), // and looks at the origin
+		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+	);
 
 	// Projection matrix
 	float width = static_cast<float>(WindowRender::GetInstance()->getWidth());
 	float height = static_cast<float>(WindowRender::GetInstance()->getHeight());
-	m_ProjectionMatrix = glm::ortho(0.0f, width, 0.0f, height);
+	m_ProjectionMatrix = glm::ortho(0.0f, width, 0.0f, height, -100.0f, 100.0f);
 
-	float w = size[0];
-	float h = size[1];
+	float w = size.x;
+	float h = size.y;
+	glm::vec2 coordinator(0.0f);
 	coordinator.y = height - coordinator.y - h;
 	float vertices[] = {
 		// positions								//color				
@@ -159,19 +162,24 @@ void Renderer3D::DrawColor(glm::vec2 coordinator, glm::vec2 size, glm::vec2 scal
 	glBindVertexArray(0);
 }
 
-void Renderer3D::DrawImage(GLTexturePtr pTexture, glm::vec2 coordinator, glm::vec2 scale, float angle, glm::vec2 origin, float opacity, glm::vec4 color)
+void Renderer3D::DrawImage(GLTexturePtr pTexture, float opacity, glm::vec4 color)
 {
-	// View matrix
-	m_ViewMatrix = glm::mat4(1.0f);
+	glDisable(GL_DEPTH_TEST);
+	// Camera matrix
+	m_ViewMatrix = glm::lookAt(
+		glm::vec3(0, 0, 100), // Camera is at (0,0,100), in World Space
+		glm::vec3(0, 0, 0), // and looks at the origin
+		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+	);
 
 	// Projection matrix
 	float width = static_cast<float>(WindowRender::GetInstance()->getWidth());
 	float height = static_cast<float>(WindowRender::GetInstance()->getHeight());
-	m_ProjectionMatrix = glm::ortho(0.0f, width, height, 0.0f);
-
+	m_ProjectionMatrix = glm::ortho(0.0f, width, height, 0.0f, -100.0f, 100.0f);
 	float w = static_cast<float>(pTexture->GetWidth());
 	float h = static_cast<float>(pTexture->GetHeight());
 
+	glm::vec2 coordinator(0.0f);
 	float quad[8] =
 	{
 		// positions
@@ -180,13 +188,6 @@ void Renderer3D::DrawImage(GLTexturePtr pTexture, glm::vec2 coordinator, glm::ve
 		coordinator.x, coordinator.y + h,		 // bottom left
 		coordinator.x, coordinator.y,			 // top left 
 	};
-
-	if (abs(angle) >= 0.001f)
-	{
-		::rotate(quad, angle, origin.x, origin.y);
-	}
-
-	::scale(quad, scale.x, scale.y, origin.x, origin.y);
 
 	float vertices[] = {
 		// positions				//color									//opacity		// texture coords
@@ -237,26 +238,22 @@ void Renderer3D::DrawImage(GLTexturePtr pTexture, glm::vec2 coordinator, glm::ve
 	pTexture->unbind();
 }
 
-void Renderer3D::DrawText2D(
-	std::vector<CharacterPtr> characterList,
-	glm::vec2 coordinator,
-	glm::vec2 scale,
-	float angle,
-	glm::vec2 origin,
-	float opacity,
-	glm::vec3 color)
+void Renderer3D::DrawText2D(std::vector<CharacterPtr> characterList, float opacity,	glm::vec3 color)
 {
+	glDisable(GL_DEPTH_TEST);
+
 	float width = static_cast<float>(WindowRender::GetInstance()->getWidth());
 	float height = static_cast<float>(WindowRender::GetInstance()->getHeight());
 
-	// View matrix
-	m_ViewMatrix = glm::mat4(1.0f);
-
-	// Model matrix : an identity matrix (model will be at the origin)
-	m_ModalMatrix = glm::mat4(1.0f);
+	// Camera matrix
+	m_ViewMatrix = glm::lookAt(
+		glm::vec3(0, 0, 100), // Camera is at (4,3,3), in World Space
+		glm::vec3(0, 0, 0), // and looks at the origin
+		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+	);
 
 	// Projection matrix
-	m_ProjectionMatrix = glm::ortho(0.0f, width, height, 0.0f);
+	m_ProjectionMatrix = glm::ortho(0.0f, width, height, 0.0f, -100.0f, 100.0f);
 
 	// Calculate final matrix
 	glm::mat4 m_TransformMatrix = m_ProjectionMatrix * m_ViewMatrix * m_ModalMatrix;
@@ -269,6 +266,7 @@ void Renderer3D::DrawText2D(
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 
+	glm::vec2 coordinator(0.0f);
 	// iterate through all characters
 	for (auto& ch : characterList)
 	{
@@ -286,13 +284,6 @@ void Renderer3D::DrawText2D(
 			xpos,     ypos + h, // bottom left
 			xpos,     ypos,     // top left 
 		};
-
-		if (abs(angle) >= 0.001f)
-		{
-			::rotate(quad, angle, origin.x, origin.y);
-		}
-
-		::scale(quad, scale.x, scale.y, origin.x, origin.y);
 
 		// update VBO for each character
 		float vertices[4][4] = {
@@ -318,14 +309,14 @@ void Renderer3D::DrawText2D(
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		coordinator.x += (ch->mAdvance >> 6) * scale.x; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		coordinator.x += (ch->mAdvance >> 6);//*scale.x; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Renderer3D::DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial /*std::vector<GLTexturePtr>& list*/, ModelPtr pModel)
+void Renderer3D::DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial, ModelPtr pModel)
 {
 	glEnable(GL_DEPTH_TEST);
 	pShaderProgram->useProgram();
