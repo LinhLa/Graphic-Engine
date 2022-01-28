@@ -4,6 +4,7 @@
 #include <SDL_opengl.h>
 #include <gl\glu.h>
 #include "creator.h"
+#include <vector>
 class Shader final: public creator<Shader>
 {
 private:
@@ -11,13 +12,18 @@ private:
 
 	GLenum	m_Type = 0;
 	GLuint  m_ShaderID  = 0;
+
+	std::vector<char*>	m_shaderSource;
+	std::vector<GLint>  m_lenght;
 protected:
 	Shader(const std::string& name, GLenum type);
 public:
 	friend class creator<Shader>;
 	~Shader();
 
-	void setSource(GLsizei count, const GLchar* const* shaderSource, const GLint* length);
+	void load(std::string);
+	void addSource(const GLchar* shaderSource, GLint length);
+	void setSource(/*GLsizei count, const GLchar* const* shaderSource, const GLint* length*/);
 	void compile();
 
 	GLuint  getId() const;

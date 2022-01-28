@@ -27,10 +27,12 @@ struct TextureRecord {
 class Mesh final: public creator<Mesh>
 {
 private:
+	std::string m_name;
+	std::string m_material;
+
 	// mesh data
-	std::vector<VertexRecord>       vertices;
+	std::vector<VertexRecord> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<TextureRecord>      textures;
 	
 	//  render data
     uint32_t VAO = 0U;
@@ -38,15 +40,25 @@ private:
     uint32_t EBO = 0U;
 
 protected:
-	Mesh(std::vector<VertexRecord> vertices, std::vector<unsigned int> indices, std::vector<TextureRecord> textures);
+	Mesh(std::string name, std::vector<VertexRecord> vertices, std::vector<unsigned int> indices);
 public:
 	friend class creator<Mesh>;
 	~Mesh();
 
     void setupMesh();
 	void Mesh::debug();
+
+	uint32_t vao() const;
+	uint32_t vbo() const;
+	uint32_t ebo() const;
+
+	size_t vertexCount() const;
+	size_t indexCount() const;
+
 	std::string getName() const;
-	void Draw(ShaderProgramPtr pShader);
+
+	std::string getMaterial();
+	void setMaterial(std::string);
 };
 
 typedef std::shared_ptr<Mesh> MeshPtr;

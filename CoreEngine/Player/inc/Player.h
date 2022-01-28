@@ -31,7 +31,7 @@ private:
 	const std::string FADE_IN_PROGRESS = "FADE_IN_PROGRESS";
 
 	FocusPtr			m_pFocus = nullptr;
-	std::weak_ptr<EmptyNode> m_pPlayer;
+	EmptyNodePtr		m_pPlayer = nullptr;
 
 	void AcquireResource();
 	void PrepareAnimation();

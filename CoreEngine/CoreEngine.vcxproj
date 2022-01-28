@@ -187,7 +187,6 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include=".\UIFramework\inc\Node2DImage.h" />
     <ClInclude Include=".\UIFramework\inc\NodeButton2D.h" />
     <ClInclude Include=".\UIFramework\inc\NodeText2D.h" />
-    <ClInclude Include=".\UIFramework\inc\NodeViewPort2D.h" />
     <ClInclude Include=".\UIFramework\inc\Surface.h" />
     <ClInclude Include=".\UIFramework\inc\Texture.h" />
     <ClInclude Include=".\inc\Application.h" />
@@ -203,6 +202,7 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="3D Cube\inc\Cube3D.h" />
     <ClInclude Include="inc\FpsTracking.h" />
     <ClInclude Include="inc\FrameRateCapping.h" />
+    <ClInclude Include="inc\ModelLoader.h" />
     <ClInclude Include="Player\inc\BackGround.h" />
     <ClInclude Include="Player\inc\Focus.h" />
     <ClInclude Include="Player\inc\IFocusComponent.h" />
@@ -213,10 +213,12 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="Player\inc\FullSizeSymbol.h" />
     <ClInclude Include="Player\inc\ProgressBar.h" />
     <ClInclude Include="Player\inc\TimeSlide.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UIFramework\inc\Attribute.h" />
     <ClInclude Include="UIFramework\inc\Camera.h" />
+    <ClInclude Include="UIFramework\inc\DynamicShader.h" />
     <ClInclude Include="UIFramework\inc\GLFont.h" />
     <ClInclude Include="UIFramework\inc\GLFrameBufferObject.h" />
     <ClInclude Include="UIFramework\inc\GLProperty.h" />
@@ -225,6 +227,8 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\GLTexture.h" />
     <ClInclude Include="UIFramework\inc\GLTypeDictionary.h" />
     <ClInclude Include="UIFramework\inc\ImGuiShader.h" />
+    <ClInclude Include="UIFramework\inc\LibrarySignalMethod.h" />
+    <ClInclude Include="UIFramework\inc\LightingProperty.h" />
     <ClInclude Include="UIFramework\inc\Material.h" />
     <ClInclude Include="UIFramework\inc\MaterialProperty.h" />
     <ClInclude Include="UIFramework\inc\Mesh.h" />
@@ -245,11 +249,13 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\Library.h" />
     <ClInclude Include="UIFramework\inc\Model.h" />
     <ClInclude Include="UIFramework\inc\Node3D.h" />
+    <ClInclude Include="UIFramework\inc\NodeLight.h" />
     <ClInclude Include="UIFramework\inc\OriginProperty.h" />
     <ClInclude Include="UIFramework\inc\PropertyDefine.h" />
     <ClInclude Include="UIFramework\inc\RenderContext.h" />
     <ClInclude Include="UIFramework\inc\Renderer3D.h" />
     <ClInclude Include="UIFramework\inc\RenderManipulator.h" />
+    <ClInclude Include="UIFramework\inc\NodeMesh.h" />
     <ClInclude Include="UIFramework\inc\SceneHelper.h" />
     <ClInclude Include="UIFramework\inc\Shader.h" />
     <ClInclude Include="UIFramework\inc\ShaderProgram.h" />
@@ -277,6 +283,7 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="FpsTracking.cpp" />
     <ClCompile Include="FrameRateCapping.cpp" />
+    <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="Player\BackGround.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -329,6 +336,7 @@ $(SDL_TTF)\lib\x64
     </ClCompile>
     <ClCompile Include="UIFramework\Attribute.cpp" />
     <ClCompile Include="UIFramework\Camera.cpp" />
+    <ClCompile Include="UIFramework\DynamicShader.cpp" />
     <ClCompile Include="UIFramework\GLFont.cpp" />
     <ClCompile Include="UIFramework\GLFrameBufferObject.cpp" />
     <ClCompile Include="UIFramework\GLProperty.cpp" />
@@ -337,6 +345,8 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="UIFramework\GLTexture.cpp" />
     <ClCompile Include="UIFramework\GLTypeDictionary.cpp" />
     <ClCompile Include="UIFramework\ImGuiShader.cpp" />
+    <ClCompile Include="UIFramework\LibrarySignalMethod.cpp" />
+    <ClCompile Include="UIFramework\LightingProperty.cpp" />
     <ClCompile Include="UIFramework\Material.cpp" />
     <ClCompile Include="UIFramework\MaterialProperty.cpp" />
     <ClCompile Include="UIFramework\Mesh.cpp" />
@@ -357,11 +367,13 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="UIFramework\Library.cpp" />
     <ClCompile Include="UIFramework\Model.cpp" />
     <ClCompile Include="UIFramework\Node3D.cpp" />
+    <ClCompile Include="UIFramework\NodeLight.cpp" />
     <ClCompile Include="UIFramework\OriginProperty.cpp" />
     <ClCompile Include="UIFramework\PropertyDefine.cpp" />
     <ClCompile Include="UIFramework\RenderContext.cpp" />
     <ClCompile Include="UIFramework\Renderer3D.cpp" />
     <ClCompile Include="UIFramework\RenderManipulator.cpp" />
+    <ClCompile Include="UIFramework\NodeMesh.cpp" />
     <ClCompile Include="UIFramework\SceneHelper.cpp" />
     <ClCompile Include="UIFramework\Shader.cpp" />
     <ClCompile Include="UIFramework\ShaderProgram.cpp" />
@@ -376,7 +388,6 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include=".\UIFramework\Node2DImage.cpp" />
     <ClCompile Include=".\UIFramework\NodeButton2D.cpp" />
     <ClCompile Include=".\UIFramework\NodeText2D.cpp" />
-    <ClCompile Include=".\UIFramework\NodeViewPort2D.cpp" />
     <ClCompile Include=".\UIFramework\Surface.cpp" />
     <ClCompile Include=".\UIFramework\Texture.cpp" />
     <ClCompile Include=".\Application.cpp" />
@@ -398,6 +409,38 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="UIFramework\UIObjectSignalMethod.cpp" />
     <ClCompile Include="UIFramework\Uniform.cpp" />
     <ClCompile Include="UIFramework\WindowRender.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CoreEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\BlurFrag.glsl" />
+    <None Include="Shader\BlurVex.glsl" />
+    <None Include="Shader\ColorFrag.glsl" />
+    <None Include="Shader\ColorVex.glsl" />
+    <None Include="Shader\CubeFrag.glsl" />
+    <None Include="Shader\CubeVex.glsl" />
+    <None Include="Shader\DynamicFrag.glsl" />
+    <None Include="Shader\DynamicVex.glsl" />
+    <None Include="Shader\GeometryFrag.glsl" />
+    <None Include="Shader\GeometryVex.glsl" />
+    <None Include="Shader\GrayscaleFrag.glsl" />
+    <None Include="Shader\GrayscaleVex.glsl" />
+    <None Include="Shader\InversionFrag.glsl" />
+    <None Include="Shader\InversionVex.glsl" />
+    <None Include="Shader\LightShadingFrag.glsl" />
+    <None Include="Shader\LightShadingVex.glsl" />
+    <None Include="Shader\MultiLightFrag.glsl" />
+    <None Include="Shader\MultiLightVex.glsl" />
+    <None Include="Shader\PBRVex.glsl" />
+    <None Include="Shader\QuadFrag.glsl" />
+    <None Include="Shader\QuadVex.glsl" />
+    <None Include="Shader\TextFrag.glsl" />
+    <None Include="Shader\TextureFrag.glsl" />
+    <None Include="Shader\TextureVex.glsl" />
+    <None Include="Shader\TextVex.glsl" />
+    <None Include="Shader\TriangleFrag.glsl" />
+    <None Include="Shader\TriangleVex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

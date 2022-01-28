@@ -28,6 +28,7 @@ class GLTexture: public creator<GLTexture>
 private:
 	std::string		m_name;
 	std::string		m_path;
+
 	GLuint 			m_textureID = 0U;
 	GLenum 			m_target = 0U;
 	GLenum			m_location = 0U;
@@ -70,12 +71,12 @@ public:
 	void loadToGPU(bool flag = true);
 	bool isLoadToGPU() const;
 
-	void gen();
 	void active();
 	void bind();
-	void unbind();
 
 	std::string getName() const;
+	std::string getPath() const;
+
 	GLuint getID() const;
 };
 

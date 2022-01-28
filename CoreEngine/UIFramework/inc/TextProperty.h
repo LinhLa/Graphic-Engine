@@ -7,22 +7,15 @@
 
 class TextProperty final: public IPropertyMethod, public creator<TextProperty>
 {
-private:
-	PropertyTable* m_PropertyTable = nullptr;
 protected:
-	TextProperty() = delete;
+	PropertyTable* m_pPropertyTable = nullptr;
 	TextProperty(PropertyTable*);
 public:
 	virtual ~TextProperty();
 	friend class creator<TextProperty>;
 
-	TextProperty& operator=(const TextProperty & rhs);
+	TextProperty& operator=(const TextProperty & rhs) = delete;
 
-	template<typename ... Args>
-	static std::shared_ptr<TextProperty> create(Args&& ... args)
-	{
-		return std::shared_ptr<TextProperty>(new TextProperty(std::forward<Args>(args)...));
-	}
 
 	void init() override;
 

@@ -2,7 +2,7 @@
 #include <list>
 #include <memory>
 #include "log.h"
-
+class PropertyTable;
 /**
  * @brief      forward declairation
  */
@@ -17,6 +17,7 @@ public:
 	IPropertyMethod(){}
 	virtual ~IPropertyMethod(){}
 	virtual void init() = 0;
+	virtual void setProperty(std::shared_ptr<PropertyTable>) {};
 };
 
 typedef std::shared_ptr<IPropertyMethod> IPropertyMethodSharedPtr;
@@ -76,7 +77,7 @@ public:
             }
 		}
 		///<push new method object with init properties
-		m_propertyMethodTable.push_back(pMethodObject);
 		pMethodObject->init();
+		m_propertyMethodTable.push_back(pMethodObject);
 	}
 };

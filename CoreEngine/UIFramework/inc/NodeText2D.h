@@ -9,12 +9,11 @@
 class NodeText2D final: public UIObject, public creator<NodeText2D>
 {
 private:
-	GLTexturePtr	m_pTexture = nullptr;
 	FontPtr			m_pFont = nullptr;
 	GLFontPtr		m_pGLFont = nullptr;
 
-	bool	m_bFontChanged = false;
-	bool	m_bUIChanged = false;
+	bool	m_bFontChanged = true;
+	bool	m_bUIChanged = true;
 
 	void UpdateFont();
 protected:
@@ -23,7 +22,7 @@ protected:
 public:
 	virtual ~NodeText2D();
 	uint8_t getType() override;
-
+	UIObjectPtr clone() override;
 	friend class creator<NodeText2D>;
 
 	void onDraw(VoidType&&);

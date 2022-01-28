@@ -15,9 +15,10 @@
 #include "SignalDefine.h"
 
 #include "GLRenderContext.h"
+#include "GLRenderManipulator.h"
 #include "Renderer3D.h"
 
-Node2DImage::Node2DImage(std::string name):UIObject(name)
+Node2DImage::Node2DImage(std::string name) :UIObject(name)
 {
 	//<on draw
 	bind(ON_DRAW_SIGNAL, this, &Node2DImage::onDraw);
@@ -28,7 +29,7 @@ Node2DImage::Node2DImage(std::string name):UIObject(name)
 #else
 	std::function<void(SDL_Color&&)> onColorForeground = [&](SDL_Color&& value) {m_bUIChanged = true; };
 #endif
-	
+
 	BindPropertySignal(FORE_GROUND_COLOR, onColorForeground);
 
 	//<set flag ui update on scale
@@ -52,6 +53,14 @@ uint8_t Node2DImage::getType()
 	return NODE_2D_IMAGE_TYPE;
 }
 
+UIObjectPtr Node2DImage::clone()
+{
+	auto pObject = Node2DImage::create(m_name);
+	this->setProperty(pObject);
+	pObject->SetTexture(m_pTexture->getName());
+	return pObject;
+}
+
 void Node2DImage::onInit(VoidType&&)
 {}
 
@@ -62,7 +71,7 @@ void Node2DImage::onDraw(VoidType&&)
 
 	//get layout display
 #ifndef OPENGL_RENDERING
-	SDL_Rect sdlResult{0, 0, m_pTexture->GetWidth(), m_pTexture->GetHeight()};
+	SDL_Rect sdlResult{ 0, 0, m_pTexture->GetWidth(), m_pTexture->GetHeight() };
 
 	//get center point
 	SDL_Point centerPoint = originMethod->GetCenterPoint();
@@ -95,7 +104,12 @@ void Node2DImage::onDraw(VoidType&&)
 		}
 
 		//set opacity
-		m_pTextureToRender->setAlpha(originMethod->GetOpacity());
+		uint8_t alpha = originMethod->GetOpacity();
+		if (m_pParentUIObject.lock())
+		{
+			alpha = originMethod->GetOpacity() * (m_pParentUIObject.lock()->GetPropertyValue<uint8_t>(OPACITY) / 255.0f);
+		}
+		m_pTextureToRender->setAlpha(alpha);
 
 #endif
 		//reset flag
@@ -107,13 +121,20 @@ void Node2DImage::onDraw(VoidType&&)
 	RenderExContextPtr context = RenderExContext::create(UIHelper::GetRenderer(), sdlResult, display_rect, originMethod->GetAngle(), centerPoint, originMethod->GetFlip());
 	context->excute(m_pTextureToRender);
 #else
-
-	//get foreground color
+	//< foreground color
 	auto foregroundColor = originMethod->GetForeGroundColor();
+
+	//< calculate opacity
+	auto opacity = originMethod->GetOpacity();
+	if (m_pParentUIObject.lock())
+	{
+		opacity = originMethod->GetOpacity() * m_pParentUIObject.lock()->GetPropertyValue<float>(OPACITY);
+	}
+
 	//<set world matrix
 	Renderer3D::GetInstance()->setModalMatrix(m_worldTransform);
 	//Render image
-	Renderer3D::GetInstance()->DrawImage(m_pTexture, originMethod->GetOpacity(), foregroundColor);
+	Renderer3D::GetInstance()->DrawImage(m_pTexture, opacity, foregroundColor);
 #endif
 }
 

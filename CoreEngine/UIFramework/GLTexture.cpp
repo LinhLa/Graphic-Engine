@@ -48,12 +48,14 @@ GLTexture::GLTexture(const std::string& name, GLenum target, int w, int h, GLint
 	glTexParameteri(m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-GLTexture::GLTexture(const std::string& name, GLuint textureID):m_name(name), m_textureID(textureID), m_target(GL_TEXTURE_2D)
+GLTexture::GLTexture(const std::string& name, GLuint textureID):m_name(name), m_textureID(textureID)
 {
+	glGetTextureParameteriv(m_textureID, GL_TEXTURE_TARGET, (GLint*)&m_target);
 	glBindTexture(m_target, m_textureID);
 	glGetTexLevelParameteriv(m_target, 0, GL_TEXTURE_WIDTH, &m_width);
 	glGetTexLevelParameteriv(m_target, 0, GL_TEXTURE_HEIGHT, &m_height);
 	glGetTexLevelParameteriv(m_target, 0, GL_TEXTURE_INTERNAL_FORMAT, &m_iformat);
+	glGetTexLevelParameteriv(m_target, 0, GL_TEXTURE_SWIZZLE_RGBA, &m_Channels);
 	glBindTexture(m_target, 0U);
 }
 
@@ -62,11 +64,21 @@ GLTexture::GLTexture(const std::string& name, GLuint textureID):m_name(name), m_
  */
 void GLTexture::init()
 {
-	gen();
-	bind();
-	setParam();
+	glGenTextures(1, &m_textureID);
+	glBindTexture(m_target, m_textureID);
+	//set Param
+	for (auto& p : m_scalarParamList)
+	{
+		setTextureParam(p.func, p.pname, p.param);
+	}
+
+	for (auto& p : m_vectorParamList)
+	{
+		setTextureParam(p.func, p.pname, p.params);
+	}
+
 	load();
-	unbind();
+	glBindTexture(m_target, 0);
 }
 
 /**
@@ -81,15 +93,25 @@ void GLTexture::load()
 	unsigned char* data = stbi_load(m_path.c_str(), &m_width, &m_height, &m_Channels, 0);
 	if (!data)
 	{
-		throw std::logic_error("Failed to load texture");
+		LOG_DEBUG("Failed to load texture: %s", m_path.c_str());
+		_ASSERT(false);
 	}
 	if (4 == m_Channels)
 	{
 		m_iformat = GL_RGBA;
 	}
-	else
+	else if(3 == m_Channels)
 	{
 		m_iformat = GL_RGB;
+	}
+	else if (1 == m_Channels)
+	{
+		m_iformat = GL_RED;
+	}
+	else
+	{
+		LOG_DEBUG("Texture[%s] unknow format", m_path.c_str());
+		_ASSERT(false);
 	}
 	glTexImage2D(m_target, 0, m_iformat, m_width, m_height, 0, m_iformat, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(m_target);
@@ -261,14 +283,6 @@ bool GLTexture::isLoadToGPU() const
 }
 
 /**
- * @brief      { function_description }
- */
-void GLTexture::gen()
-{
-	glGenTextures(1, &m_textureID);
-}
-
-/**
  * @brief      active texture
  */
 void GLTexture::active()
@@ -288,14 +302,14 @@ void GLTexture::bind()
 	glBindTexture(m_target, m_textureID);
 }
 
-void GLTexture::unbind()
-{
-	glBindTexture(m_target, 0);
-}
-
 std::string GLTexture::getName() const
 {
 	return m_name;
+}
+
+std::string GLTexture::getPath() const
+{
+	return m_path;
 }
 
 GLuint GLTexture::getID() const

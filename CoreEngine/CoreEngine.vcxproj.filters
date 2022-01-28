@@ -19,9 +19,6 @@
     <ClCompile Include=".\UIFramework\NodeText2D.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
-    <ClCompile Include=".\UIFramework\NodeViewPort2D.cpp">
-      <Filter>UIFramework</Filter>
-    </ClCompile>
     <ClCompile Include="UIFramework\OriginProperty.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
@@ -268,6 +265,20 @@
     <ClCompile Include="UIFramework\ImGuiShader.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
+    <ClCompile Include="ModelLoader.cpp" />
+    <ClCompile Include="UIFramework\NodeMesh.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\NodeLight.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\DynamicShader.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\LibrarySignalMethod.cpp" />
+    <ClCompile Include="UIFramework\LightingProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -321,9 +332,6 @@
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
     <ClInclude Include=".\UIFramework\inc\UIObject.h">
-      <Filter>Header Files\UIFramework</Filter>
-    </ClInclude>
-    <ClInclude Include=".\UIFramework\inc\NodeViewPort2D.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
     <ClInclude Include="UIFramework\inc\IPropertyMethod.h">
@@ -536,6 +544,23 @@
     <ClInclude Include="UIFramework\inc\ImGuiShader.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
+    <ClInclude Include="inc\ModelLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\NodeMesh.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\NodeLight.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\DynamicShader.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="UIFramework\inc\LibrarySignalMethod.h" />
+    <ClInclude Include="UIFramework\inc\LightingProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -574,5 +599,94 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{3b5f3d9a-3ede-449a-bb65-7a3149ecd85a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{c16d9a36-092d-473a-b813-593f9fc38f4d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CoreEngine.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\BlurFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\BlurVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\ColorFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\ColorVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\CubeFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\CubeVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\DynamicFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\DynamicVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\GeometryFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\GeometryVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\GrayscaleFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\GrayscaleVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\InversionFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\InversionVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\LightShadingFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\LightShadingVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\MultiLightFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\MultiLightVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\PBRVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\QuadFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\QuadVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\TextFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\TextureFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\TextureVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\TextVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\TriangleFrag.glsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\TriangleVex.glsl">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

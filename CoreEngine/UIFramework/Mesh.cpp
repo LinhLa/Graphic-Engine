@@ -8,11 +8,10 @@
 #include <sstream>
 #include <iostream>
 
-Mesh::Mesh(std::vector<VertexRecord> vertices, std::vector<unsigned int> indices, std::vector<TextureRecord> textures)
+Mesh::Mesh(std::string name, std::vector<VertexRecord> vertices, std::vector<unsigned int> indices): m_name(name)
 {
     this->vertices = vertices;
     this->indices = indices;
-    this->textures = textures;
 
     setupMesh();
 }
@@ -57,44 +56,44 @@ void Mesh::setupMesh()
 
 void Mesh::debug()
 {
-	LOG_DEBUG(".................................................................");
-	LOG_DEBUG("VAO[%u]", VAO);
-	LOG_DEBUG("VBO[%u]", VBO);
-	LOG_DEBUG("EBO[%u]", EBO);
-    LOG_DEBUG("vertex count[%u]", vertices.size());
-    LOG_DEBUG("index count[%u]", indices.size());
-	LOG_DEBUG(".................................................................");
+	LOG_DEBUG("Mesh[%s]:VAO[%u] VBO[%u] EBO[%u], vertex count[%u] index count[%u] material[%s]", m_name.c_str(), VAO, VBO, EBO, vertices.size(), indices.size(), m_material.c_str());
 }
 
-void Mesh::Draw(ShaderProgramPtr pShader)
+uint32_t Mesh::vao() const
 {
-	//unsigned int diffuseNr = 1;
-	//unsigned int specularNr = 1;
-	//for(unsigned int i = 0; i < textures.size(); i++)
-	//{
- //       glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
- //       // retrieve texture number (the N in diffuse_textureN)
- //       std::string number;
- //       std::string name = textures[i].type;
- //       if(name == "texture_diffuse")
- //       	number = std::to_string(diffuseNr++);
- //       else if(name == "texture_specular")
- //       	number = std::to_string(specularNr++);
+    return VAO;
+}
 
-	//	glUniform1i(glGetUniformLocation(pShader->getID(), ("material." + name + number).c_str()), i);
- //       glBindTexture(GL_TEXTURE_2D, textures[i].id);
- //   }
- //   glActiveTexture(GL_TEXTURE0);
+uint32_t Mesh::vbo() const
+{
+    return VBO;
+}
+uint32_t Mesh::ebo() const
+{
+    return EBO;
+}
 
-    // draw mesh
-    glBindVertexArray(VAO);
-    if (0U != EBO)
-    {
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    }
-    else
-    {
-        glDrawArrays(GL_TRIANGLES, 0, this->vertices.size());
-    }
-    glBindVertexArray(0);
+size_t Mesh::vertexCount() const
+{
+    return vertices.size();
+}
+
+size_t Mesh::indexCount() const
+{
+    return indices.size();
+}
+
+std::string Mesh::getName() const
+{
+    return m_name;
+}
+
+std::string Mesh::getMaterial()
+{
+    return m_material;
+}
+
+void Mesh::setMaterial(std::string pMaterial)
+{
+    m_material = pMaterial;
 }

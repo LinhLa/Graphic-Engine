@@ -9,21 +9,25 @@
 #include "ResourceAcquire.h"
 #include "EmptyNode.h"
 
-#include "OriginProperty.h"
+#include "PropertyDefine.h"
 #include "SceneHelper.h"
+
+#include "OriginProperty.h"
+#include "LayoutProperty.h"
+
+const int32_t INIT = (0x01);
+const int32_t RENDER = (0x02);
 
 #define ROOT 	"root"
 
-#define INIT 	int32_t(0x01)
-#define RENDER 	int32_t(0x02)
-
 Scene::Scene()
 {
-	UIObjectPtr proot = EmptyNode::create(ROOT);
-	OriginPropertyPtr OriginMethod = proot->GetPropertyMethodObj<OriginProperty>();
-	OriginMethod->SetBroadCastEvent(true);
-	m_scene_graph.push_front(proot);
-	m_UIObject_table.insert({ ROOT, proot });
+	m_pNodeRoot = EmptyNode::create(ROOT);
+	m_pNodeRoot->onInit();
+	m_pNodeRoot->SetPropertyValue<bool>(IS_BROADCAST_EVENT, true);
+	
+	m_scene_graph.push_front(m_pNodeRoot);
+	m_UIObject_table.insert({ ROOT, m_pNodeRoot });
 }
 
 Scene::~Scene()
@@ -124,14 +128,15 @@ void Scene::LoadResource()
 	// check if the type of the value is "object"
 	_ASSERT(json_value.is<picojson::object>());
 
-	LoadPropertyTypeList(json_value);
 	LoadTextureList(json_value);
+	LoadPropertyTypeList(json_value);
+	
 #ifdef OPENGL_RENDERING
-	LoadFragmentShaderList(json_value);
-	LoadVertexShaderList(json_value);
 	LoadShaderProgramList(json_value);
+	LoadMaterialList(json_value);
+	
 	LoadMeshList(json_value);
-	LoadModel(json_value);
+	LoadModel(m_UIObject_table, json_value);
 #endif
 	LoadResourceList(m_UIObject_table, json_value);
 }
@@ -144,4 +149,14 @@ UIObjectPtr Scene::GetResource(std::string url, bool isAsync)
 		ResourceAcquire::GetInstance()->ResourceAcquired(url);
 	}
 	return nullptr;
+}
+
+std::vector<std::string> Scene::GetResource()
+{
+	std::vector<std::string> list;
+	for (auto& item : m_UIObject_table)
+	{
+		list.push_back(item.first);
+	}
+	return list;
 }

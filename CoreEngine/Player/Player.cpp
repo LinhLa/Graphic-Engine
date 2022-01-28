@@ -52,12 +52,12 @@ void Player::onKeyInputEvent(SDL_Event &&arg)
 
 void Player::setVisible(bool visible)
 {
-	m_pPlayer.lock()->SetPropertyValue(VISIBLE, visible);
+	m_pPlayer->SetPropertyValue(VISIBLE, visible);
 }
 
 EmptyNodePtr Player::getPlayer()
 {
-	return m_pPlayer.lock();
+	return m_pPlayer;
 }
 
 void Player::init(VoidType&& dummy)
@@ -126,17 +126,18 @@ void Player::AcquireResource()
 	auto pLanscape = Scene::GetInstance()->LookupUIObject<Node2DImage>(LAND_SCAPE);
 
 	auto pPlayerNode = EmptyNode::create(VIDEO_PLAYER);
+
 	Scene::GetInstance()->AddResource(pPlayerNode);
 	Scene::GetInstance()->AddToSceneGraph(pPlayerNode);
 	
 	pPlayerNode->addChild(pLanscape);
 	pPlayerNode->addChild(pPlayerBackground);
-	/*pPlayerNode->SetPropertyValue<float>(ANGLE, 5.0f);
-	pPlayerNode->SetPropertyValue<glm::vec3>(SCALE_VECTOR, glm::vec3(0.5f));
+	pPlayerNode->SetPropertyValue<float>(ANGLE, 5.0f);
+	//pPlayerNode->SetPropertyValue<glm::vec3>(SCALE_VECTOR, glm::vec3(0.5f));
 	pPlayerNode->SetPropertyValue<glm::vec3>(TRANS_VECTOR, glm::vec3(150.0f, 100.0f, 0.0f));
 	pPlayerNode->SetPropertyValue<bool>(IS_CLIP, true);
 	pPlayerNode->SetPropertyValue<float>(LAYOUT_WIDTH, 800.0f);
-	pPlayerNode->SetPropertyValue<float>(LAYOUT_HEIGHT, 600.0f);*/
+	pPlayerNode->SetPropertyValue<float>(LAYOUT_HEIGHT, 600.0f);
 
 	m_pPlayer = pPlayerNode;
 	for (auto &existedComponent : m_ComponentList)

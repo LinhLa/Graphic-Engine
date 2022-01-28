@@ -1,17 +1,6 @@
 #include "stdafx.h"
 #include "IProperty.h"
 
-const std::map<std::string, uint8_t> property_type_map =
-{
-	{"STRING", STRING},
-	{"INT", INT},
-	{"BOOL", BOOL},
-	{"FLOAT", FLOAT},
-	{"VEC2", VEC2},
-	{"VEC3", VEC3},
-	{"VEC4", VEC4},
-	{"ARRAY_INT", ARRAY_INT },
-};
 PropertyTable::PropertyTable()
 {}
 
@@ -30,11 +19,6 @@ bool PropertyTable::AddProperty(std::string property_name, IPropertyPtr pPropert
 	{
 		LOG_ERROR("null pointer");
 		return bResult;
-	}
-
-	if (IsPropertyExist(property_name))
-	{
-		LOG_DEBUG("property[%s] is exist", property_name.c_str());
 	}
 
 	m_propertyTable[property_name] = pProperty;
@@ -57,4 +41,69 @@ IPropertyPtr PropertyTable::GetProperty(std::string property_name)
 void PropertyTable::RemoveProperty(std::string property_name)
 {
 	m_propertyTable.erase(property_name);
+}
+
+
+/**
+ * @brief      { function_description }
+ * Only import property which doen't exist
+ * @param[in]  pTable  The table
+ */
+void PropertyTable::importProperty(std::shared_ptr<PropertyTable> pTable)
+{
+	if (!pTable)
+	{
+		LOG_ERROR("null pointer");
+		return;
+	}
+
+	for (auto& item : pTable->m_propertyTable)
+	{
+		auto item_iter = m_propertyTable.find(item.first);
+		if (item_iter == m_propertyTable.end())
+		{
+			m_propertyTable.insert(std::make_pair(item.first, item.second->clone()));
+		}
+		else{}
+	}
+}
+
+/**
+ * @brief      : target object adopt property from source object
+ * caution     : target property which exist will replaced and may crash if it conten any signal
+ * @param[in]  pTable  The table
+ */
+void PropertyTable::shareProperty(std::shared_ptr<PropertyTable> pTable)
+{
+	if (!pTable)
+	{
+		LOG_ERROR("null pointer");
+		return;
+	}
+
+	for (auto& item : pTable->m_propertyTable)
+	{
+		m_propertyTable[item.first] = item.second;
+	}
+}
+
+/*
+* Usaged: Set property to pTable
+*/
+void PropertyTable::setProperty(std::shared_ptr<PropertyTable> pTable)
+{
+	if (!pTable)
+	{
+		LOG_ERROR("null pointer");
+		return;
+	}
+
+	for (auto& item : m_propertyTable)
+	{
+		auto pProperty = pTable->GetProperty(item.first);
+		if (pProperty)
+		{
+			item.second->SetValue(pProperty);
+		}
+	}
 }

@@ -1,77 +1,197 @@
 #pragma once
-#include "Model.h"
-#include "ShaderProgram.h"
-#include "Material.h"
-#include "GLTexture.h"
-#include "Camera.h"
 #include "creator.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class GLRender2DContext : public creator<GLRender2DContext>
+#include "Renderer3D.h"
+#include "Library.h"
+#include "GLFrameBufferObject.h"
+#include "ShaderProgram.h"
+
+
+#define GL_CLEAR_COLOR	glClearColor(0.2f, 0.3f, 0.3f, 0.0f)
+
+extern const std::string SHADOWN_PROGRAM;
+extern const std::string SHADOWN_MATERIAL;
+
+extern const std::string INVERSION;
+extern const std::string GRAYSCALE;
+
+
+extern const std::string IDENTITY;
+extern const std::string EDGE0;
+extern const std::string EDGE1;
+extern const std::string EDGE2;
+extern const std::string SHARPEN;
+extern const std::string BOX_BLUR;
+extern const std::string GAUSSIAN_BLUR;
+extern const std::string EMBOSS;
+
+
+enum GL_RENDER_PASS : GLint
+{
+	DEFAULT_RENDER_PASS			= 1 << 0,
+	MULTISAMPLE_RENDER_PASS		= 1 << 1,
+	SHADOWN_MAP_RENDER_PASS		= 1 << 2,
+	POST_PROCESSING_RENDER_PASS = 1 << 3,
+};
+
+
+enum GL_RENDER_EFFECT : GLint
+{
+	POST_PROCESSING_INVERSION,
+	POST_PROCESSING_GRAYSCALE,
+	POST_PROCESSING_IDENTITY,
+	POST_PROCESSING_EDGE0,
+	POST_PROCESSING_EDGE1,
+	POST_PROCESSING_EDGE2,
+	POST_PROCESSING_SHARPEN,
+	POST_PROCESSING_BOX_BLUR,
+	POST_PROCESSING_GAUSSIAN_BLUR,
+	POST_PROCESSING_EMBOSS,
+};
+
+extern const std::map<std::string, GLint> gRenderPassMap;
+
+
+class GLRenderContextManipulator;
+class IGLRenderContext;
+typedef std::shared_ptr<IGLRenderContext> IGLRenderContextPtr;
+
+class IGLRenderContext
 {
 protected:
-	GLRender2DContext(
-		GLTexturePtr pTexture,
-		glm::vec2 coordinator,
-		glm::vec2 scale,
-		glm::vec4 color,
-		float angle,
-		float opcity,
-		glm::vec2 center,
-		SDL_RendererFlip flip);
+	friend class GLRenderContextManipulator;
+	GLFrameBufferObjectPtr m_pFBO = nullptr;
+	IGLRenderContext() {}
 
-	void calculateMatrix();
+	virtual void excute() = 0;
+	virtual void finish() = 0;
 public:
-	virtual ~GLRender2DContext();
-	friend class creator<GLRender2DContext>;
+	virtual ~IGLRenderContext() {}
+	virtual GLint type() = 0;
 
-	void excute();
-private:
-	GLTexturePtr	m_pTexture = nullptr;
-	glm::vec2		m_coordinator;
-	glm::vec2		m_scale;
-	glm::vec4		m_color;
-	float			m_angle;
-	float			m_opcity;
-	glm::vec2		m_center;
-	SDL_RendererFlip m_flip = SDL_FLIP_NONE;
+	GLuint getBufferObject()
+	{
+		GLuint fbo = 0U;
+		if (m_pFBO)
+		{
+			fbo = m_pFBO->getID();
+		}
+		return fbo;
+	}
+
+	static void blitFrameBuffer(GLuint from , GLuint to);
 };
-typedef std::shared_ptr<GLRender2DContext> GLRender2DContextPtr;
 
-class GLRender3DContext : public creator<GLRender3DContext>
+class GLRenderShadown : public creator<GLRenderShadown>, public IGLRenderContext
 {
 protected:
-	GLRender3DContext(
-		glm::vec3  scale,
-		glm::vec3  translate,
-		glm::vec3  rotate,
-		float	angle,
-		ShaderProgramPtr,
-		MaterialPtr,
-		ModelPtr,
-		CameraPtr);
+	GLRenderShadown(std::string name = "");
+	GLFrameBufferObjectPtr m_pFBO = nullptr;
 public:
-	virtual ~GLRender3DContext();
-	friend class creator<GLRender3DContext>;
+	virtual ~GLRenderShadown();
+	friend class creator<GLRenderShadown>;
 
-	void excute();
-private:
-	glm::vec3  		m_scale;
-	glm::vec3  		m_translate;
-	glm::vec3  		m_rotate;
-	float     		m_angle;
-
-	std::vector<GLTexturePtr> m_TextureList;
-
-	ShaderProgramPtr m_pShaderProgram = nullptr;
-	ModelPtr		m_pModel = nullptr;
-	MaterialPtr		m_pMaterial = nullptr;
-	CameraPtr		m_pCamera = nullptr;
-	void calculateMatrix();
-	void processTextureMap();
+	void excute() override;
+	void finish() override;
+	GLint type() override;
 };
-typedef std::shared_ptr<GLRender3DContext> GLRender3DContextPtr;
 
+class GLRenderDefault : public creator<GLRenderDefault>, public IGLRenderContext
+{
+protected:
+	GLRenderDefault(std::string name);
+	GLFrameBufferObjectPtr m_pFBO = nullptr;
+public:
+	virtual ~GLRenderDefault();
+	friend class creator<GLRenderDefault>;
+
+	void excute() override;
+	void finish() override;
+
+	GLint type() override;
+};
+
+class GLRenderMultisample : public creator<GLRenderMultisample>, public IGLRenderContext
+{
+protected:
+	GLRenderMultisample(std::string name);
+	GLFrameBufferObjectPtr m_pFBO = nullptr;
+public:
+	virtual ~GLRenderMultisample();
+	friend class creator<GLRenderMultisample>;
+
+	void excute() override;
+	void finish() override;
+
+	GLint type() override;
+};
+
+
+class IKernel
+{
+public:
+	IKernel() {}
+	~IKernel() {}
+	virtual GLint type() = 0;
+	virtual std::string name() = 0;
+	virtual std::string shader() = 0;
+};
+
+typedef std::shared_ptr<IKernel> IKernelPtr;
+
+class InversionKernel final : public IKernel, public creator<InversionKernel>
+{
+	InversionKernel() {}
+public:
+	friend class creator<InversionKernel>;
+	virtual ~InversionKernel() {}
+
+	GLint type() override { return POST_PROCESSING_INVERSION; }
+	std::string name() override { return (INVERSION); }
+	std::string shader() override  { return "#define INVERSION\n";}
+};
+
+class GrayscaleKernel final : public IKernel, public creator<GrayscaleKernel>
+{
+	GrayscaleKernel() {}
+public:
+	friend class creator<GrayscaleKernel>;
+	virtual ~GrayscaleKernel() {}
+
+	GLint type() override { return POST_PROCESSING_GRAYSCALE; }
+	std::string name() override { return (GRAYSCALE); }
+	std::string shader() override { return "#define GRAYSCALE\n";}
+};
+
+class BlurKernel final : public IKernel, public creator<BlurKernel>
+{
+	BlurKernel() {}
+public:
+	friend class creator<BlurKernel>;
+	virtual ~BlurKernel() {}
+
+	GLint type() override { return POST_PROCESSING_GAUSSIAN_BLUR; }
+	std::string name() override { return (GAUSSIAN_BLUR); }
+	std::string shader() override { return ("#define GAUSSIAN_BLUR\n"); }
+};
+
+class GLRenderEffect : public creator<GLRenderEffect>, public IGLRenderContext
+{
+protected:
+	std::list<IKernelPtr> m_kernelList;
+	GLRenderEffect(std::string name, std::initializer_list<IKernelPtr> list = {});
+
+	ShaderProgramPtr prepareShader();
+public:
+	virtual ~GLRenderEffect();
+	friend class creator<GLRenderEffect>;
+
+	void add(IKernelPtr pKernel);
+	void excute() override;
+	void finish() override;
+	GLint type() override;
+};

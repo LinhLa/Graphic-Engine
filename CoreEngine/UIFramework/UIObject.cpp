@@ -4,6 +4,7 @@
 #include "UIObject.h"
 #include "Configuration.h"
 #include "Render.h"
+#include "WindowRender.h"
 #include "Renderer3D.h"
 
 #include "OriginProperty.h"
@@ -17,8 +18,10 @@
 #include "PropertyDefine.h"
 #include "SignalDefine.h"
 
+
 #include "RenderManipulator.h"
 #include "GLRenderManipulator.h"
+
 
 #include "UIHelper.h"
 #include "Library.h"
@@ -27,14 +30,25 @@
 
 using namespace UIHelper;
 
+extern const std::map<std::string, uint8_t> gMapNodeType =
+{
+	{"2D_IMAGE", NODE_2D_IMAGE_TYPE},
+	{"2D_BUTTON", NODE_2D_BUTTON_TYPE},
+	{"2D_TEXT", NODE_2D_TEXT_TYPE},
+	{"EMPTY_NODE", EMPTY_NODE},
+	{"STACK_LAYOUT_2D", STACK_LAYOUT_2D},
+	{"NODE_3D", NODE_3D},
+	{"NODE_MESH", NODE_MESH},
+	{"NODE_LIGHT", NODE_LIGHT}
+};
+
 UIObject::UIObject(std::string name) :m_name(name)
 {
 #ifdef OPENGL_RENDERING
 	AddPropertyMethodObj(GLProperty::create(dynamic_cast<PropertyTable*>(this)));
-	AddPropertyMethodObj(MaterialProperty::create(dynamic_cast<PropertyTable*>(this)));
 #endif
-	AddPropertyMethodObj(OriginProperty::create(dynamic_cast<PropertyTable*>(this)));
 	AddPropertyMethodObj(LayoutProperty::create(dynamic_cast<PropertyTable*>(this)));
+	AddPropertyMethodObj(OriginProperty::create(dynamic_cast<PropertyTable*>(this)));
 
 	AddSignalMethodObj(KeyInputSignalMethod::create(dynamic_cast<SignalTable*>(this)));
 	AddSignalMethodObj(UIObjectSignalMethod::create(dynamic_cast<SignalTable*>(this)));
@@ -54,41 +68,51 @@ void UIObject::onInit()
 	}
 }
 
-void UIObject::onDraw()
+#ifdef OPENGL_RENDERING
+std::unique_ptr<GLRenderClipManipulator> UIObject::updateClipArea()
 {
 	auto originMethod = GetPropertyMethodObj<OriginProperty>();
 	auto LayoutMethod = GetPropertyMethodObj<LayoutProperty>();
-	//<Stop draw on invisible
-	if (!originMethod->isVisible())
-	{
-		return;
-	}
-
-	//update transform matrix
-	updateWorldTransform();
-
-#ifndef OPENGL_RENDERING
-	SDL_Rect parent_rect = LayoutMethod->GetLayoutInformation();
-	RenderClipManipulator clipManipulator(UIHelper::GetRenderer(), parent_rect);
-#else
+	//<Set clip area
 	auto size = LayoutMethod->GetLayoutSize();
 	auto transform = LayoutMethod->GetLayoutTransform();
-	glm::vec4 parent_rect(transform.x, transform.y, size.x, size.y);
-	GLRenderClipManipulator clipManipulator(parent_rect);
+	auto scaleX = WindowRender::GetInstance()->scaleX();
+	auto scaleY = WindowRender::GetInstance()->scaleY();
+	glm::vec4 parent_rect(transform.x * scaleX, transform.y * scaleY, size.x * scaleX, size.y * scaleY);
+	std::unique_ptr<GLRenderClipManipulator> pClipManipulator(new GLRenderClipManipulator(parent_rect));
+
+	//Ignore if clip area is not valid
+	if (!pClipManipulator->HasIntersection())
+	{
+		return nullptr;
+	}
+	pClipManipulator->SetRenderClipTarget();
+	return std::move(pClipManipulator);
+}
+
+#else
+
+std::unique_ptr<RenderClipManipulator> UIObject::updateClipArea()
+{
+	auto originMethod = GetPropertyMethodObj<OriginProperty>();
+	auto LayoutMethod = GetPropertyMethodObj<LayoutProperty>();
+	SDL_Rect parent_rect = LayoutMethod->GetLayoutInformation();
+	std::unique_ptr<RenderClipManipulator> pClipManipulator(new RenderClipManipulator(UIHelper::GetRenderer(), parent_rect));
+
+	//Ignore if clip area is not valid
+	if (!pClipManipulator->HasIntersection())
+	{
+		return nullptr;
+	}
+	pClipManipulator->SetRenderClipTarget();
+	return std::move(pClipManipulator);
+}
 #endif
 
-	//<Check clip area
-	if (originMethod->IsClip())
-	{
-		//Ignore if clip area is not valid
-		if (!clipManipulator.HasIntersection())
-		{
-			return;
-		}
-		clipManipulator.SetRenderClipTarget();
-	}
-
-	//Check background color
+void UIObject::updateBackground()
+{
+	auto originMethod = GetPropertyMethodObj<OriginProperty>();
+	auto LayoutMethod = GetPropertyMethodObj<LayoutProperty>();
 	if (IsPropertyExist(BACK_GROUND_COLOR))
 	{
 #ifndef OPENGL_RENDERING
@@ -97,6 +121,10 @@ void UIObject::onDraw()
 		{
 			//Calculate Alpha
 			color.a = static_cast<uint8_t>((originMethod->GetOpacity() / 255.0F) * color.a);
+			if (m_pParentUIObject.lock())
+			{
+				color.a = ((originMethod->GetOpacity() / 255.0F) * (m_pParentUIObject.lock()->GetPropertyValue<uint8_t>(OPACITY) / 255.0f)) * color.a;
+			}
 
 			//Create render manip
 			RenderDrawManipulator drawer(UIHelper::GetRenderer(), SDL_BLENDMODE_BLEND, color);
@@ -108,12 +136,47 @@ void UIObject::onDraw()
 		auto color = originMethod->GetBackGroundColor();
 		if (OriginProperty::isValidColor(color))
 		{
-			Renderer3D::GetInstance()->DrawColor(
-				LayoutMethod->GetLayoutSize(),
-				color);
+			// calculate Alpha
+			if (m_pParentUIObject.lock())
+			{
+				color.a *= (originMethod->GetOpacity() * m_pParentUIObject.lock()->GetPropertyValue<float>(OPACITY));
+			}
+			Renderer3D::GetInstance()->DrawColor(LayoutMethod->GetLayoutSize(), color);
 		}
 #endif
 	}
+}
+
+void UIObject::onDraw()
+{
+	auto originMethod = GetPropertyMethodObj<OriginProperty>();
+	auto LayoutMethod = GetPropertyMethodObj<LayoutProperty>();
+	//<Stop draw on invisible
+	if (!originMethod->isVisible())
+	{
+		return;
+	}
+#ifdef OPENGL_RENDERING
+	std::unique_ptr<GLRenderClipManipulator> pClipManip = nullptr;
+#else
+	std::unique_ptr<RenderClipManipulator> pClipManip = nullptr;
+#endif
+	//<Check clip area
+	if (originMethod->IsClip())
+	{
+		pClipManip = std::move(updateClipArea());
+		if (!pClipManip)
+		{
+			return;
+		}
+}
+
+
+	//update transform matrix
+	updateWorldTransform();
+
+	//Check background color
+	updateBackground();
 
 	//<broadcast signal on draw
 	OnSignal(ON_DRAW_SIGNAL, VoidType{});
@@ -124,6 +187,9 @@ void UIObject::onDraw()
 		//draw
 		child->onDraw();
 	}
+
+	//<broadcast signal after draw
+	OnSignal(ON_DRAW_DONE_SIGNAL, VoidType{});
 }
 
 void UIObject::onClean()
@@ -148,7 +214,7 @@ void UIObject::onKeyInputEvent(SDL_Event& arg)
 #else
 	SDL_Rect display_rect = LayoutMethod->GetLayoutInformation();
 #endif
-	
+
 	UIHelper::MOUSE_STATE state = UIHelper::onMouseEvent(arg, display_rect);
 
 	//Get mouse position
@@ -221,7 +287,7 @@ std::string UIObject::getUrl() const
 	auto parent = m_pParentUIObject.lock();
 	if (!parent)
 	{
-		return std::string();
+		return m_name;
 	}
 	return parent->getUrl() + std::string("/") + m_name;
 }
@@ -241,7 +307,8 @@ void UIObject::moveTo(UIObjectPtr parent)
 			current_parent->removeChild(m_name);
 		}
 		else
-		{}
+		{
+		}
 		parent->addChild(shared_from_this());
 		m_pParentUIObject = parent;
 	}
@@ -276,18 +343,6 @@ void UIObject::removeChild(std::string m_name)
 	}
 }
 
-UIObjectPtr UIObject::getChild(std::string m_name)
-{
-	for (auto& child : m_childList)
-	{
-		if (child->getName() == m_name)
-		{
-			return child;
-		}
-	}
-	return nullptr;
-}
-
 #ifdef OPENGL_RENDERING
 void UIObject::updateWorldTransform()
 {
@@ -307,21 +362,22 @@ void UIObject::updateLocalTransform()
 {
 	switch (getType())
 	{
-		case NODE_2D_IMAGE_TYPE:
-		case NODE_2D_BUTTON_TYPE:
-		case NODE_2D_TEXT_TYPE:
-		case NODE_2D_VIEWPORT_TYPE:
-		case EMPTY_NODE:
-		case STACK_LAYOUT_2D:
-		{
-			updateLocalTransform2D();
-			break;
-		}
-		case NODE_3D:
-		{
-			updateLocalTransform3D();
-			break;
-		}
+	case NODE_2D_IMAGE_TYPE:
+	case NODE_2D_BUTTON_TYPE:
+	case NODE_2D_TEXT_TYPE:
+	case EMPTY_NODE:
+	case STACK_LAYOUT_2D:
+	{
+		updateLocalTransform2D();
+		break;
+	}
+	case NODE_3D:
+	case NODE_MESH:
+	case NODE_LIGHT:
+	{
+		updateLocalTransform3D();
+		break;
+	}
 	default:
 		break;
 	}

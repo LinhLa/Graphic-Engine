@@ -16,6 +16,6 @@ void main()
     // note that we read the multiplication from right to left
     gl_Position = projection * view * model * vec4(aPos, 1.0);
     TexCoord = aTexCoord;
-    Normal = (model * vec4(aNormal, 1.0)).xyz;
-    FragPos = (model * vec4(aPos, 1.0)).xyz;
+    Normal = mat3(transpose(inverse(model))) * aNormal;
+    FragPos = vec3(model * vec4(aPos, 1.0));
 }

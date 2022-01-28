@@ -26,7 +26,7 @@ protected:
 public:
 	virtual ~NodeButton2D();
 	uint8_t getType() override;
-
+	UIObjectPtr clone() override;
 	friend class creator<NodeButton2D>;
 
 	void onDraw(VoidType&&);

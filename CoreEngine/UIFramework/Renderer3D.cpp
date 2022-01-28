@@ -6,7 +6,6 @@
 #include "WindowRender.h"
 #include "Library.h"
 #include "log.h"
-#include "Transformation2D.h"
 
 #define MODEL_MATRIX		"model"
 #define VIEW_MATRIX  		"view"
@@ -62,8 +61,8 @@ static void initFrameBuffer()
 	{
 		return;
 	}
-	float width = static_cast<float>(WindowRender::GetInstance()->getWidth());
-	float height = static_cast<float>(WindowRender::GetInstance()->getHeight());
+	auto width = WindowRender::GetInstance()->getWidth();
+	auto height = WindowRender::GetInstance()->getHeight();
 
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
@@ -73,7 +72,7 @@ static void initFrameBuffer()
 	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
 	// Give an empty image to OpenGL ( the last "0" )
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	
+
 	// set texture options
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -89,12 +88,8 @@ static void initFrameBuffer()
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-	// Set the list of draw buffers.
-	//GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT1 };
-	//glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
-
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-	SDL_Log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+		SDL_Log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	isInit = true;
@@ -137,7 +132,9 @@ void Renderer3D::DrawColor(glm::vec2 size, glm::vec4 color)
 
 	auto pColorProgram = Library::GetInstance()->get<ShaderProgram>(COLOR_SHADER);
 	pColorProgram->useProgram();
-	setUnifromMatrix(pColorProgram);
+	pColorProgram->setUnifromMatrix(m_ProjectionMatrix, PROJECT_MATRIX);
+	pColorProgram->setUnifromMatrix(m_ViewMatrix, VIEW_MATRIX);
+	pColorProgram->setUnifromMatrix(m_ModalMatrix, MODEL_MATRIX);
 
 	// update content of VBO memory
 	glBindVertexArray(VAO);
@@ -162,7 +159,7 @@ void Renderer3D::DrawColor(glm::vec2 size, glm::vec4 color)
 	glBindVertexArray(0);
 }
 
-void Renderer3D::DrawImage(GLTexturePtr pTexture, float opacity, glm::vec4 color)
+void Renderer3D::DrawImage(GLTexturePtr pTexture, float opacity, glm::vec4 color, ShaderProgramPtr pShader)
 {
 	glDisable(GL_DEPTH_TEST);
 	// Camera matrix
@@ -197,9 +194,14 @@ void Renderer3D::DrawImage(GLTexturePtr pTexture, float opacity, glm::vec4 color
 		quad[6], quad[7], 0.0f,		color.r, color.g, color.b, color.a,		opacity,		0.0f, 1.0f  // top left 
 	};
 
-	auto pTextureProgram = Library::GetInstance()->get<ShaderProgram>(TEXTURE_SHADER);
-	pTextureProgram->useProgram();
-	setUnifromMatrix(pTextureProgram);
+	if (!pShader)
+	{
+		pShader = Library::GetInstance()->get<ShaderProgram>(TEXTURE_SHADER);
+	}
+	pShader->useProgram();
+	pShader->setUnifromMatrix(m_ProjectionMatrix, PROJECT_MATRIX);
+	pShader->setUnifromMatrix(m_ViewMatrix, VIEW_MATRIX);
+	pShader->setUnifromMatrix(m_ModalMatrix, MODEL_MATRIX);
 
 	// active and bind texture
 	glActiveTexture(GL_TEXTURE0);
@@ -235,10 +237,10 @@ void Renderer3D::DrawImage(GLTexturePtr pTexture, float opacity, glm::vec4 color
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
-	pTexture->unbind();
+	glBindTexture(pTexture->getTarget(), 0);
 }
 
-void Renderer3D::DrawText2D(std::vector<CharacterPtr> characterList, float opacity,	glm::vec3 color)
+void Renderer3D::DrawText2D(std::vector<CharacterPtr> characterList, float opacity, glm::vec3 color)
 {
 	glDisable(GL_DEPTH_TEST);
 
@@ -309,24 +311,37 @@ void Renderer3D::DrawText2D(std::vector<CharacterPtr> characterList, float opaci
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		coordinator.x += (ch->mAdvance >> 6);//*scale.x; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		coordinator.x += (ch->mAdvance >> 6);// bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Renderer3D::DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial, ModelPtr pModel)
+void Renderer3D::DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial, MeshPtr pMesh)
 {
 	glEnable(GL_DEPTH_TEST);
 	pShaderProgram->useProgram();
-	setUniform(pShaderProgram, pMaterial);
-	setUnifromMatrix(pShaderProgram);
-	//activeTexture(list);
-	pModel->Draw(pShaderProgram);
+	pShaderProgram->setUniform(pMaterial);
 
+	pShaderProgram->setUnifromMatrix(m_ProjectionMatrix, PROJECT_MATRIX);
+	pShaderProgram->setUnifromMatrix(m_ViewMatrix, VIEW_MATRIX);
+	pShaderProgram->setUnifromMatrix(m_ModalMatrix, MODEL_MATRIX);
+
+	// draw mesh
+	glBindVertexArray(pMesh->vao());
+	if (0U != pMesh->ebo())
+	{
+		glDrawElements(GL_TRIANGLES, pMesh->indexCount(), GL_UNSIGNED_INT, 0);
+	}
+	else
+	{
+		glDrawArrays(GL_TRIANGLES, 0, pMesh->vertexCount());
+	}
+	glBindVertexArray(0);
 	glDisable(GL_DEPTH_TEST);
 }
+
 glm::mat4 Renderer3D::getModalMatrix() const { return m_ModalMatrix; }
 glm::mat4 Renderer3D::getViewMatrix() const { return m_ViewMatrix; }
 glm::mat4 Renderer3D::getProjectionMatrix() const { return m_ProjectionMatrix; }
@@ -376,34 +391,6 @@ void Renderer3D::setUnifromMatrix(ShaderProgramPtr pShaderProgram)
 	else
 	{
 		LOG_DEBUG("Shader program[%s] No uniform location for [%s]", pShaderProgram->getName().c_str(), MODEL_MATRIX);
-	}
-}
-
-void Renderer3D::activeTexture(std::vector<GLTexturePtr>& list)
-{
-	glEnable(GL_TEXTURE_2D);
-	GLint max_texture_units;
-	GLint count = 0;
-	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_texture_units);
-
-	// bind textures on corresponding texture units
-	for (auto itr = list.begin(); itr != list.end(); ++itr)
-	{
-		(*itr)->active();
-		count++;
-		if (max_texture_units <= count)
-		{
-			LOG_DEBUG("Over max texture units: Max[%d] Current[%d]", max_texture_units, list.size());
-			break;
-		}
-	}
-}
-
-void Renderer3D::unbindTexture(std::vector<GLTexturePtr>& list)
-{
-	for (auto& pTexture : list)
-	{
-		pTexture->unbind();
 	}
 }
 

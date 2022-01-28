@@ -18,6 +18,8 @@
 NodeText2D::NodeText2D(std::string name):UIObject(name)
 {
 	AddPropertyMethodObj(TextProperty::create(dynamic_cast<PropertyTable*>(this)));
+	//<on draw
+	bind(ON_DRAW_SIGNAL, this, &NodeText2D::onDraw);
 
 	std::function<void(std::string&&)> onTextUpdate = [&](std::string&&) {m_bFontChanged = m_bUIChanged = true; };
 	std::function<void(int32_t&&)> onFontSizeUpdate = [&](int32_t&&) {m_bFontChanged = m_bUIChanged = true; };
@@ -28,7 +30,7 @@ NodeText2D::NodeText2D(std::string name):UIObject(name)
 	std::function<void(SDL_Color&&)> onColorUpdate = [&](SDL_Color&&) {m_bFontChanged = m_bUIChanged = true; };
 	std::function<void(SDL_Color&&)> onFontColorUpdate = [&](SDL_Color&&) {m_bFontChanged = m_bUIChanged = true; };
 #endif
-	
+
 	//<on text propert changed
 	BindPropertySignal(TEXT, onTextUpdate);
 	BindPropertySignal(FONT_NAME, onTextUpdate);
@@ -37,9 +39,6 @@ NodeText2D::NodeText2D(std::string name):UIObject(name)
 
 	//<on foreground color changed
 	BindPropertySignal(FORE_GROUND_COLOR, onColorUpdate);
-
-	//<on draw
-	bind(ON_DRAW_SIGNAL, this, &NodeText2D::onDraw);
 
 	//<on scale changed
 	std::function<void(float&&)> onScaleUpdate = [&](float&& value) {m_bUIChanged = true;	};
@@ -53,12 +52,16 @@ NodeText2D::NodeText2D(std::string name):UIObject(name)
 	std::function<void(uint8_t&&)> onOpacityUpdate = [&](uint8_t&& value) {m_bUIChanged = true;	};
 #endif
 	BindPropertySignal(OPACITY, onOpacityUpdate);
-
-	//<create texture to render GLTexture(const std::string& name, GLenum target, int w, int h, GLint format);
-	m_pTexture = GLTexture::create(m_name, GL_SAMPLER_2D, Configuration::GetInstance()->width, Configuration::GetInstance()->height, GL_RGB);
 }
 
 NodeText2D::~NodeText2D(){}
+
+UIObjectPtr NodeText2D::clone()
+{
+	auto pObject = NodeText2D::create(m_name);
+	this->setProperty(pObject);
+	return pObject;
+}
 
 void NodeText2D::UpdateFont()
 {
@@ -151,24 +154,35 @@ void NodeText2D::onDraw(VoidType&&)
 		}
 
 		//set alpha
-		m_pFont->setAlpha(originMethod->GetOpacity());
+		uint8_t alpha = originMethod->GetOpacity();
+		if (m_pParentUIObject.lock())
+		{
+			alpha = originMethod->GetOpacity() * (m_pParentUIObject.lock()->GetPropertyValue<uint8_t>(OPACITY) / 255.0f);
+		}
+		m_pFont->setAlpha(alpha);
 #endif
 		//reset flag
 		m_bUIChanged = false;
 	}
 #ifndef OPENGL_RENDERING
 	//<load texture to render
-	RenderExContextPtr context = RenderExContext::create(UIHelper::GetRenderer(), sdlResult, display_rect, OriginMethod->GetAngle(), centerPoint, OriginMethod->GetFlip());
+	RenderExContextPtr context = RenderExContext::create(UIHelper::GetRenderer(), sdlResult, display_rect, originMethod->GetAngle(), centerPoint, originMethod->GetFlip());
 	context->excute(m_pFont);
 #else
 	//get font color
 	auto color = TextMethod->GetColor();
 
+	//< calculate opacity
+	auto opacity = originMethod->GetOpacity();
+	if (m_pParentUIObject.lock())
+	{
+		opacity = originMethod->GetOpacity() * m_pParentUIObject.lock()->GetPropertyValue<float>(OPACITY);
+	}
 	//<set world matrix
 	Renderer3D::GetInstance()->setModalMatrix(m_worldTransform);
 
-	//Render image
-	Renderer3D::GetInstance()->DrawText2D(m_pGLFont->getCharacterList(), originMethod->GetOpacity(), color);
+	//Render text
+	Renderer3D::GetInstance()->DrawText2D(m_pGLFont->getCharacterList(), opacity, color);
 #endif
 }
 

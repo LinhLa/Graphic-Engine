@@ -36,6 +36,8 @@ private:
 protected:
 	Render();
 	~Render();
+
+	void drawScene();
 public:
 	bool init();
 	void render();

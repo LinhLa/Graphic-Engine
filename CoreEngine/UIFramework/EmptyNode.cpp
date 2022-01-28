@@ -11,6 +11,13 @@ uint8_t EmptyNode::getType()
 	return EMPTY_NODE;
 }
 
+UIObjectPtr EmptyNode::clone()
+{
+	auto pObject = EmptyNode::create(m_name);
+	this->setProperty(pObject);
+	return pObject;
+}
+
 void EmptyNode::onInit(VoidType&&)
 {}
 

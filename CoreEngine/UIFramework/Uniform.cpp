@@ -64,7 +64,7 @@ std::shared_ptr<IUniform> create(std::string name, GLuint index, GLenum type, GL
 		}
 		case GL_SAMPLER_2D:
 		{
-			pUniform = Uniform<std::string>::create(name, index, type, size);
+			pUniform = Uniform<glm::u32>::create(name, index, type, size);
 			break;
 		}
 		case GL_FLOAT_MAT4:
@@ -86,10 +86,9 @@ void IUniform::glUniform(GLint location, void* param)
 	if (GL_SAMPLER_2D == this->getType())
 	{
 		GLint &rTextureLocation = *(GLint*)(param);
-		//glUniform1i(location, rTextureLocation++);
 		glUniform1i(location, rTextureLocation);
 	}
-	if (GL_FLOAT == this->getType())
+	else if (GL_FLOAT == this->getType())
 	{
 		glUniform1f(location, DynamicTypeCheck<glm::f32>()->get());
 	}
@@ -103,13 +102,14 @@ void IUniform::glUniform(GLint location, void* param)
 		glm::vec4 v4 = DynamicTypeCheck<glm::vec4>()->get();
 		glUniform4f(location, v4[0], v4[1], v4[2], v4[3]);
 	}
-	else if (GL_DOUBLE_MAT4 == this->getType())
+	else if ((GL_FLOAT_MAT4 == this->getType()) || 
+		(GL_DOUBLE_VEC4 == this->getType()))
 	{
 		glm::mat4 mat4 = DynamicTypeCheck<glm::mat4>()->get();
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat4));
 	}
 	else
 	{
-		//LOG_DEBUG("Uniform not support type[%d] for [%s]", getType(), getName().c_str());
+		LOG_DEBUG("Uniform not support type[%d] for [%s]", getType(), getName().c_str());
 	}
 }

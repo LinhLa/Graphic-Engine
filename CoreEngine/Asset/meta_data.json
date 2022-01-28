@@ -5,204 +5,193 @@
 		"logo": "logo.png",
 		"release_date": "12122020"
 	},
+	"property_type_list": [
+		{
+			"name":"ActiveTexture",
+			"type":"sampler2D",
+			"value": "default_diffuse"
+		},
+		{
+			"name":"texture1",
+			"type":"sampler2D",
+			"value": "default_diffuse"
+		},
+		{
+			"name":"texture1",
+			"type":"sampler2D",
+			"value": "default_diffuse"
+		},
+		{
+			"name":"progress",
+			"type":"float",
+			"value": "1.0",
+			"upper":"1.0",
+			"lower":"0.0"
+		},
+		{
+			"name":"color",
+			"type":"vec4",
+			"value": [1.0, 1.0, 1.0, 1.0],
+			"upper":[1.0, 1.0, 1.0, 1.0],
+			"lower":[0.0, 0.0, 0.0, 0.0]
+		}
+	],
+	"Material_list": [
+		{
+			"name": "LightShading",
+			"property_list" : ["texture1"],
+			"program":"LightShading"
+		},
+		{
+			"name": "Geometry",
+			"property_list" : ["texture1"],
+			"program":"Geometry"
+		},
+		{
+			"name": "Cube",
+			"property_list" : ["material.ambient","material.diffuse","material.specular","material.diffuseMap","material.specularMap","material.shininess","light.color","light.ambient","light.diffuse","light.specular","light.position"],
+			"program":"Cube"
+		},
+		{
+			"name": "Quad",
+			"property_list" : ["texture1", "texture2"],
+			"program":"Quad"
+		},
+		{
+			"name": "Triangle",
+			"property_list" : ["color"],
+			"program":"Triangle"
+		},
+		{
+			"name": "Texture",
+			"property_list" : ["ActiveTexture", "progress", "color"],
+			"program":"Texture"
+		}
+	],
 	"Model_list": [
 		{
 			"name": "Cube",
-			"position": [ -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5],
-			"uv": [0.0 , 0.0 , 1.0 , 0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 ,  0.0 , 0.0 , 1.0 , 0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 ,  1.0 , 0.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 ,  1.0 , 0.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 ,  0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , 0.0 , 1.0 ,  0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , 0.0 , 1.0],
-			"normal":[0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0]
+			"mesh":[
+				{
+					"name":"Cube",
+					"material":"Cube",
+					"position": [ -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5 , -0.5 , 0.5 , -0.5 , -0.5 , -0.5 , -0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , 0.5 , -0.5 , 0.5 , 0.5 , -0.5 , 0.5 , -0.5],
+					"uv": [0.0 , 0.0 , 1.0 , 0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 ,  0.0 , 0.0 , 1.0 , 0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 ,  1.0 , 0.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 ,  1.0 , 0.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 ,  0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , 0.0 , 1.0 ,  0.0 , 1.0 , 1.0 , 1.0 , 1.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , 0.0 , 1.0],
+					"normal":[0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 ,  0.0 , 0.0 , 1.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , -1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0 , 0.0 , 1.0 , 0.0]
+				}
+			]
 		},
 		{
 			"name": "Quad",
-			"position": [0.5, 0.5, 0.0, 0.5, -0.5, 0.0, -0.5, -0.5, 0.0, -0.5, 0.5, 0.0],
-			"normal":[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0],
-			"uv":[1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
-			"indices": [0, 1, 3, 1, 2, 3]
+			"mesh":[
+				{
+					"name":"Quad",
+					"material":"Quad",
+					"position": [0.5, 0.5, 0.0, 0.5, -0.5, 0.0, -0.5, -0.5, 0.0, -0.5, 0.5, 0.0],
+					"normal":[1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0],
+					"uv":[1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+					"indices": [0, 1, 3, 1, 2, 3]
+				}
+			]
 		},
 		{
 			"name": "Triangle",
-			"position": [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0],
-			"indices": [0, 1, 2]
+			"mesh":[
+				{
+					"name":"Triangle",
+					"material":"Triangle",
+					"position": [-0.5, -0.5, 0.0, 0.5, -0.5, 0.0, 0.0, 0.5, 0.0],
+					"indices": [0, 1, 2]
+				}
+			]
 		},
 		{
 			"name": "Texture",
-			"position": [1.0, 1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, 0.0, -1.0, 1.0, 0.0],
-			"uv":[1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
-			"indices": [0, 1, 3, 1, 2, 3]
+			"mesh":[
+				{
+					"name":"Texture",
+					"material":"Texture",
+					"position": [1.0, 1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, 0.0, -1.0, 1.0, 0.0],
+					"uv":[1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+					"indices": [0, 1, 3, 1, 2, 3]
+				}
+			]
 		}
 	],
-	"ShaderProgram_list":[{
-			"name": "Quad",
-			"shader": ["QuadVex", "QuadFrag"]
-		},
-		{
-			"name": "Triangle",
-			"shader": ["TriangleVex", "TriangleFrag"]
-		},
-		{
-			"name": "Cube",
-			"shader": ["CubeVex", "CubeFrag"]
-		},
-		{
-			"name": "Texture",
-			"shader": ["TextureVex", "TextureFrag"]
-		},
-		{
-			"name": "Color",
-			"shader": ["ColorVex", "ColorFrag"]
-		},
-		{
-			"name": "Text",
-			"shader": ["TextVex", "TextFrag"]
-		},
-		{
-			"name": "LightShading",
-			"shader": ["LightShadingVex", "LightShadingFrag"]
-		}
-	],
-	"VertexShader_list": [{
-			"name": "QuadVex",
-			"source": "QuadVex.glsl"
-		},
-		{
-			"name": "TriangleVex",
-			"source": "TriangleVex.glsl"
-		},
-		{
-			"name": "CubeVex",
-			"source": "CubeVex.glsl"
-		},
-		{
-			"name": "TextureVex",
-			"source": "TextureVex.glsl"
-		},
-		{
-			"name": "ColorVex",
-			"source": "ColorVex.glsl"
-		},
-		{
-			"name": "TextVex",
-			"source": "TextVex.glsl"
-		},
-		{
-			"name":"LightShadingVex",
-			"source":"LightShadingVex.glsl"
-		}
-	],
-	"FragmentShader_list": [{
-			"name": "QuadFrag",
-			"source": "QuadFrag.glsl"
-		},
-		{
-			"name": "TriangleFrag",
-			"source": "TriangleFrag.glsl"
-		},
-		{
-			"name": "CubeFrag",
-			"source": "CubeFrag.glsl"
-		},
-		{
-			"name": "TextureFrag",
-			"source": "TextureFrag.glsl"
-		},
-		{
-			"name": "ColorFrag",
-			"source": "ColorFrag.glsl"
-		},
-		{
-			"name": "TextFrag",
-			"source": "TextFrag.glsl"
-		},
-		{
-			"name": "LightShadingFrag",
-			"source": "LightShadingFrag.glsl"
-		}
-	],
-	"3D_asset_list": ["monkey.dae","cube.dae", "sphere.dae","Cup_Made_By_Tyro_Smith.dae","earch.dae", "my_sphere.dae"],
+	"ShaderProgram_list":["Quad","Triangle","Cube","Texture","Color","Text","LightShading","Geometry", "Inversion","Grayscale", "Blur"],
+	"3D_asset_list": ["room.fbx","monkey.dae","cube.dae", "sphere.dae","cup.fbx","earch.dae", "my_sphere.dae"],
 	"texture_list": [
+		{
+			"texture_name": "node",
+			"texture_path": "node.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
+		},
 		{
 			"texture_name": "specular",
 			"texture_path": "specular.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_CLAMP_TO_BORDER",
-				"wrap_t": "GL_CLAMP_TO_BORDER"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
 			"texture_name": "diffuse",
 			"texture_path": "diffuse.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_CLAMP_TO_BORDER",
-				"wrap_t": "GL_CLAMP_TO_BORDER"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
 			"texture_name": "transparent_window",
 			"texture_path": "blending_transparent_window.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_CLAMP_TO_BORDER",
-				"wrap_t": "GL_CLAMP_TO_BORDER"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
 			"texture_name": "container",
 			"texture_path": "container.jpg",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_REPEAT",
-				"wrap_t": "GL_REPEAT"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
-			"texture_name": "default.png",
-			"texture_path": "default.png",
+			"texture_name": "default_normal",
+			"texture_path": "default_normal.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_CLAMP_TO_BORDER",
-				"wrap_t": "GL_CLAMP_TO_BORDER"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
+		},		
+		{
+			"texture_name": "default_diffuse",
+			"texture_path": "default_diffuse.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
+		},
+		{
+			"texture_name": "default_specular",
+			"texture_path": "default_specular.png",
+			"load_to_gpu": true,
+			"target": "GL_TEXTURE_2D",
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
 			"texture_name": "landscape.png",
 			"texture_path": "landscape.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_REPEAT",
-				"wrap_t": "GL_REPEAT"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
 			"texture_name": "background.png",
@@ -215,14 +204,8 @@
 			"texture_path": "play_arrow.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_REPEAT",
-				"wrap_t": "GL_REPEAT"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
 			"texture_name": "play_pause.png",
@@ -247,14 +230,8 @@
 			"texture_path": "playbutton_background.png",
 			"load_to_gpu": true,
 			"target": "GL_TEXTURE_2D",
-			"wrap": {
-				"wrap_s": "GL_REPEAT",
-				"wrap_t": "GL_REPEAT"
-			},
-			"filter": {
-				"minifying": "GL_NEAREST",
-				"magnifying": "GL_NEAREST"
-			}
+			"wrap": "GL_CLAMP_TO_EDGE",
+			"filter":"GL_LINEAR"
 		},
 		{
 			"texture_name": "player_background.png",
@@ -293,19 +270,34 @@
 			"target": "GL_TEXTURE_2D"
 		}
 	],
-	"property_type_list": {},
-	"resources_list": [{
+	"resources_list": [
+		{
 			"resource_name": "3D Cube",
 			"type": "6",
-			"layout": {
-				"transform": [0.0, 0.0, 0.0],
-				"rotate": [0.0, 0.0, 0.0],
-				"scale": [0.5, 0.5, 0.5],
-				"x": 150,
-				"y": 150,
-				"w": 400,
-				"h": 300
-			},
+			"model": ["sphere"],
+			"mesh":
+			[
+				{"name":"sphere1","mesh":"sphere","layout": {"transform": [1.5,1.2, 0.0]},"material_property":{}},
+				{"name":"sphere2","mesh":"sphere","layout": {"transform": [0.0,1.5, 1.0]},"material_property":{}},
+				{"name":"sphere3","mesh":"sphere","layout": {"transform": [-1.5, 0.0, 0.0]},"material_property":{}},
+				{"name":"sphere4","mesh":"sphere","layout": {"transform": [0.0,1.0, 0.0]},"material_property":{}}
+			],
+			"RenderPass":["Multisamle"],
+			"lighting":[
+				{
+					"name":"Lamb",
+					"type":"point",
+					"pointlight.ambient": [0.38, 0.38, 0.38, 1.0],
+					"pointlight.diffuse": [0.96, 1.0, 0.314, 1.0],
+					"pointlight.specular": [1.0, 0.94, 0.549, 1.0],
+					"pointlight.position": [0.0, 0.0, 0.0],
+					"pointlight.constant": 0.2,
+					"pointlight.linear": 0.3,
+					"pointlight.quadratic": 0.3,
+					"layout": {"transform": [0.0,-2.0, 0.0]}
+				}
+			],
+			"layout": {"rotate": [0.0,0.0, 0.0]},
 			"origin_property": {
 				"visible": true,
 				"angle": 0.0,
@@ -315,10 +307,8 @@
 				"isclip": false
 			},
 			"gl_property": {
-				"model": "sphere",
-				"program": "Cube",
 				"blend_indensity": 1.0,
-				"cam_position": [0.0, 0.0, 5.0],
+				"cam_position": [0.0, 0.0, 10.0],
 				"cam_front": [0.0, 0.0, -1.0],
 				"cam_target": [0.0, 0.0, 0.0],
 				"cam_up": [0.0, 1.0, 0.0],
@@ -326,20 +316,6 @@
 				"far_plane":100,
 				"fov" : 45,
 				"camera":"perspective"
-			},
-			"material_property":
-			{
-				"light.color": [0.8, 1.0, 0.0],
-				"light.ambient": [0.2, 0.2, 0.2],
-				"light.diffuse": [0.5, 0.5, 0.5],
-				"light.specular": [1.0, 1.0, 1.0],
-				"light.position": [0.0, 0.0, 5.0],
- 				"material.ambient": [0.2, 0.1, 0.06],
-				"material.diffuse": [0.4, 0.2, 0.1],
-				"material.specular": [1.0, 0.7, 0.2],
-				"material.diffuseMap": "diffuse",
-				"material.specularMap": "specular",
-				"material.shininess": 16
 			}
 		},
 		{

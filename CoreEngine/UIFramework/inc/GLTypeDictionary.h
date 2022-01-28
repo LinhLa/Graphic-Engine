@@ -1,5 +1,6 @@
 #pragma once
-#include <unordered_map>
+#include <string>
+#include <map>
 #include <gl\glew.h>
 #include <SDL_opengl.h>
 #include <gl\glu.h>
@@ -19,15 +20,18 @@ enum GL_TEXTURE_FUNC : int
 	TEXTURE_PARAM_IIV,
 	TEXTURE_PARAM_IUIV,
 };
+typedef std::pair<GLenum, GLenum> BlendFunction;
 
-extern const std::unordered_map<GLenum, std::string> GLSL_TYPE_DICTIONARY;
-extern const std::unordered_map<GLenum, std::string> OPENGL_TYPE_DICTIONARY;
-extern const std::unordered_map<std::string, GLenum> ENUM_TYPE_FROMSTRING;
-extern const std::unordered_map<std::string, size_t> SIZE_TYPE_FROMSTRING;
-extern const std::unordered_map<std::string, GLenum> GL_TEXTURE_TARGET_MAP;
-extern const std::unordered_map<std::string, GLenum> GL_TEXTURE_PNAME_MAP;
-extern const std::unordered_map<std::string, GLenum> GL_TEXTURE_PVALUE_MAP;
-extern const std::unordered_map<std::string, GL_TEXTURE_FUNC> GL_TEXTURE_FUNC_MAP; 
-extern const std::unordered_map<std::string, GLenum> GL_BUFFER_BINDING_TARGET_MAP;
-extern const std::unordered_map<std::string, GLenum> GL_BUFFER_USAGE_MAP;
-extern const std::unordered_map<std::string, GLenum> GL_PRIMITIVE_MAP;
+extern const std::map<BlendFunction, std::string> GL_BLENDING_DICTIONARY;
+extern const std::map<GLenum, std::string> GLSL_TYPE_DICTIONARY;
+extern const std::map<std::string, GLenum> GLSL_TYPE_MAP;
+extern const std::map<GLenum, std::string> OPENGL_TYPE_DICTIONARY;
+extern const std::map<std::string, GLenum> ENUM_TYPE_FROMSTRING;
+extern const std::map<std::string, size_t> SIZE_TYPE_FROMSTRING;
+extern const std::map<std::string, GLenum> GL_TEXTURE_TARGET_MAP;
+extern const std::map<std::string, GLenum> GL_TEXTURE_PNAME_MAP;
+extern const std::map<std::string, GLenum> GL_TEXTURE_PVALUE_MAP;
+extern const std::map<std::string, GL_TEXTURE_FUNC> GL_TEXTURE_FUNC_MAP; 
+extern const std::map<std::string, GLenum> GL_BUFFER_BINDING_TARGET_MAP;
+extern const std::map<std::string, GLenum> GL_BUFFER_USAGE_MAP;
+extern const std::map<std::string, GLenum> GL_PRIMITIVE_MAP;

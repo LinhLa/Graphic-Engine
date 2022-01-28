@@ -52,3 +52,6 @@ extern const std::string FOV;
 extern const std::string NEAR_PLANE;
 extern const std::string FAR_PLANE;
 extern const std::string CAMERA_TYPE;
+
+extern const std::string VIEW_PORT;
+extern const std::string RENDER_PASS;

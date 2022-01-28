@@ -14,15 +14,14 @@
 
 class LayoutProperty final: public IPropertyMethod, public creator<LayoutProperty>
 {
-private:
-	PropertyTable* m_PropertyTable = nullptr;
 protected:
+	PropertyTable* m_pPropertyTable = nullptr;
 	LayoutProperty(PropertyTable*);
 public:
 	~LayoutProperty();
 	friend class creator<LayoutProperty>;
 
-	LayoutProperty& operator=(const LayoutProperty& rhs);
+	LayoutProperty& operator=(const LayoutProperty& rhs) = delete;
 	void init() override;
 
 #ifdef OPENGL_RENDERING

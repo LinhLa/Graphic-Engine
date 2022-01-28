@@ -12,6 +12,7 @@ public:
 
 	friend class creator<EmptyNode>;
 
+	UIObjectPtr clone() override;
 	void onDraw(VoidType&&);
 	void onInit(VoidType&&);
 	void onClean(VoidType&&);

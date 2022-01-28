@@ -10,5 +10,8 @@ const std::string MOUSE_RELEASE_SIGNAL = "MOUSE_RELEASE_SIGNAL";
 const std::string KEY_PRESS_SIGNAL = "KEY_PRESS_SIGNAL";
 
 const std::string ON_DRAW_SIGNAL = "ON_DRAW_SIGNAL";
+const std::string ON_DRAW_DONE_SIGNAL = "ON_DRAW_DONE_SIGNAL";
 const std::string ON_CLEAN_SIGNAL = "ON_CLEAN_SIGNAL";
 const std::string ON_INIT_SIGNAL = "ON_INIT_SIGNAL";
+
+const std::string ON_UPDATE_SIGNAL = "ON_UPDATE_SIGNAL";

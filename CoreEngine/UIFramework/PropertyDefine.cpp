@@ -51,3 +51,6 @@ const std::string FOV				= std::string("fov");
 const std::string NEAR_PLANE		= std::string("near_plane");
 const std::string FAR_PLANE			= std::string("far_plane");
 const std::string CAMERA_TYPE		= std::string("camera");
+
+const std::string VIEW_PORT			= std::string("view_port");
+const std::string RENDER_PASS		= std::string("RenderPass");

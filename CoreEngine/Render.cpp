@@ -1,8 +1,9 @@
-#include "stdafx.h"
+	#include "stdafx.h"
 
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl3.h"
+#include "GLRenderManipulator.h"
 
 #include "Render.h"
 #include "Configuration.h"
@@ -92,10 +93,6 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	m_glcontext = pWindowRender->CreateContext();
 	SDL_GL_MakeCurrent(pWindowRender->getWindow(), m_glcontext);
 
-	//<Set view port
-	glViewport(0, 0, width, height);
-
-
 	//Since we want the latest features, we have to set glewExperimental to true
 	glewExperimental = GL_TRUE;
 
@@ -116,6 +113,11 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	SDL_CHECK(SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"), "Warning: Linear texture filtering not enabled :");
 	SDL_CHECK(SDL_SetHint(SDL_HINT_MOUSE_RELATIVE_SCALING, "1"), "Warning: Mouse relative scaling not enabled :");
 
+	//<Print some GL infomation
+	SDL_Log("%s", glGetString(GL_RENDERER));
+	SDL_Log("%s", glGetString(GL_VENDOR));
+	SDL_Log("%s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -128,7 +130,7 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
     //ImGui::StyleColorsClassic();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplSDL2_InitForOpenGL(pWindowRender->getWindow(), m_glcontext);
+    ImGui_ImplSDL2_InitForOpenGL(pWindowRender->getWindow(), m_glcontext);	
     ImGui_ImplOpenGL3_Init("#version 330");
 
 	glEnable(GL_SCISSOR_TEST);
@@ -137,6 +139,13 @@ bool Render::initWindow(const char* title, int xpos, int ypos, const int& width,
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_MULTISAMPLE);
+
+	//<Init view port
+	GLRenderViewPortManipulator::push(glm::ivec4(0, 0, width, height));
+
+	//<Init fbo
+	GLRenderFBOManipulator::push(0U);
+
 #else
 	//<Get window render
 	m_pRenderer = pWindowRender->CreateRenderer(-1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_TARGETTEXTURE);
@@ -184,10 +193,40 @@ void Render::clean()
 	SDL_Quit();
 }
 
+void Render::drawScene()
+{
+#ifdef OPENGL_RENDERING
+	GLRenderContextManipulator context_manip;
+	context_manip.push(GLRenderMultisample::create("Multisample whole screen"));
+	context_manip.excute();
+#endif
+	//< render scene graph
+	SDL_Event sdlevent;
+	sdlevent.type = SDL_USEREVENT;
+	sdlevent.user.code = RENDER;
+	Scene::GetInstance()->onEvent(sdlevent);
+#ifdef OPENGL_RENDERING
+	context_manip.finish();
+
+	//post processing effect
+	//auto context = GLRenderEffect::create(
+	//	std::string("post processing"), 
+	//	std::initializer_list<IKernelPtr>{
+	//		InversionKernel::create(),
+	//		BlurKernel::create(),
+	//		GrayscaleKernel::create()
+	//});
+	//context_manip.push(context);
+	//context_manip.excuteAll();
+#endif
+}
 
 void Render::render()
 {
 #ifdef OPENGL_RENDERING
+	//<bind to default frambuffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0U);
+
 	//<Set Clear color
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
@@ -198,15 +237,14 @@ void Render::render()
 	SDL_RenderClear(m_pRenderer);
 #endif
 	//< render scene graph
-	SDL_Event sdlevent;
-	sdlevent.type = SDL_USEREVENT;
-	sdlevent.user.code = 0x02;
-	Scene::GetInstance()->onEvent(sdlevent);
+	drawScene();
+
 #ifdef OPENGL_RENDERING
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-	//<Swap our buffer to display the current contents of buffer on screen
+	//<Swap buffer to display the current contents of buffer on screen
 	WindowRender::GetInstance()->SwapWindow();
 #else
 	/* Update screen*/

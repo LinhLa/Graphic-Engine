@@ -50,15 +50,13 @@ void Cube3D::onKeyInputEvent(SDL_Event &&arg)
 		onKeyPress();
 	}
 
-	auto pMaterial = Library::GetInstance()->get<Material>(CUBE_3D_URL);
-	ImGuiShader::GetInstance()->setProperty(pMaterial);
-	ImGuiShader::GetInstance()->setProperty(m_pCube3D);
+	//ImGuiShader::GetInstance()->setProperty(m_pCube3D);
 }
 void Cube3D::onKeyPress()
 {
 	const uint8_t* currentKeyStates = SDL_GetKeyboardState(NULL);
 	float cameraSpeed = 0.01f * static_cast<float>(DeltaTime::GetInstance()->getDelta());
-	auto glProperty		= m_pCube3D->GetPropertyMethodObj<GLProperty>();
+	auto glProperty = m_pCube3D->GetPropertyMethodObj<GLProperty>();
 	auto cameraPos		= glProperty->GetCamPos();
 	auto cameraTarget	= glProperty->GetCamTarget();
 	auto cameraUp		= glProperty->GetCamUp();
@@ -148,8 +146,7 @@ void Cube3D::onMouseMove()
 // processes input received from a mouse scroll-wheel event. Only requires input on the vertical wheel-axis
 void Cube3D::onMouseScroll(float yoffset)
 {
-	auto glProperty = m_pCube3D->GetPropertyMethodObj<GLProperty>();
-	float Zoom = glProperty->GetFOV();
+	float Zoom = m_pCube3D->GetPropertyValue<float>(FOV);
 	Zoom -= (float)yoffset;
 	if (Zoom < 1.0f)
 	{
@@ -159,7 +156,7 @@ void Cube3D::onMouseScroll(float yoffset)
 	{
 		Zoom = 45.0f;
 	}
-	glProperty->SetFOV(Zoom);
+	m_pCube3D->SetPropertyValue<float>(FOV, std::move(Zoom));
 }
 
 void Cube3D::setVisible(bool visible)
@@ -176,10 +173,14 @@ void Cube3D::init(VoidType&& dummy)
 {
 	LOG_DEBUG("");
 	AcquireResource();
+
+	//<Setup scene graph
 	Scene::GetInstance()->AddToSceneGraph(m_pCube3D);
-	auto pMaterial = Library::GetInstance()->get<Material>(CUBE_3D_URL);
-	ImGuiShader::GetInstance()->importProperty(pMaterial);
-	ImGuiShader::GetInstance()->importProperty(m_pCube3D);
+	//ImGuiShader::GetInstance()->importProperty(m_pCube3D);
+
+	//<Set Light Shading to sphere mesh node
+	//auto nodeSphere = m_pCube3D->getChild<NodeMesh>("sphere");
+	//nodeSphere->SetProgram("Cube");
 }
 
 void Cube3D::AcquireResource()

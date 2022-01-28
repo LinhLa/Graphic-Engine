@@ -32,14 +32,12 @@ private:
 
 	void setUnifromMatrix(ShaderProgramPtr);
 	void setUniform(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial);
-	void activeTexture(std::vector<GLTexturePtr>& );
-	void unbindTexture(std::vector<GLTexturePtr>& );
 
 public:
 	void DrawText2D(std::vector<CharacterPtr>,float opacity,glm::vec3 color);
 	void DrawColor(glm::vec2 size, glm::vec4 color);
-	void DrawImage(GLTexturePtr pTexture, float opacity, glm::vec4 color);
-	void DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial, ModelPtr pModel);
+	void DrawImage(GLTexturePtr pTexture, float opacity = 1.0f, glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f), ShaderProgramPtr pShader = nullptr);
+	void DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterialProperty, MeshPtr pMesh);
 
 	glm::mat4 getModalMatrix() const;
 	glm::mat4 getViewMatrix() const;

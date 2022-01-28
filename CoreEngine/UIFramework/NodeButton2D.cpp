@@ -20,6 +20,13 @@ uint8_t NodeButton2D::getType()
 	return NODE_2D_BUTTON_TYPE;
 }
 
+UIObjectPtr NodeButton2D::clone()
+{
+	auto pObject = NodeButton2D::create(m_name);
+	this->setProperty(pObject);
+	return pObject;
+}
+
 void NodeButton2D::onInit(VoidType&&)
 {}
 

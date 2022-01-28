@@ -4,8 +4,8 @@
 class DeltaTime: public SingletonHolder<DeltaTime>
 {
 private:
-	uint64_t m_start = 0;
-	uint64_t m_now = 0;
+	uint64_t m_start = 0U;
+	uint64_t m_now = 0U;
 	bool	m_isStart = false;
 protected:
 	DeltaTime();

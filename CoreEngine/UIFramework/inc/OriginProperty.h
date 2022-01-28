@@ -25,15 +25,14 @@ extern const std::map<std::string, int> gMapAligment;
 
 class OriginProperty final: public IPropertyMethod, public creator<OriginProperty>
 {
-private:
-	PropertyTable* m_PropertyTable = nullptr;
 protected:
+	PropertyTable* m_pPropertyTable = nullptr;
 	OriginProperty(PropertyTable*);
 public:
 	~OriginProperty();
 	friend class creator<OriginProperty>;
 
-	OriginProperty& operator=(const OriginProperty& rhs);
+	OriginProperty& operator=(const OriginProperty& rhs) = delete;
 	void init() override;
 
 	bool 	isVisible() const;

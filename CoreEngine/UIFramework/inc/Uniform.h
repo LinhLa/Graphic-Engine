@@ -8,6 +8,8 @@
 #include "log.h"
 #include "GLTypeDictionary.h"
 #include "UIObject.h"
+#include "Library.h"
+#include "Material.h"
 class IUniform;
 template<typename T> class Uniform;
 std::shared_ptr<IUniform> create(std::string name, GLuint index, GLenum type, GLint size);
@@ -108,9 +110,10 @@ public:
 	void sync(std::shared_ptr<PropertyTable> pObject)
 	{
 		if (GL_SAMPLER_2D == m_type)
-		{ 
-			pObject->AddProperty(this->getName(), Property<std::string>::create(this->getName(), "default.png", m_type));
-		} 
+		{
+			auto pTexture = Library::GetInstance()->get<GLTexture>(TEXTURE_DIFFUSE_DEFAULT);
+			pObject->AddProperty(this->getName(), Property<glm::u32>::create(this->getName(), pTexture->getID(), m_type));
+		}
 		else
 		{
 			pObject->AddProperty(this->getName(), Property<T>::create(this->getName(), T(), m_type));
@@ -119,11 +122,7 @@ public:
 
 	void debug()
 	{
-		LOG_DEBUG("..................................");
-		LOG_DEBUG("name[%s]" , m_name.c_str());
-		LOG_DEBUG("index[%d]" , m_index);
-		LOG_DEBUG("type[%s]" , GLSL_TYPE_DICTIONARY.at(m_type).c_str());
-		LOG_DEBUG("size[%d]" , m_size);
+		LOG_DEBUG("[%s]: index[%d] type[%s] size[%d]" , m_name.c_str(), m_index, GLSL_TYPE_DICTIONARY.at(m_type).c_str(), m_size);
 	}
 };
 

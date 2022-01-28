@@ -4,7 +4,7 @@
 #include <chrono>
 #include <thread>
 #include <vector>
-
+#include <fstream>
 #include <glm/glm.hpp>
 #include <glm/common.hpp>
 
@@ -52,7 +52,7 @@ namespace util
 	}
 
 	template<class T>
-	T ConvertToType(std::string& strVal)
+	T ConvertToType(std::string strVal)
 	{
 		std::stringstream sstream(strVal);
 		T value;

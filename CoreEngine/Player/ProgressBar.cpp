@@ -156,6 +156,7 @@ void ProgressBar::onSilerMove()
 {
 	auto sliderLayout = m_pSlider->GetPropertyMethodObj<LayoutProperty>();
 	auto elapsedLayout = m_pElapsedTime->GetPropertyMethodObj<LayoutProperty>();
+
 #ifdef OPENGL_RENDERING
 	auto transform = sliderLayout->GetLayoutTransform();
 	auto size = sliderLayout->GetLayoutSize();
@@ -178,7 +179,7 @@ void ProgressBar::onSilerMove()
 	elapsedLayout->SetLayoutTransform(transform);
 #else
 	elapsedLayout->SetLayoutInformation(elapsed_rect);
-#endif	
+#endif
 }
 
 void ProgressBar::FocusIn()

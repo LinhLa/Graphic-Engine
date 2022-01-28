@@ -9,6 +9,7 @@
 #include "GLTexture.h"
 #include "Library.h"
 #include "UIObject.h"
+
 ShaderProgram::ShaderProgram(const std::string& name):m_name(name)
 {
 	m_ProgramID = glCreateProgram();
@@ -92,6 +93,7 @@ void ShaderProgram::debug()
 {
 	auto uniformList = querryUniform();
 	auto attributeList = querryAttribute();
+	LOG_DEBUG("------------------------------ SHADER PROGRAM[%s] ------------------------------", m_name.c_str());
 	if (!uniformList.empty())
 	{
 		for(auto &pUniform: uniformList)
@@ -111,10 +113,7 @@ void ShaderProgram::debug()
 
 std::vector<IUniformPtr> ShaderProgram::querryUniform()
 {
-	if (!m_UniformList.empty())
-	{
-		return m_UniformList;
-	}
+	m_UniformList.clear();
 
 	//<Query uniform from program shader
 	GLint maxLen = 0;
@@ -160,10 +159,7 @@ std::vector<IUniformPtr> ShaderProgram::querryUniform()
 
 std::vector<AttributePtr> ShaderProgram::querryAttribute()
 {
-	if (!m_AttributeList.empty())
-	{
-		return m_AttributeList;
-	}
+	m_AttributeList.clear();
 
 	//<Query uniform from program shader
 	GLint maxLen = 0;
@@ -225,7 +221,11 @@ void ShaderProgram::syncUniform(std::shared_ptr<PropertyTable> pObject)
 		return;
 	}
 
-	m_UniformList = querryUniform();
+	if (m_UniformList.empty())
+	{
+		m_UniformList = querryUniform();
+	}
+
 	for(auto &pUniform: m_UniformList)
 	{
 		if (false == pObject->IsPropertyExist(pUniform->getName()))
@@ -236,22 +236,89 @@ void ShaderProgram::syncUniform(std::shared_ptr<PropertyTable> pObject)
 	}
 }
 
-void ShaderProgram::setUniform(std::shared_ptr<PropertyTable> pObject)
+void ShaderProgram::setUniform(MaterialPtr pMaterial)
 {
-	if(!pObject)
+	if(!pMaterial)
 	{
 		return;
 	}
+	GLenum textureLocation = GL_TEXTURE0;
+	GLenum location = 0;
 
+	glEnable(GL_TEXTURE_2D);
 	for(auto &pUniform: m_UniformList)
 	{
-		if (true == pObject->IsPropertyExist(pUniform->getName()))
+		if (true == pMaterial->IsPropertyExist(pUniform->getName()))
 		{
-			pUniform->set(pObject->GetProperty(pUniform->getName()));
+			//<update value to uniform object
+			pUniform->set(pMaterial->GetProperty(pUniform->getName()));
 		}
 		else
 		{
-			LOG_DEBUG("Uniform not sync: %s", pUniform->getName().c_str());
+			LOG_OFF("Uniform not sync: %s", pUniform->getName().c_str());
 		}
+
+
+		//<set uniform
+		location = glGetUniformLocation(m_ProgramID, pUniform->getName().c_str());
+		if (-1 != location)
+		{
+			if (GL_SAMPLER_2D == pUniform->getType())
+			{
+				GLTexturePtr pTexture = nullptr;
+				
+				if (pMaterial->GetProperty(pUniform->getName()))
+				{
+					auto property = pMaterial->GetProperty(pUniform->getName());
+					if (property)
+					{
+						
+						auto textureUnit = property->GetValue<glm::u32>();
+						pUniform->glUniform(location, (void*)&textureLocation);
+						glActiveTexture(textureLocation);
+						glBindTexture(GL_TEXTURE_2D, textureUnit);
+						textureLocation++;
+					}
+				}
+				else if (pMaterial->hasTextureMap(pUniform->getName()))//<querry texture from material
+				{
+					pTexture = pMaterial->GetTexture(pUniform->getName());
+					pUniform->glUniform(location, (void*)&textureLocation);
+					pTexture->setLocation(textureLocation);
+					pTexture->active();
+					textureLocation++;
+
+				}
+			}
+			else
+			{
+				pUniform->glUniform(location, nullptr);
+			}
+		}
+		else
+		{
+			LOG_DEBUG("Couldn't get uniform location for:%s", pUniform->getName().c_str());
+		}
+	}
+
+	GLint max_texture_units;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_texture_units);
+
+	if (max_texture_units <= GLint(textureLocation - GL_TEXTURE0))
+	{
+		LOG_DEBUG("Over max texture units: Max[%d] Current[%d]", max_texture_units, textureLocation);
+	}
+}
+
+void ShaderProgram::setUnifromMatrix(glm::mat4 matrix, const char* uniform)
+{
+	GLint uniformLocation = glGetUniformLocation(m_ProgramID, uniform);
+	if (-1 != uniformLocation)
+	{
+		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+	else
+	{
+		LOG_DEBUG("Shader program[%s] No uniform location for [%s]", m_name.c_str(), uniform);
 	}
 }

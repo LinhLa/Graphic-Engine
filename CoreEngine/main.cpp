@@ -5,13 +5,8 @@
 
 #include <iostream>
 #include "Application.h"
-//#include "Scene.h"
-//#include "Node3D.h"
-//#include "Node2DImage.h"
-//#include "NodeText2D.h"
+
 #include "Player.h"
-
-
 #include "Cube3D.h"
 
 #ifdef main	// Disable marco SDL2
@@ -22,13 +17,13 @@ int main(int argc, char* argv[])
 {
 	Application* app = Application::GetInstance();
 
-	auto pPlayer = Player::create();
-	app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pPlayer.get(), &Player::init);
-	app->bind(Application::KEY_INPUT_SIGNAL, pPlayer.get(), &Player::onKeyInputEvent);
+	//auto pPlayer = Player::create();
+	//app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pPlayer.get(), &Player::init);
+	//app->bind(Application::KEY_INPUT_SIGNAL, pPlayer.get(), &Player::onKeyInputEvent);
 
-	//auto pCube3D = Cube3D::create();
-	//app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pCube3D.get(), &Cube3D::init);
-	//app->bind(Application::KEY_INPUT_SIGNAL, pCube3D.get(), &Cube3D::onKeyInputEvent);
+	auto pCube3D = Cube3D::create();
+	app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pCube3D.get(), &Cube3D::init);
+	app->bind(Application::KEY_INPUT_SIGNAL, pCube3D.get(), &Cube3D::onKeyInputEvent);
 
 	app->init();
 	app->start();

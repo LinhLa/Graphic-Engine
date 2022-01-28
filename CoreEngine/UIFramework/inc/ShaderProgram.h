@@ -7,8 +7,12 @@
 #include "Shader.h"
 #include "Uniform.h"
 #include "Attribute.h"
+#include "Material.h"
 #include "creator.h"
-#include "UIObject.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp> 
+
 class ShaderProgram final: public creator<ShaderProgram>
 {
 private:
@@ -35,13 +39,14 @@ public:
 	void debug();
 
 	std::vector<IUniformPtr> 	querryUniform();
-	std::vector<AttributePtr> querryAttribute();
+	std::vector<AttributePtr>	querryAttribute();
 
 	GLuint  getID() const;
 	GLint   getTextureUnitCount() const;
 	std::string getName() const;
-	void syncUniform(std::shared_ptr<PropertyTable> pObject);
-	void setUniform(std::shared_ptr<PropertyTable> pObject);
+	void syncUniform(std::shared_ptr<PropertyTable>);
+	void setUniform(MaterialPtr);
+	void setUnifromMatrix(glm::mat4, const char*);
 };
 
 typedef std::shared_ptr<ShaderProgram> ShaderProgramPtr;

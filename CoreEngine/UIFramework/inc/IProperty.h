@@ -11,40 +11,17 @@
 #include "log.h"
 #include "utils.h"
 #include <SDL.h>
+#ifdef OPENGL_RENDERING
+#include <gl\glew.h>
+#include <SDL_opengl.h>
+#include <gl\glu.h>
+#endif
+
 #include <glm/glm.hpp>
 
 class ImGuiShader;
 class AnimationProperty;
 
-enum PROPERTY_TYPE : int32_t
-{
-	UNDEFINE = 0U,
-	INT,
-	UINT8,
-	CAMERA_VIEW_TYPE,
-	FLOAT,
-	BOOL,
-	STRING,
-	VEC4_COLOR,
-	VEC3_COLOR,
-	VEC4,
-	VEC3,
-	VEC2,
-	ARRAY_INT,
-};
-
-
-class PropertyType final : public creator<PropertyType>
-{
-public:
-	friend class creator<PropertyType>;
-	uint8_t m_type;
-	PropertyType(uint8_t type) :m_type(type) {}
-	~PropertyType() {}
-};
-
-typedef std::shared_ptr<PropertyType> PropertyTypePtr;
-extern const std::map<std::string, uint8_t> property_type_map;
 /**
  * @brief      forward declairation
  */
@@ -132,12 +109,12 @@ private:
 	T 				m_value;
 	T				m_upper;
 	T				m_lower;
-	int32_t 		m_type = 0;
+	uint32_t 		m_type = 0;
 public:
 	std::shared_ptr<Signal<T>> 	m_pSignalValueChange;
 protected:
 	friend class Property<T>;
-	Property(std::string name, T&& value = T{}, int32_t uType = UNDEFINE) :m_property_name(name), m_value(value), m_type(uType)
+	Property(std::string name, T&& value = T{}, uint32_t uType = GL_INVALID_ENUM) :m_property_name(name), m_value(value), m_type(uType)
 	{
 		m_pSignalValueChange = Signal<T>::create();
 	}
@@ -211,12 +188,12 @@ public:
 		m_lower = lower;
 	}
 
-	void getUpper() const
+	T getUpper() const
 	{
 		return m_upper;
 	}
 
-	void getLower() const
+	T getLower() const
 	{
 		return m_lower;
 	}
@@ -252,6 +229,10 @@ public:
 	bool AddProperty(std::string, IPropertyPtr);
 	IPropertyPtr GetProperty(std::string);
 	void RemoveProperty(std::string);
+
+	void importProperty(std::shared_ptr<PropertyTable> pTable);
+	void shareProperty(std::shared_ptr<PropertyTable> pTable);
+	void setProperty(std::shared_ptr<PropertyTable> pTable);
 
 	template<typename U>
 	void SetPropertyValue(std::string property_name, U value)

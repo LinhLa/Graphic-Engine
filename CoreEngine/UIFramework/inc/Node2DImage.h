@@ -8,18 +8,17 @@ class Node2DImage final: public UIObject, public creator<Node2DImage>
 private:
 #ifdef OPENGL_RENDERING
 	GLTexturePtr		m_pTexture = nullptr;
-	ShaderProgramPtr	m_pShaderProgram = nullptr;
 #else
 	TexturePtr 	m_pTexture = nullptr;
 	TexturePtr 	m_pTextureToRender = nullptr;
 #endif
-	bool		m_bUIChanged = false;
+	bool		m_bUIChanged = true;
 protected:
 	Node2DImage(std::string name);
 public:
 	virtual ~Node2DImage();
 	uint8_t getType() override;
-
+	UIObjectPtr clone() override;
 	friend class creator<Node2DImage>;
 
 	void onDraw(VoidType&&);

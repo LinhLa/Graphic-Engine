@@ -16,10 +16,3 @@ public:
 	bool isAlive(void*);
 	bool isDeath(void*);
 };
-
-class BookWritter
-{
-public:
-	BookWritter();
-	~BookWritter();
-};

@@ -40,7 +40,7 @@ float Camera::FarPlane() const
 glm::mat4 Camera::View()
 {
     //Calculate view matrix
-    m_view = glm::lookAt(m_Pos , m_Target, m_Up);
+    m_view = glm::lookAt(m_Pos, m_Target, m_Up);
     return m_view;
 }
 

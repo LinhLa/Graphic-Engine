@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include <fstream>
 #include "Shader.h"
 #include "GLInfoLog.h"
 #include "log.h"
@@ -17,11 +18,41 @@ Shader::Shader(const std::string& name, GLenum type):m_name(name), m_Type(type)
 Shader::~Shader()
 {
 	glDeleteShader(m_ShaderID);
+	for (auto& string : m_shaderSource)
+	{
+		if (string)
+		{
+			delete[] string;
+		}
+	}
 }
 
-void Shader::setSource(GLsizei count, const GLchar* const * shaderSource, const GLint *length)
+void Shader::load(std::string path)
 {
-	glShaderSource(m_ShaderID, count, shaderSource, length);
+	//<Open shader source file
+	std::ifstream inShaderStream(path.c_str());
+
+	//<Validate ifstream
+	_ASSERT(inShaderStream);
+
+	//<Read to string
+	std::string inShaderString((std::istreambuf_iterator<char>(inShaderStream)), std::istreambuf_iterator<char>());
+
+	//<Attach source
+	addSource(inShaderString.c_str(), inShaderString.length());
+}
+
+void Shader::addSource(const GLchar* shaderSource, GLint length)
+{
+	char* source = new char[length];
+	std::memcpy(source, shaderSource, length);
+	m_lenght.push_back(length);
+	m_shaderSource.push_back(source);
+}
+
+void Shader::setSource(/*GLsizei count, const GLchar* const * shaderSource, const GLint *length*/)
+{
+	glShaderSource(m_ShaderID, m_shaderSource.size(), &m_shaderSource[0], &m_lenght[0]);
 }
 
 void Shader::compile()

@@ -30,13 +30,3 @@ bool LifeAndDeathBook::isDeath(void* o)
 	}
 	return true;
 }
-
-BookWritter::BookWritter()
-{
-	LifeAndDeathBook::GetInstance()->live(reinterpret_cast<void*>(this));
-}
-
-BookWritter::~BookWritter()
-{
-	LifeAndDeathBook::GetInstance()->die(reinterpret_cast<void*>(this));
-}

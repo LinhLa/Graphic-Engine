@@ -17,9 +17,5 @@ std::string Attribute::getName() const
 
 void Attribute::debug()
 {
-	LOG_DEBUG("..................................");
-	LOG_DEBUG("name[%s]" , m_name.c_str());
-	LOG_DEBUG("index[%d]" , m_index);
-	LOG_DEBUG("type[%s]" , GLSL_TYPE_DICTIONARY.at(m_type).c_str());
-	LOG_DEBUG("size[%d]" , m_size);
+	LOG_DEBUG("[%s]: index[%d] type[%s] size[%d]" , m_name.c_str(), m_index, GLSL_TYPE_DICTIONARY.at(m_type).c_str(), m_size);
 }

@@ -10,25 +10,24 @@
 #include "GLTexture.h"
 
 
-enum CAMERA_TYPE_ENUM : uint8_t
+enum CAMERA_TYPE_ENUM : int
 {
-	ORTHOGRAPHIC = 0U,
+	ORTHOGRAPHIC = 0,
 	PERSPECTIVE,
 };
 
 extern const std::map<std::string, CAMERA_TYPE_ENUM> cameraMap;
 
-class GLProperty final: public IPropertyMethod, public creator<GLProperty>
+class GLProperty final: public IPropertyMethod ,public creator<GLProperty>
 {
-private:
-	PropertyTable* m_PropertyTable = nullptr;
 protected:
+	PropertyTable* m_pPropertyTable = nullptr;
 	GLProperty(PropertyTable*);
 public:
 	~GLProperty();
 	friend class creator<GLProperty>;
 
-	GLProperty& operator=(const GLProperty& rhs);
+	GLProperty& operator=(const GLProperty& rhs) = delete;
 	void init() override;
 
 	float 	GetBlendIndensity() const;
@@ -64,8 +63,11 @@ public:
 	float GLProperty::GetFarPlane() const;
 	void GLProperty::SetFarPlane(float value);
 
-	uint8_t GetCameraType() const;
-	void SetCameraType(uint8_t value);
+	int GetCameraType() const;
+	void SetCameraType(int value);
+
+	glm::i32vec4 GetViewPort() const;
+	void SetViewPort(glm::i32vec4 value);
 };
 
 typedef std::shared_ptr<GLProperty> GLPropertyPtr;

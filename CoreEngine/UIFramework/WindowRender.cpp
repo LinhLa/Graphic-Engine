@@ -3,6 +3,8 @@
 #include "Configuration.h"
 #include "Scene.h"
 #include "PropertyDefine.h"
+#include "GLRenderManipulator.h"
+
 WindowRender::WindowRender() {}
 
 WindowRender::~WindowRender() {}
@@ -149,7 +151,8 @@ void WindowRender::onWindowEvent(SDL_Event& e)
 			m_width = e.window.data1;
 			m_height = e.window.data2;
 #ifdef OPENGL_RENDERING
-			glViewport(0, 0, e.window.data1, e.window.data2);
+			GLRenderViewPortManipulator::clear();
+			GLRenderViewPortManipulator::push(glm::ivec4(0, 0, e.window.data1, e.window.data2));
 			scale.x = m_scaleX;
 			scale.y = m_scaleY;
 			pRoot->SetPropertyValue<glm::vec3>(SCALE_VECTOR, scale);

@@ -235,7 +235,7 @@ public:
 		}
 		else
 		{
-			LOG_ERROR("signal is not found [%s]", signal_name.c_str());
+			LOG_ERROR("signal[%s] is not found", signal_name.c_str());
 		}
 		return 0;
 	}
@@ -254,7 +254,7 @@ public:
 		}
 		else
 		{
-			LOG_ERROR("signal is not found [%s]", signal_name.c_str());
+			LOG_ERROR("signal[%s] is not found", signal_name.c_str());
 		}
 		return 0;
 	}
@@ -273,7 +273,7 @@ public:
 		}
 		else
 		{
-			LOG_ERROR("signal is not found [%s]", signal_name.c_str());
+			LOG_ERROR("signal[%s] is not found", signal_name.c_str());
 		}
 		return 0;
 	}
@@ -292,7 +292,7 @@ public:
 		}
 		else
 		{
-			LOG_ERROR("signal is not found [%s]", signal_name.c_str());
+			LOG_ERROR("signal[%s] is not found", signal_name.c_str());
 		}
 	}
 };
