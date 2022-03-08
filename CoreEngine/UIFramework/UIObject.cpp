@@ -354,7 +354,7 @@ void UIObject::updateWorldTransform()
 	}
 	else
 	{
-		m_worldTransform = glm::mat4(1.0f) * m_localTransform;
+		m_worldTransform = m_localTransform;
 	}
 	LOG_OFF("Node[%s] Transform: %s", m_name.c_str(), glm::to_string(m_worldTransform).c_str());
 }

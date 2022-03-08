@@ -279,6 +279,21 @@
     <ClCompile Include="UIFramework\LightingProperty.cpp">
       <Filter>UIFramework</Filter>
     </ClCompile>
+    <ClCompile Include="UIFramework\CameraProperty.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="UIFramework\NodeCamera.cpp">
+      <Filter>UIFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Physic\OctTree.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Physic\Physical.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
+    <ClCompile Include="Physic\IntersectionType.cpp">
+      <Filter>Physic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -561,6 +576,60 @@
     <ClInclude Include="UIFramework\inc\LightingProperty.h">
       <Filter>Header Files\UIFramework</Filter>
     </ClInclude>
+    <ClInclude Include="UIFramework\inc\CameraProperty.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="UIFramework\inc\NodeCamera.h">
+      <Filter>Header Files\UIFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\OctTree.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\Physical.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\BoundingBox.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\BoundingFrustum.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\BoundingSphere.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\ContainmentType.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\MathHelper.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\Matrix.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\Plane.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\PlaneIntersectionType.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\Point.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\Quaternion.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\Ray.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\Rectangle.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\IEquatable.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
+    <ClInclude Include="Physic\inc\IntersectionRecord.h">
+      <Filter>Header Files\Physic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -601,6 +670,12 @@
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{c16d9a36-092d-473a-b813-593f9fc38f4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physic">
+      <UniqueIdentifier>{8fda48b6-c61b-41cd-adb3-dab9d92443b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Physic">
+      <UniqueIdentifier>{3a34d6ee-03e0-4886-8d08-281ca4d3307f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

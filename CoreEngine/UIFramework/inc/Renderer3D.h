@@ -30,7 +30,6 @@ private:
 	glm::mat4  		m_ViewMatrix;
 	glm::mat4  		m_ProjectionMatrix;
 
-	void setUnifromMatrix(ShaderProgramPtr);
 	void setUniform(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial);
 
 public:

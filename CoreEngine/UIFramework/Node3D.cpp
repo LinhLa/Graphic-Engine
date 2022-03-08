@@ -3,12 +3,14 @@
 #include <base_define.h>
 #include <Node3D.h>
 #include <NodeMesh.h>
+#include <NodeCamera.h>
 #include "Library.h"
 
 #include "OriginProperty.h"
 #include "LayoutProperty.h"
 #include "GLProperty.h"
 #include "MaterialProperty.h"
+#include "CameraProperty.h"
 
 #include "UIHelper.h"
 
@@ -23,6 +25,9 @@
 
 Node3D::Node3D(std::string name) :UIObject(name)
 {
+	//<create default camera
+	m_camera = NodeCamera::create(name);
+
 	//<on draw
 	bind(ON_DRAW_SIGNAL, this, &Node3D::onDraw);
 
@@ -48,6 +53,7 @@ UIObjectPtr Node3D::clone()
 	pObject->SetNodeLight<NodePointLight>(m_pointLights);
 	pObject->SetNodeLight<NodeSpotLight>(m_spotLights);
 	pObject->SetNodeLight<NodeDirectionalLight>(m_directionalLights);
+	pObject->SetNodeCamera(m_camera);
 	return pObject;
 }
 
@@ -57,9 +63,10 @@ void Node3D::onInit(VoidType&&)
 void Node3D::onDraw(VoidType&&)
 {
 	auto glProperty = GetPropertyMethodObj<GLProperty>();
-
+	auto cameraProperty = m_camera->GetPropertyMethodObj<CameraProperty>();
 	//<view matrix, projection matrix
-	auto pCamera = Camera::create(glProperty);
+	auto pCamera = Camera::create(cameraProperty);
+
 	Renderer3D::GetInstance()->setViewMatrix(pCamera->View());
 	Renderer3D::GetInstance()->setProjectionMatrix(pCamera->projectionMatrix());
 
@@ -90,4 +97,9 @@ void Node3D::SetModel(const std::string& name)
 			addChild(node);
 		}
 	}
+}
+
+void Node3D::SetNodeCamera(NodeCameraPtr camera)
+{
+	m_camera = camera;
 }

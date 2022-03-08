@@ -20,12 +20,14 @@ using namespace util;
 #include "Node3D.h"
 #include "NodeMesh.h"
 #include "NodeLight.h"
+#include "NodeCamera.h"
 
 #include "OriginProperty.h"
 #include "LayoutProperty.h"
 #include "TextProperty.h"
 #include "GLProperty.h"
 #include "MaterialProperty.h"
+#include "CameraProperty.h"
 
 #include "Shader.h"
 #include "ShaderProgram.h"
@@ -41,6 +43,11 @@ using namespace util;
 
 #include "PropertyDefine.h"
 #include "ModelLoader.h"
+
+int32_t DOUBLE2INT(double X) {return int(rint(X));}
+uint8_t DOUBLE2UINT8(double X) {return uint8_t(rint(X));}
+uint32_t DOUBLE2UINT32(double X) {return uint32_t(rint(X));}
+float DOUBLE2FLOAT(double X) {return static_cast<float>(X);}
 
 static const std::string PROPERTY_TYPE_LIST = std::string("property_type_list");
 static const std::string PROPERTY_LIST = std::string("property_list");
@@ -67,11 +74,6 @@ static const std::string ISCLIP = std::string("isclip");
 
 static const std::string TEXT_PROPERTY = std::string("text_property");
 
-static const std::string RED = std::string("r");
-static const std::string GREEN = std::string("g");
-static const std::string BLUE = std::string("b");
-static const std::string ALPHA = std::string("alpha");
-
 static const std::string MATERIAL_PROPERTY_LIST = std::string("material_property");
 static const std::string LIGHTING_LIST = std::string("lighting");
 static const std::string MATERIAL_LIST = std::string("Material_list");
@@ -84,11 +86,6 @@ static const std::string PROPERTY_LOWER = std::string("lower");
 
 static const std::string THREE_D_ASSET_LIST = std::string("3D_asset_list");
 static const std::string NAME = std::string("name");
-
-#define DOUBLE2INT(X)		int(rint(X))
-#define DOUBLE2UINT8(X)		uint8_t(rint(X))
-#define DOUBLE2UINT32(X)	uint32_t(rint(X))
-#define DOUBLE2FLOAT(X)		static_cast<float>(X)
 
 static const std::string SHADER_PROGRAM_LIST = std::string("ShaderProgram_list");
 static const std::string VEX_SHADER_LIST = std::string("VertexShader_list");
@@ -116,6 +113,8 @@ static const std::string VALUE = std::string("value");
 
 static const std::string WRAP = std::string("wrap");
 static const std::string FILTER = std::string("filter");
+
+static const std::string CAMERA = std::string("Camera");
 
 static picojson::value snull;
 
@@ -156,13 +155,29 @@ glm::vec3 GLMVec3(picojson::array& o_vec3_list)
 	return value;
 }
 
-glm::vec4 GLMVec4(picojson::array& o_vec4_list)
+//glm::vec4 GLMVec4(picojson::array& o_vec4_list)
+//{
+//	glm::vec4 value;
+//	std::vector<float> vec4;
+//	for (picojson::value item : o_vec4_list)
+//	{
+//		vec4.push_back(DOUBLE2FLOAT(item.get<double>()));
+//	}
+//	value.x = vec4[0];
+//	value.y = vec4[1];
+//	value.z = vec4[2];
+//	value.w = vec4[3];
+//	return value;
+//}
+
+template<class T = float, class GLM_TYPE = glm::vec4>
+GLM_TYPE GLMVec4(picojson::array& o_vec4_list, std::function<T(double)> converter = DOUBLE2FLOAT)
 {
-	glm::vec4 value;
-	std::vector<float> vec4;
+	GLM_TYPE value;
+	std::vector<T> vec4;
 	for (picojson::value item : o_vec4_list)
 	{
-		vec4.push_back(DOUBLE2FLOAT(item.get<double>()));
+		vec4.push_back(converter(item.get<double>()));
 	}
 	value.x = vec4[0];
 	value.y = vec4[1];
@@ -309,55 +324,81 @@ void LoadGLProperty(picojson::object& o_glProperty, Node3DPtr pObject)
 		glMethod->SetBlendIndensity(static_cast<float>(indensity));
 	}
 
-	//<set Cam position
-	if (o_glProperty.end() != o_glProperty.find(CAM_POSITION))
+	//<Set viewport
+	if (o_glProperty.end() != o_glProperty.find(VIEW_PORT))
 	{
-		picojson::array o_vec3_list = o_glProperty[CAM_POSITION].get<picojson::array>();
-		glMethod->SetCamPos(GLMVec3(o_vec3_list));
+		picojson::array o_vec4_list = o_glProperty[VIEW_PORT].get<picojson::array>();
+		glMethod->SetViewPort(GLMVec4<glm::i32, glm::i32vec4>(o_vec4_list, &DOUBLE2UINT32));
+	}
+}
+
+void LoadCameraProperty(picojson::array& o_camera_list, Node3DPtr pObject)
+{
+	std::vector<UIObjectPtr> cameras;
+	for (auto& o_camera : o_camera_list)
+	{
+		auto name = o_camera.get(NAME).get<std::string>();
+		UIObjectPtr pCamNode = NodeCamera::create(name);	
+		auto camMethod = pCamNode->GetPropertyMethodObj<CameraProperty>();
+		
+		//<set Cam position
+		if (snull != o_camera.get(CAM_POSITION))
+		{
+			picojson::array o_vec3_list = o_camera.get(CAM_POSITION).get<picojson::array>();
+			camMethod->SetCamPos(GLMVec3(o_vec3_list));
+		}
+
+		//<set Cam direction
+		if (snull != o_camera.get(CAM_FRONT))
+		{
+			picojson::array o_vec3_list = o_camera.get(CAM_FRONT).get<picojson::array>();
+			camMethod->SetCamFront(GLMVec3(o_vec3_list));
+		}
+
+		//<Set Cam target
+		if (snull != o_camera.get(CAM_TARGET))
+		{
+			picojson::array o_vec3_list = o_camera.get(CAM_TARGET).get<picojson::array>();
+			camMethod->SetCamTarget(GLMVec3(o_vec3_list));
+		}
+
+		//<set Cam up
+		if (snull != o_camera.get(CAM_UP))
+		{
+			picojson::array o_vec3_list = o_camera.get(CAM_UP).get<picojson::array>();
+			camMethod->SetCamUp(GLMVec3(o_vec3_list));
+		}
+		//<set Camera type
+		if (snull != o_camera.get(CAMERA_TYPE))
+		{
+			std::string cam_type = o_camera.get(CAMERA_TYPE).get<std::string>();
+			camMethod->SetCameraType(cameraMap.at(cam_type));
+		}
+
+		//<set FOV
+		if (snull != o_camera.get(FOV))
+		{
+			camMethod->SetFOV(DOUBLE2FLOAT(o_camera.get(FOV).get<double>()));
+		}
+
+		//<set near/far plane
+		if (snull != o_camera.get(NEAR_PLANE))
+		{
+			camMethod->SetNearPlane(DOUBLE2FLOAT(o_camera.get(NEAR_PLANE).get<double>()));
+		}
+		if (snull != o_camera.get(FAR_PLANE))
+		{
+			camMethod->SetFarPlane(DOUBLE2FLOAT(o_camera.get(FAR_PLANE).get<double>()));
+		}
+		cameras.push_back(pCamNode);
 	}
 
-	//<set Cam direction
-	if (o_glProperty.end() != o_glProperty.find(CAM_FRONT))
+	for (auto& node : cameras)
 	{
-		picojson::array o_vec3_list = o_glProperty[CAM_FRONT].get<picojson::array>();
-		glMethod->SetCamFront(GLMVec3(o_vec3_list));
+		pObject->addChild(node);
 	}
 
-	//<Set Cam target
-	if (o_glProperty.end() != o_glProperty.find(CAM_TARGET))
-	{
-		picojson::array o_vec3_list = o_glProperty[CAM_TARGET].get<picojson::array>();
-		glMethod->SetCamTarget(GLMVec3(o_vec3_list));
-	}
-
-	//<set Cam up
-	if (o_glProperty.end() != o_glProperty.find(CAM_UP))
-	{
-		picojson::array o_vec3_list = o_glProperty[CAM_UP].get<picojson::array>();
-		glMethod->SetCamUp(GLMVec3(o_vec3_list));
-	}
-	//<set Camera type
-	if (o_glProperty.end() != o_glProperty.find(CAMERA_TYPE))
-	{
-		std::string cam_type = o_glProperty[CAMERA_TYPE].get<std::string>();
-		glMethod->SetCameraType(cameraMap.at(cam_type));
-	}
-
-	//<set FOV
-	if (o_glProperty.end() != o_glProperty.find(FOV))
-	{
-		glMethod->SetFOV(DOUBLE2FLOAT(o_glProperty[FOV].get<double>()));
-	}
-
-	//<set near/far plane
-	if (o_glProperty.end() != o_glProperty.find(NEAR_PLANE))
-	{
-		glMethod->SetNearPlane(DOUBLE2FLOAT(o_glProperty[NEAR_PLANE].get<double>()));
-	}
-	if (o_glProperty.end() != o_glProperty.find(FAR_PLANE))
-	{
-		glMethod->SetFarPlane(DOUBLE2FLOAT(o_glProperty[FAR_PLANE].get<double>()));
-	}
+	//pObject->SetNodeCamera(cameras);
 }
 
 void LoadMaterialProperty(picojson::object& o_material, NodeMeshPtr pObject)
@@ -636,9 +677,25 @@ void LoadLightingProperty(picojson::array& o_lighting_list, Node3DPtr pObject)
 			else {}
 		}
 	}
-	pObject->SetNodeLight<NodePointLight>(pointLights);
-	pObject->SetNodeLight<NodeSpotLight>(spotLights);
-	pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);
+
+	for (auto& node : pointLights)
+	{
+		pObject->addChild(node);
+	}
+
+	for (auto& node : spotLights)
+	{
+		pObject->addChild(node);
+	}
+
+	for (auto& node : directionalLights)
+	{
+		pObject->addChild(node);
+	}
+
+	//pObject->SetNodeLight<NodePointLight>(pointLights);
+	//pObject->SetNodeLight<NodeSpotLight>(spotLights);
+	//pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);
 }
 
 void LoadTextureList(picojson::value& json_value)
@@ -793,16 +850,15 @@ void LoadOriginProperty(picojson::object& o_origin_property, UIObjectPtr pObject
 	//Foreground color
 	if (o_origin_property.end() != o_origin_property.find(FORE_GROUND_COLOR))
 	{
-#ifdef OPENGL_RENDERING
 		picojson::array o_vec4_list = o_origin_property[FORE_GROUND_COLOR].get<picojson::array>();
+#ifdef OPENGL_RENDERING	
 		originMethod->SetForeGroundColor(GLMVec4(o_vec4_list));
 #else
-		picojson::object o_foreground = o_origin_property[FORE_GROUND_COLOR].get<picojson::object>();
 		SDL_Color color = {
-			DOUBLE2UINT8(o_foreground[RED].get<double>()),
-			DOUBLE2UINT8(o_foreground[GREEN].get<double>()),
-			DOUBLE2UINT8(o_foreground[BLUE].get<double>()),
-			DOUBLE2UINT8(o_foreground[ALPHA].get<double>())
+			DOUBLE2UINT8(o_vec4_list[0]),
+			DOUBLE2UINT8(o_vec4_list[1]),
+			DOUBLE2UINT8(o_vec4_list[2]),
+			DOUBLE2UINT8(o_vec4_list[3])
 		};
 		originMethod->SetForeGroundColor(color);
 #endif
@@ -811,16 +867,15 @@ void LoadOriginProperty(picojson::object& o_origin_property, UIObjectPtr pObject
 	//Background color
 	if (o_origin_property.end() != o_origin_property.find(BACK_GROUND_COLOR))
 	{
-#ifdef OPENGL_RENDERING
 		picojson::array o_vec4_list = o_origin_property[BACK_GROUND_COLOR].get<picojson::array>();
+#ifdef OPENGL_RENDERING
 		originMethod->SetBackGroundColor(GLMVec4(o_vec4_list));
 #else
-		picojson::object o_background = o_origin_property[BACK_GROUND_COLOR].get<picojson::object>();
 		SDL_Color color = {
-			DOUBLE2UINT8(o_background[RED].get<double>()),
-			DOUBLE2UINT8(o_background[GREEN].get<double>()),
-			DOUBLE2UINT8(o_background[BLUE].get<double>()),
-			DOUBLE2UINT8(o_background[ALPHA].get<double>())
+			DOUBLE2UINT8(o_vec4_list[0]),
+			DOUBLE2UINT8(o_vec4_list[1]),
+			DOUBLE2UINT8(o_vec4_list[2]),
+			DOUBLE2UINT8(o_vec4_list[3])
 		};
 		originMethod->SetBackGroundColor(color);
 #endif
@@ -896,16 +951,16 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 			textMethod->SetText(o_text_property[TEXT].get<std::string>().c_str());
 			textMethod->SetFontName(o_text_property[FONT_NAME].get<std::string>().c_str());
 			textMethod->SetFontSize(DOUBLE2INT(o_text_property[FONT_SIZE].get<double>()));
-#ifdef OPENGL_RENDERING
+
 			picojson::array o_vec3_list = o_text_property[FONT_COLOR].get<picojson::array>();
+#ifdef OPENGL_RENDERING
 			textMethod->SetColor(GLMVec3(o_vec3_list));
 #else
-			picojson::object o_fontColor = o_text_property[FONT_COLOR].get<picojson::object>();
 			textMethod->SetColor(
-				DOUBLE2INT(o_fontColor[RED].get<double>()),
-				DOUBLE2INT(o_fontColor[GREEN].get<double>()),
-				DOUBLE2INT(o_fontColor[BLUE].get<double>()),
-				DOUBLE2INT(o_fontColor[ALPHA].get<double>()));
+				DOUBLE2INT(o_vec3_list[0]),
+				DOUBLE2INT(o_vec3_list[1]),
+				DOUBLE2INT(o_vec3_list[2]),
+				DOUBLE2INT(255));
 #endif
 		}
 
@@ -961,6 +1016,14 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 			{
 				picojson::object o_glProperty = iter->get(GLPROPERTY).get<picojson::object>();
 				LoadGLProperty(o_glProperty, std::dynamic_pointer_cast<Node3D>(pObject));
+			}
+			else {}
+
+			//set camera property
+			if (snull != iter->get(CAMERA))
+			{
+				picojson::array o_camera_list = iter->get(CAMERA).get<picojson::array>();
+				LoadCameraProperty(o_camera_list, std::dynamic_pointer_cast<Node3D>(pObject));
 			}
 			else {}
 

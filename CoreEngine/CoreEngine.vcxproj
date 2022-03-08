@@ -95,7 +95,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);$(IMGUI_BACKEND);$(IMGUI_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\inc;.\Physic\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);$(IMGUI_BACKEND);$(IMGUI_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,7 +116,7 @@ $(SDL_IMAGE)\lib\x86</AdditionalLibraryDirectories>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;OPENGL_RENDERING;OPENGL_RENDERING_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);$(IMGUI_BACKEND);$(IMGUI_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\inc;.\Physic\inc;.\UIFramework\inc;.\3D Cube\inc;.\Player\inc;.\Player\NativeFileDialog;..\MemoryManager\inc;..\LogFramework\inc;..\Common\inc;..\gl_tinyxml_collada-master;..\ServiceMgr\inc;$(BOOST_HOME);$(SDL_HOME)\include;$(SDL_IMAGE)\include;$(SDL_TTF)\include;$(GLEW_HOME)\include;$(FREETYPE_HOME);$(ASSIMP_HOME);$(GLM_HOME);$(IMGUI_BACKEND);$(IMGUI_HOME);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -203,6 +203,22 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="inc\FpsTracking.h" />
     <ClInclude Include="inc\FrameRateCapping.h" />
     <ClInclude Include="inc\ModelLoader.h" />
+    <ClInclude Include="Physic\inc\BoundingBox.h" />
+    <ClInclude Include="Physic\inc\BoundingFrustum.h" />
+    <ClInclude Include="Physic\inc\BoundingSphere.h" />
+    <ClInclude Include="Physic\inc\ContainmentType.h" />
+    <ClInclude Include="Physic\inc\IEquatable.h" />
+    <ClInclude Include="Physic\inc\IntersectionRecord.h" />
+    <ClInclude Include="Physic\inc\MathHelper.h" />
+    <ClInclude Include="Physic\inc\Matrix.h" />
+    <ClInclude Include="Physic\inc\OctTree.h" />
+    <ClInclude Include="Physic\inc\Physical.h" />
+    <ClInclude Include="Physic\inc\Plane.h" />
+    <ClInclude Include="Physic\inc\PlaneIntersectionType.h" />
+    <ClInclude Include="Physic\inc\Point.h" />
+    <ClInclude Include="Physic\inc\Quaternion.h" />
+    <ClInclude Include="Physic\inc\Ray.h" />
+    <ClInclude Include="Physic\inc\Rectangle.h" />
     <ClInclude Include="Player\inc\BackGround.h" />
     <ClInclude Include="Player\inc\Focus.h" />
     <ClInclude Include="Player\inc\IFocusComponent.h" />
@@ -218,6 +234,7 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UIFramework\inc\Attribute.h" />
     <ClInclude Include="UIFramework\inc\Camera.h" />
+    <ClInclude Include="UIFramework\inc\CameraProperty.h" />
     <ClInclude Include="UIFramework\inc\DynamicShader.h" />
     <ClInclude Include="UIFramework\inc\GLFont.h" />
     <ClInclude Include="UIFramework\inc\GLFrameBufferObject.h" />
@@ -249,6 +266,7 @@ $(SDL_TTF)\lib\x64
     <ClInclude Include="UIFramework\inc\Library.h" />
     <ClInclude Include="UIFramework\inc\Model.h" />
     <ClInclude Include="UIFramework\inc\Node3D.h" />
+    <ClInclude Include="UIFramework\inc\NodeCamera.h" />
     <ClInclude Include="UIFramework\inc\NodeLight.h" />
     <ClInclude Include="UIFramework\inc\OriginProperty.h" />
     <ClInclude Include="UIFramework\inc\PropertyDefine.h" />
@@ -284,6 +302,9 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="FpsTracking.cpp" />
     <ClCompile Include="FrameRateCapping.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
+    <ClCompile Include="Physic\IntersectionType.cpp" />
+    <ClCompile Include="Physic\OctTree.cpp" />
+    <ClCompile Include="Physic\Physical.cpp" />
     <ClCompile Include="Player\BackGround.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -336,6 +357,7 @@ $(SDL_TTF)\lib\x64
     </ClCompile>
     <ClCompile Include="UIFramework\Attribute.cpp" />
     <ClCompile Include="UIFramework\Camera.cpp" />
+    <ClCompile Include="UIFramework\CameraProperty.cpp" />
     <ClCompile Include="UIFramework\DynamicShader.cpp" />
     <ClCompile Include="UIFramework\GLFont.cpp" />
     <ClCompile Include="UIFramework\GLFrameBufferObject.cpp" />
@@ -367,6 +389,7 @@ $(SDL_TTF)\lib\x64
     <ClCompile Include="UIFramework\Library.cpp" />
     <ClCompile Include="UIFramework\Model.cpp" />
     <ClCompile Include="UIFramework\Node3D.cpp" />
+    <ClCompile Include="UIFramework\NodeCamera.cpp" />
     <ClCompile Include="UIFramework\NodeLight.cpp" />
     <ClCompile Include="UIFramework\OriginProperty.cpp" />
     <ClCompile Include="UIFramework\PropertyDefine.cpp" />

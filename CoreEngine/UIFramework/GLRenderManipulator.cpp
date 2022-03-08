@@ -119,6 +119,7 @@ void GLRenderViewPortManipulator::pop()
 
 void GLRenderViewPortManipulator::push(glm::i32vec4 target_viewport)
 {
+	target_viewport = flipY(target_viewport);
 	m_stack.push(target_viewport);
 	glViewport(target_viewport[0], target_viewport[1], target_viewport[2], target_viewport[3]);
 }

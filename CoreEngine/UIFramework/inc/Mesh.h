@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <unordered_map>
-
+#include <set>
 #include <gl\glew.h>
 #include <SDL_opengl.h>
 #include <gl\glu.h>
@@ -56,7 +56,7 @@ public:
 	size_t indexCount() const;
 
 	std::string getName() const;
-
+	std::vector<glm::vec3> getVertex();
 	std::string getMaterial();
 	void setMaterial(std::string);
 };

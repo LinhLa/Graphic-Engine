@@ -277,10 +277,10 @@
 			"model": ["sphere"],
 			"mesh":
 			[
-				{"name":"sphere1","mesh":"sphere","layout": {"transform": [1.5,1.2, 0.0]},"material_property":{}},
-				{"name":"sphere2","mesh":"sphere","layout": {"transform": [0.0,1.5, 1.0]},"material_property":{}},
+				{"name":"sphere1","mesh":"sphere","layout": {"transform": [1.5,0.0, 0.0]},"material_property":{}},
+				{"name":"sphere2","mesh":"sphere","layout": {"transform": [0.0,1.5, 0.0]},"material_property":{}},
 				{"name":"sphere3","mesh":"sphere","layout": {"transform": [-1.5, 0.0, 0.0]},"material_property":{}},
-				{"name":"sphere4","mesh":"sphere","layout": {"transform": [0.0,1.0, 0.0]},"material_property":{}}
+				{"name":"sphere4","mesh":"sphere","layout": {"transform": [0.0,-1.5, 0.0]},"material_property":{}}
 			],
 			"RenderPass":["Multisamle"],
 			"lighting":[
@@ -295,6 +295,30 @@
 					"pointlight.linear": 0.3,
 					"pointlight.quadratic": 0.3,
 					"layout": {"transform": [0.0,-2.0, 0.0]}
+				}
+			],
+			"Camera":[
+				{
+					"name":"First Person",
+					"cam_position": [0.0, 0.0, 10.0],
+					"cam_front": [0.0, 0.0, -1.0],
+					"cam_target": [0.0, 0.0, 0.0],
+					"cam_up": [0.0, 1.0, 0.0],
+					"near_plane":0.1,
+					"far_plane":100,
+					"fov" : 45,
+					"camera":"perspective"
+				},
+				{
+					"name":"Third Person",
+					"cam_position": [0.0, 0.0, 10.0],
+					"cam_front": [0.0, 0.0, 1.0],
+					"cam_target": [0.0, 0.0, 0.0],
+					"cam_up": [0.0, 1.0, 0.0],
+					"near_plane":0.1,
+					"far_plane":100,
+					"fov" : 45,
+					"camera":"perspective"
 				}
 			],
 			"layout": {"rotate": [0.0,0.0, 0.0]},
@@ -315,7 +339,8 @@
 				"near_plane":0.1,
 				"far_plane":100,
 				"fov" : 45,
-				"camera":"perspective"
+				"camera":"perspective",
+				"view_port":[0,0,400,300]
 			}
 		},
 		{

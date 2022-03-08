@@ -10,12 +10,12 @@ out vec3 FragPos;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
-
+uniform mat4 normal;
 void main()
 {
     // note that we read the multiplication from right to left
     gl_Position = projection * view * model * vec4(aPos, 1.0);
     TexCoord = aTexCoord;
-    Normal = mat3(transpose(inverse(model))) * aNormal;
+    Normal = mat3(normal) * aNormal;
     FragPos = vec3(model * vec4(aPos, 1.0));
 }

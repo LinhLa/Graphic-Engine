@@ -167,29 +167,29 @@ void Application::start()
 		// Start the Dear ImGui frame
 		ImGuiShader::GetInstance()->StartNewFrame();
 
-		// Show demo
+		// Show ImGUI
 		ImGuiShader::GetInstance()->Show();
 
 		///<Play animation timeline
 		AnimationTimeLine::GetInstance()->onPlay();
 
-		///<on signal pre render
-		OnSignal<SDL_Event>(PRE_RENDER_SIGNAL, std::move(SDL_Event{ event }));
-
 		///<Execute timer task
 		TaskPoolInstance::GetInstance()->executeTaskList();
 
+		///<on signal pre render
+		OnSignal<SDL_Event>(PRE_RENDER_SIGNAL, std::move(SDL_Event{ event }));
+
 		///<Render screen
 		Render::GetInstance()->render();
+
+		///<on signal post render
+		OnSignal<SDL_Event>(POST_RENDER_SIGNAL, std::move(SDL_Event{ event }));
 
 		///<Increate frame and calculate and correct fps
 		framePerSecond.countFrames();
 
 		///<Set Current counter
 		DeltaTime::GetInstance()->now();
-
-		///<on signal post render
-		OnSignal<SDL_Event>(POST_RENDER_SIGNAL, std::move(SDL_Event{ event }));
 	}
 
 	///<application is quit

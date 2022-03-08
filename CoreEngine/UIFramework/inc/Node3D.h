@@ -2,6 +2,7 @@
 #include <UIObject.h>
 #include <NodeMesh.h>
 #include <NodeLight.h>
+#include <NodeCamera.h>
 #include "Model.h"
 #include "Mesh.h"
 #include "Material.h"
@@ -14,7 +15,8 @@ private:
 	std::map<std::string, ModelPtr>		m_modelStack;
 	std::vector<UIObjectPtr>			m_pointLights;
 	std::vector<UIObjectPtr>			m_spotLights;
-	std::vector<UIObjectPtr>	m_directionalLights;
+	std::vector<UIObjectPtr>			m_directionalLights;
+	NodeCameraPtr						m_camera = nullptr;
 protected:
 	Node3D(std::string name);
 public:
@@ -30,6 +32,8 @@ public:
 
 	void SetModel(const std::string& name);
 
+	void SetNodeCamera(NodeCameraPtr camera);
+
 	template<class T>
 	void SetNodeLight(std::vector<UIObjectPtr> lights)
 	{
@@ -39,6 +43,7 @@ public:
 			for (auto& node : m_pointLights)
 			{
 				this->m_childList.push_front(node);
+				node->setParent(shared_from_this());
 			}
 		}
 		if (typeid(T).hash_code() == typeid(NodeSpotLight).hash_code())
@@ -47,6 +52,7 @@ public:
 			for (auto& node : m_spotLights)
 			{
 				this->m_childList.push_front(node);
+				node->setParent(shared_from_this());
 			}
 		}
 		if (typeid(T).hash_code() == typeid(NodeDirectionalLight).hash_code())

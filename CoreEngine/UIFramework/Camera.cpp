@@ -5,24 +5,24 @@
 #include <chrono>
 #include "WindowRender.h"
 
-Camera::Camera(GLPropertyPtr glProperty)
+Camera::Camera(CameraPropertyPtr cameraProperty)
 {
-    if (!glProperty)
+    if (!cameraProperty)
     {
         throw std::logic_error("invalid argument");
     }
-    m_Pos       = glProperty->GetCamPos();
-    m_Front     = glProperty->GetCamFront();
-    m_Up        = glProperty->GetCamUp();
-    m_Target    = glProperty->GetCamTarget();
-    m_Yaw       = glProperty->GetCamYaw();
-    m_Pitch     = glProperty->GetCamPitch();
-    m_Zoom      = glProperty->GetFOV();
-    m_Speed     = glProperty->GetCamSpeed();
+    m_Pos       = cameraProperty->GetCamPos();
+    m_Front     = cameraProperty->GetCamFront();
+    m_Up        = cameraProperty->GetCamUp();
+    m_Target    = cameraProperty->GetCamTarget();
+    m_Yaw       = cameraProperty->GetCamYaw();
+    m_Pitch     = cameraProperty->GetCamPitch();
+    m_Zoom      = cameraProperty->GetFOV();
+    m_Speed     = cameraProperty->GetCamSpeed();
 
-    m_Near      = glProperty->GetNearPlane();
-    m_Far       = glProperty->GetFarPlane();
-    m_CamType   = glProperty->GetCameraType();
+    m_Near      = cameraProperty->GetNearPlane();
+    m_Far       = cameraProperty->GetFarPlane();
+    m_CamType   = cameraProperty->GetCameraType();
 }
 
 Camera::~Camera(){}

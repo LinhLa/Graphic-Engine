@@ -64,10 +64,10 @@ uniform SpotLight           spotlight[NR_SPOT_LIGHTS];
 #endif
 
 uniform Material material;
-
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 viewInverse;
 
 vec4 CalcPointLight(PointLight light, vec3 norm, vec3 viewDir)
 {
@@ -193,7 +193,8 @@ void main()
 
     vec3 norm = normalize(Normal);
 
-    vec3 viewPos = vec4(view * vec4(0.0,0.0,0.0,1.0)).xyz;
+    vec3 viewPos =  viewInverse[3].xyz;
+
     vec3 viewDir = normalize(viewPos - FragPos);
 
     #ifdef NR_POINT_LIGHTS

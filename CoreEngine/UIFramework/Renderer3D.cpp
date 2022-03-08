@@ -9,7 +9,10 @@
 
 #define MODEL_MATRIX		"model"
 #define VIEW_MATRIX  		"view"
+#define VIEW_MATRIX_INVERSE "viewInverse"
 #define PROJECT_MATRIX  	"projection"
+#define NORMAL_MATRIX		"normal"
+
 #define TEXT_SHADER			"Text"
 #define TEXT_COLOR			"textColor"
 #define TEXTURE_SHADER		"Texture"
@@ -326,7 +329,9 @@ void Renderer3D::DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMate
 
 	pShaderProgram->setUnifromMatrix(m_ProjectionMatrix, PROJECT_MATRIX);
 	pShaderProgram->setUnifromMatrix(m_ViewMatrix, VIEW_MATRIX);
+	pShaderProgram->setUnifromMatrix(glm::inverse(m_ViewMatrix), VIEW_MATRIX_INVERSE);
 	pShaderProgram->setUnifromMatrix(m_ModalMatrix, MODEL_MATRIX);
+	pShaderProgram->setUnifromMatrix(glm::transpose(glm::inverse(m_ModalMatrix)), NORMAL_MATRIX);
 
 	// draw mesh
 	glBindVertexArray(pMesh->vao());
@@ -359,39 +364,6 @@ void Renderer3D::setViewMatrix(glm::mat4 matrix)
 void Renderer3D::setProjectionMatrix(glm::mat4 matrix)
 {
 	m_ProjectionMatrix = matrix;
-}
-
-void Renderer3D::setUnifromMatrix(ShaderProgramPtr pShaderProgram)
-{
-	GLint uniformLocation = glGetUniformLocation(pShaderProgram->getID(), PROJECT_MATRIX);
-	if (-1 != uniformLocation)
-	{
-		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_ProjectionMatrix));
-	}
-	else
-	{
-		LOG_DEBUG("Shader program[%s] No uniform location for [%s]", pShaderProgram->getName().c_str(), PROJECT_MATRIX);
-	}
-
-	uniformLocation = glGetUniformLocation(pShaderProgram->getID(), VIEW_MATRIX);
-	if (-1 != uniformLocation)
-	{
-		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_ViewMatrix));
-	}
-	else
-	{
-		LOG_DEBUG("Shader program[%s] No uniform location for [%s]", pShaderProgram->getName().c_str(), VIEW_MATRIX);
-	}
-
-	uniformLocation = glGetUniformLocation(pShaderProgram->getID(), MODEL_MATRIX);
-	if (-1 != uniformLocation)
-	{
-		glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(m_ModalMatrix));
-	}
-	else
-	{
-		LOG_DEBUG("Shader program[%s] No uniform location for [%s]", pShaderProgram->getName().c_str(), MODEL_MATRIX);
-	}
 }
 
 void Renderer3D::setUniform(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial)

@@ -3,7 +3,6 @@
 #include "Mesh.h"
 #include "GLInfoLog.h"
 #include "log.h"
-
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -91,6 +90,16 @@ std::string Mesh::getName() const
 std::string Mesh::getMaterial()
 {
     return m_material;
+}
+
+std::vector<glm::vec3> Mesh::getVertex()
+{
+    std::vector<glm::vec3> list;
+    for (auto& record : vertices)
+    {
+        list.push_back(record.Position);
+    }
+    return list;
 }
 
 void Mesh::setMaterial(std::string pMaterial)

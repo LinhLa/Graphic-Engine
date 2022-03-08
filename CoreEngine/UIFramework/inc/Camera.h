@@ -1,6 +1,6 @@
 #pragma once
 #include "creator.h"
-#include "GLProperty.h"
+#include "CameraProperty.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -41,7 +41,7 @@ private:
         uint8_t m_CamType = ORTHOGRAPHIC;
 protected:
         friend class creator<Camera>;
-        Camera(GLPropertyPtr);
+        Camera(CameraPropertyPtr);
 public:
         ~Camera();
 

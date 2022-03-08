@@ -218,9 +218,24 @@ void ModelLoader::processLight(const aiScene* scene)
 			pLight->SetPropertyValue<glm::vec3>(ROTATE_VECTOR, rotation);
 		}
 	}
-	pObject->SetNodeLight<NodePointLight>(pointLights);
+
+	for (auto& node : pointLights)
+	{
+		pObject->addChild(node);
+	}
+
+	for (auto& node : spotLights)
+	{
+		pObject->addChild(node);
+	}
+
+	for (auto& node : directionalLights)
+	{
+		pObject->addChild(node);
+	}
+	/*pObject->SetNodeLight<NodePointLight>(pointLights);
 	pObject->SetNodeLight<NodeSpotLight>(spotLights);
-	pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);
+	pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);*/
 }
 
 void ModelLoader::processNode(aiNode* node, const aiScene* scene)

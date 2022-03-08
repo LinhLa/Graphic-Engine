@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	auto pCube3D = Cube3D::create();
 	app->bind(Application::POST_LOAD_RESOURCE_SIGNAL, pCube3D.get(), &Cube3D::init);
 	app->bind(Application::KEY_INPUT_SIGNAL, pCube3D.get(), &Cube3D::onKeyInputEvent);
-
+	app->bind(Application::PRE_RENDER_SIGNAL, pCube3D.get(), &Cube3D::onRenderEvent);
 	app->init();
 	app->start();
 

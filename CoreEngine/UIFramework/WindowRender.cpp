@@ -152,7 +152,7 @@ void WindowRender::onWindowEvent(SDL_Event& e)
 			m_height = e.window.data2;
 #ifdef OPENGL_RENDERING
 			GLRenderViewPortManipulator::clear();
-			GLRenderViewPortManipulator::push(glm::ivec4(0, 0, e.window.data1, e.window.data2));
+			GLRenderViewPortManipulator::push(glm::i32vec4(0, 0, e.window.data1, e.window.data2));
 			scale.x = m_scaleX;
 			scale.y = m_scaleY;
 			pRoot->SetPropertyValue<glm::vec3>(SCALE_VECTOR, scale);
