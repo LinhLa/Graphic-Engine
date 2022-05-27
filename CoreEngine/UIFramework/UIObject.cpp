@@ -27,6 +27,7 @@
 #include "Library.h"
 
 #include <glm/gtx/string_cast.hpp>
+#include <glm/gtx/euler_angles.hpp >
 
 using namespace UIHelper;
 
@@ -416,9 +417,15 @@ void UIObject::updateLocalTransform3D()
 	auto position = layoutMethod->GetLayoutTransform();
 	auto transform = glm::mat4(1.0f);
 	transform = glm::translate(transform, position);
-	transform = glm::rotate(transform, glm::radians(rotation.y), glm::vec3(0.0, 1.0, 0.0));
-	transform = glm::rotate(transform, glm::radians(rotation.x), glm::vec3(1.0, 0.0, 0.0));
-	transform = glm::rotate(transform, glm::radians(rotation.z), glm::vec3(0.0, 0.0, 1.0));
+
+	//Rotation use Euler angle
+	//transform = glm::rotate(transform, glm::radians(rotation.y), glm::vec3(0.0, 1.0, 0.0));
+	//transform = glm::rotate(transform, glm::radians(rotation.x), glm::vec3(1.0, 0.0, 0.0));
+	//transform = glm::rotate(transform, glm::radians(rotation.z), glm::vec3(0.0, 0.0, 1.0));
+
+	//Rotaion use Quaternion
+	transform *= glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
+
 	transform = glm::scale(transform, scale);
 	m_localTransform = transform;
 }
