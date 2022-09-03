@@ -11,6 +11,7 @@ const std::string SPOT_LIGHT_CUTOFF = std::string("spotlight.cutOff");
 const std::string SPOT_LIGHT_INNER_CUTOFF = std::string("spotlight.innercutOff");
 const std::string SPOT_LIGHT_OUTER_CUTOFF = std::string("spotlight.outerCutOff");
 
+const std::string DIRECTIONAL_LIGHT_POSITION = std::string("directionallight.position");
 const std::string DIRECTIONAL_LIGHT_COLOR = std::string("directionallight.color");
 const std::string DIRECTIONAL_LIGHT_AMBIENT = std::string("directionallight.ambient");
 const std::string DIRECTIONAL_LIGHT_DIFFUSE = std::string("directionallight.diffuse");
@@ -26,7 +27,10 @@ const std::string POINT_LIGHT_CONSTANT = std::string("pointlight.constant");
 const std::string POINT_LIGHT_LINEAR = std::string("pointlight.linear");
 const std::string POINT_LIGHT_QUADRATIC = std::string("pointlight.quadratic");
 
-const std::string LIGHT_TYPE = std::string("light.type");
+const std::string CAST_SHADOW 		= std::string("cast_shadow");
+const std::string LIGHT_DEPTH_MAP 	= std::string("shadowMap");
+const std::string LIGHT_SPACE_MAXTRIX	= std::string("lightSpaceMatrix");
+const std::string LIGHT_TYPE 		= std::string("light.type");
 
 const std::string MATERIAL_MODEL = std::string("material.shadingModel");
 
