@@ -30,13 +30,12 @@ private:
 	glm::mat4  		m_ViewMatrix;
 	glm::mat4  		m_ProjectionMatrix;
 
-	void setUniform(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial);
-
 public:
 	void DrawText2D(std::vector<CharacterPtr>,float opacity,glm::vec3 color);
 	void DrawColor(glm::vec2 size, glm::vec4 color);
 	void DrawImage(GLTexturePtr pTexture, float opacity = 1.0f, glm::vec4 color = glm::vec4(1.0f, 1.0f, 1.0f, 0.0f), ShaderProgramPtr pShader = nullptr);
-	void DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterialProperty, MeshPtr pMesh);
+	void DrawDepthMap(ShaderProgramPtr, MeshPtr);
+	void DrawGeometry(ShaderProgramPtr, MaterialPtr, MeshPtr);
 
 	glm::mat4 getModalMatrix() const;
 	glm::mat4 getViewMatrix() const;

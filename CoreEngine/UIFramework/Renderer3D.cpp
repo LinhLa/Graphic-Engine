@@ -321,6 +321,29 @@ void Renderer3D::DrawText2D(std::vector<CharacterPtr> characterList, float opaci
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+
+void Renderer3D::DrawDepthMap(ShaderProgramPtr pShaderProgram, MeshPtr pMesh)
+{
+	glEnable(GL_DEPTH_TEST);
+	pShaderProgram->useProgram();
+	pShaderProgram->setUnifromMatrix(m_ProjectionMatrix, PROJECT_MATRIX);
+	pShaderProgram->setUnifromMatrix(m_ViewMatrix, VIEW_MATRIX);
+	pShaderProgram->setUnifromMatrix(m_ModalMatrix, MODEL_MATRIX);
+
+	// draw mesh
+	glBindVertexArray(pMesh->vao());
+	if (0U != pMesh->ebo())
+	{
+		glDrawElements(GL_TRIANGLES, pMesh->indexCount(), GL_UNSIGNED_INT, 0);
+	}
+	else
+	{
+		glDrawArrays(GL_TRIANGLES, 0, pMesh->vertexCount());
+	}
+	glBindVertexArray(0);
+	glDisable(GL_DEPTH_TEST);
+}
+
 void Renderer3D::DrawGeometry(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial, MeshPtr pMesh)
 {
 	glEnable(GL_DEPTH_TEST);
@@ -364,47 +387,4 @@ void Renderer3D::setViewMatrix(glm::mat4 matrix)
 void Renderer3D::setProjectionMatrix(glm::mat4 matrix)
 {
 	m_ProjectionMatrix = matrix;
-}
-
-void Renderer3D::setUniform(ShaderProgramPtr pShaderProgram, MaterialPtr pMaterial)
-{
-	auto m_UniformList = pShaderProgram->querryUniform();
-	GLint textureLocation = 0;
-	GLenum location = GL_TEXTURE0;
-
-	glEnable(GL_TEXTURE_2D);
-	for (auto& pUniform : m_UniformList)
-	{
-		int location = glGetUniformLocation(pShaderProgram->getID(), pUniform->getName().c_str());
-		if (-1 != location)
-		{
-			if (GL_SAMPLER_2D == pUniform->getType())
-			{
-				if (pMaterial->hasTextureMap(pUniform->getName()))
-				{
-					auto pTexture = pMaterial->GetTexture(pUniform->getName());
-					pUniform->glUniform(location, (void*)&textureLocation);
-					pTexture->setLocation(location);
-					pTexture->active();
-					textureLocation++;
-				}
-			}
-			else
-			{
-				pUniform->glUniform(location, nullptr);
-			}
-		}
-		else
-		{
-			LOG_DEBUG("Couldn't get uniform location for:%s", pUniform->getName().c_str());
-		}
-	}
-
-	GLint max_texture_units;
-	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &max_texture_units);
-
-	if (max_texture_units <= textureLocation)
-	{
-		LOG_DEBUG("Over max texture units: Max[%d] Current[%d]", max_texture_units, textureLocation);
-	}
 }
