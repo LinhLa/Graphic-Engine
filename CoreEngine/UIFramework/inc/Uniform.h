@@ -21,6 +21,7 @@ public:
 	virtual ~IUniform(){}
 	virtual std::string getName() const = 0;
 	virtual GLenum getType() const = 0;
+	virtual GLuint getLocation() const = 0;
 	virtual const std::type_info& getTypeInfo() const = 0;
 	virtual void debug() = 0;
 
@@ -83,6 +84,11 @@ public:
 	GLenum getType() const
 	{
 		return m_type;
+	}
+
+	GLuint getLocation() const
+	{
+		return m_index;
 	}
 
 	void set(T&& value)
