@@ -42,11 +42,6 @@ static glm::vec4 toGLMVEC4(SDL_Rect rect)
 	);
 }
 
-static SDL_Rect toSDLRECT(glm::vec4 box)
-{
-	return { FLOAT2INT(box[0]), FLOAT2INT(box[1]), FLOAT2INT(box[2]), FLOAT2INT(box[3]) };
-}
-
 /*==================================================================  GLRenderClipManipulator ==================================================================*/
 
 GLRenderClipManipulator::GLRenderClipManipulator(const glm::vec4& target) : m_clip_target(target)
@@ -70,19 +65,20 @@ GLRenderClipManipulator::~GLRenderClipManipulator()
 
 bool GLRenderClipManipulator::HasIntersection()
 {
-	auto clip_target = toSDLRECT(m_clip_target);
-	auto render_area = toSDLRECT(m_render_area);
-	return (SDL_TRUE == SDL_HasIntersection(&clip_target, &render_area));
-}
-
-bool GLRenderClipManipulator::GetIntersection(glm::vec4& result)
-{
-	auto clip_target = toSDLRECT(m_clip_target);
-	auto render_area = toSDLRECT(m_render_area);
-	SDL_Rect sdlResult;
-	auto ret = SDL_IntersectRect(&clip_target, &render_area, &sdlResult);
-	result = toGLMVEC4(sdlResult);
-	return ret;
+	glm::vec4 *AABBmin = &m_clip_target;
+	glm::vec4 *AABBmax = &m_render_area;
+	if (m_clip_target.x <= (m_render_area.x + m_render_area[2]))
+	{
+		AABBmin = &m_clip_target;
+		AABBmax = &m_render_area;
+	}
+	else
+	{
+		AABBmin = &m_render_area;
+		AABBmax = &m_clip_target;
+	}
+	return (AABBmin->x <= (AABBmax->x + (*AABBmax)[2]) && (AABBmin->x + (*AABBmin)[2] >= AABBmax->x) &&
+         (AABBmin->y <= (AABBmax->y + (*AABBmax)[3]) && (AABBmin->y + (*AABBmin)[3]) >= AABBmax->y));
 }
 
 void GLRenderClipManipulator::SetRenderClipTarget()
@@ -95,7 +91,7 @@ void GLRenderClipManipulator::SetRenderClipTarget()
 	m_bSetClipTarget = true;
 }
 
-std::stack<glm::ivec4> GLRenderViewPortManipulator::m_stack;
+std::stack<std::pair<bool, glm::ivec4>> GLRenderViewPortManipulator::m_stack;
 
 GLRenderViewPortManipulator::GLRenderViewPortManipulator()
 {}
@@ -107,7 +103,7 @@ void GLRenderViewPortManipulator::pop()
 	if (!m_stack.empty())
 	{
 		m_stack.pop();
-		auto viewport = m_stack.top();
+		auto viewport = m_stack.top().second;
 		glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
 	}
 	else
@@ -117,21 +113,29 @@ void GLRenderViewPortManipulator::pop()
 	}
 }
 
-void GLRenderViewPortManipulator::push(glm::i32vec4 target_viewport)
+void GLRenderViewPortManipulator::push(glm::i32vec4 target_viewport, bool isFlipY)
 {
-	target_viewport = flipY(target_viewport);
-	m_stack.push(target_viewport);
+	if (isFlipY)
+	{
+		target_viewport = flipY(target_viewport);
+	}
+	m_stack.push(std::make_pair(isFlipY, target_viewport));
 	glViewport(target_viewport[0], target_viewport[1], target_viewport[2], target_viewport[3]);
 }
 
 glm::ivec4 GLRenderViewPortManipulator::top()
 {
-	return m_stack.top();
+	auto viewport = m_stack.top().second;
+	if (m_stack.top().first)
+	{
+		viewport = flipY(viewport);
+	}
+	return viewport;
 }
 
 void GLRenderViewPortManipulator::clear()
 {
-	m_stack = std::stack<glm::i32vec4>();
+	m_stack = std::stack<std::pair<bool, glm::ivec4>>();
 }
 
 

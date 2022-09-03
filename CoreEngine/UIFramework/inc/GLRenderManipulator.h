@@ -23,8 +23,6 @@ public:
 	~GLRenderClipManipulator();
 
 	bool HasIntersection();
-	bool GetIntersection(glm::vec4&);
-
 	void SetRenderClipTarget();
 };
 
@@ -35,13 +33,13 @@ public:
 class GLRenderViewPortManipulator
 {
 private:
-	static std::stack<glm::i32vec4> m_stack;
+	static std::stack<std::pair<bool, glm::ivec4>> m_stack;
 protected:
 	GLRenderViewPortManipulator();
 	~GLRenderViewPortManipulator();
 public:
 	static void pop();
-	static void push(glm::i32vec4);
+	static void push(glm::i32vec4, bool isFlipY = false);
 	static void clear();
 	static glm::i32vec4 top();
 };
