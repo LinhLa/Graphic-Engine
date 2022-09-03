@@ -15,9 +15,9 @@ public:
 
 	friend class creator<AnimationProperty>;
 
-	void onAnimation(std::chrono::milliseconds, UIObjectPtr);
+	void onAnimation(std::chrono::milliseconds, UIObjectPtr, int);
 	void addEntry(std::string, IKeyFramePtr);
-	bool isEnd();
+	bool isEnd(std::chrono::milliseconds);
 };
 
 typedef std::shared_ptr<AnimationProperty> AnimationPropertyPtr;
