@@ -14,7 +14,6 @@
 #define GL_CLEAR_COLOR	glClearColor(0.2f, 0.3f, 0.3f, 0.0f)
 
 extern const std::string SHADOWN_PROGRAM;
-extern const std::string SHADOWN_MATERIAL;
 
 extern const std::string INVERSION;
 extern const std::string GRAYSCALE;
@@ -73,12 +72,12 @@ public:
 	virtual ~IGLRenderContext() {}
 	virtual GLint type() = 0;
 
-	GLuint getBufferObject()
+	GLFrameBufferObjectPtr getBufferObject()
 	{
-		GLuint fbo = 0U;
+		GLFrameBufferObjectPtr fbo = nullptr;
 		if (m_pFBO)
 		{
-			fbo = m_pFBO->getID();
+			fbo = m_pFBO;
 		}
 		return fbo;
 	}
@@ -86,14 +85,13 @@ public:
 	static void blitFrameBuffer(GLuint from , GLuint to);
 };
 
-class GLRenderShadown : public creator<GLRenderShadown>, public IGLRenderContext
+class GLRenderDepthMap : public creator<GLRenderDepthMap>, public IGLRenderContext
 {
 protected:
-	GLRenderShadown(std::string name = "");
-	GLFrameBufferObjectPtr m_pFBO = nullptr;
+	GLRenderDepthMap(std::string name);
 public:
-	virtual ~GLRenderShadown();
-	friend class creator<GLRenderShadown>;
+	virtual ~GLRenderDepthMap();
+	friend class creator<GLRenderDepthMap>;
 
 	void excute() override;
 	void finish() override;
@@ -104,7 +102,6 @@ class GLRenderDefault : public creator<GLRenderDefault>, public IGLRenderContext
 {
 protected:
 	GLRenderDefault(std::string name);
-	GLFrameBufferObjectPtr m_pFBO = nullptr;
 public:
 	virtual ~GLRenderDefault();
 	friend class creator<GLRenderDefault>;
@@ -119,7 +116,6 @@ class GLRenderMultisample : public creator<GLRenderMultisample>, public IGLRende
 {
 protected:
 	GLRenderMultisample(std::string name);
-	GLFrameBufferObjectPtr m_pFBO = nullptr;
 public:
 	virtual ~GLRenderMultisample();
 	friend class creator<GLRenderMultisample>;
