@@ -61,6 +61,7 @@ static const std::string RESOURCE_NAME = std::string("resource_name");
 static const std::string TEXTURE_NAME = std::string("texture_name");
 
 static const std::string TYPE = std::string("type");
+static const std::string LIGHTING_TYPE = std::string("light_type");
 static const std::string LAYOUT = std::string("layout");
 
 static const std::string TRANSFORM = std::string("transform");
@@ -78,8 +79,8 @@ static const std::string MATERIAL_PROPERTY_LIST = std::string("material_property
 static const std::string LIGHTING_LIST = std::string("lighting");
 static const std::string MATERIAL_LIST = std::string("Material_list");
 
-static const std::string PROPERTY_NAME = std::string("property_name");
-static const std::string PROPERTY_TYPE = std::string("type");
+static const std::string PROPERTY_NAME 	= std::string("property_name");
+static const std::string PROPERTY_TYPE 	= std::string("type");
 static const std::string PROPERTY_VALUE = std::string("value");
 static const std::string PROPERTY_UPPER = std::string("upper");
 static const std::string PROPERTY_LOWER = std::string("lower");
@@ -87,32 +88,34 @@ static const std::string PROPERTY_LOWER = std::string("lower");
 static const std::string THREE_D_ASSET_LIST = std::string("3D_asset_list");
 static const std::string NAME = std::string("name");
 
-static const std::string SHADER_PROGRAM_LIST = std::string("ShaderProgram_list");
-static const std::string VEX_SHADER_LIST = std::string("VertexShader_list");
-static const std::string FRAG_SHADER_LIST = std::string("FragmentShader_list");
+static const std::string SHADER_PROGRAM_LIST 	= std::string("ShaderProgram_list");
+static const std::string VEX_SHADER_LIST 		= std::string("VertexShader_list");
+static const std::string FRAG_SHADER_LIST 		= std::string("FragmentShader_list");
 
 static const std::string SHADER_SOURCE = std::string("source");
-static const std::string SHADER = std::string("shader");
+static const std::string SHADER 		= std::string("shader");
 
-static const std::string MODEL_LIST = std::string("Model_list");
-static const std::string POSITION = std::string("position");
-static const std::string NORMAL = std::string("normal");
-static const std::string INDICES = std::string("indices");
-static const std::string UV = std::string("uv");
+static const std::string MODEL_LIST 	= std::string("Model_list");
+static const std::string POSITION 		= std::string("position");
+static const std::string NORMAL 		= std::string("normal");
+static const std::string INDICES 		= std::string("indices");
+static const std::string UV 			= std::string("uv");
 
-static const std::string GLPROPERTY = std::string("gl_property");
-static const std::string MATERIAL = std::string("material");
-static const std::string MODEL = std::string("model");
-static const std::string MESH = std::string("mesh");
-static const std::string PROGRAM = std::string("program");
+static const std::string GLPROPERTY 	= std::string("gl_property");
+static const std::string MATERIAL 		= std::string("material");
+static const std::string MODEL 			= std::string("model");
+static const std::string MESH_LIST 		= std::string("mesh list");
+static const std::string MESH 			= std::string("mesh");
+static const std::string PROGRAM 		= std::string("program");
 
-static const std::string TARGET = std::string("target");
-static const std::string TEXTURE_PARAM = std::string("texture_param");
-static const std::string FUNC = std::string("func");
-static const std::string VALUE = std::string("value");
-
-static const std::string WRAP = std::string("wrap");
-static const std::string FILTER = std::string("filter");
+static const std::string TARGET 		= std::string("target");
+static const std::string TEXTURE_PARAM 	= std::string("texture_param");
+static const std::string FUNC 			= std::string("func");
+static const std::string VALUE 			= std::string("value");
+static const std::string SAMPLE 		= std::string("sample");
+static const std::string MULTISAMPLE 	= std::string("multisamle");
+static const std::string WRAP 			= std::string("wrap");
+static const std::string FILTER 		= std::string("filter");
 
 static const std::string CAMERA = std::string("Camera");
 
@@ -154,21 +157,6 @@ glm::vec3 GLMVec3(picojson::array& o_vec3_list)
 	value.z = vec3[2];
 	return value;
 }
-
-//glm::vec4 GLMVec4(picojson::array& o_vec4_list)
-//{
-//	glm::vec4 value;
-//	std::vector<float> vec4;
-//	for (picojson::value item : o_vec4_list)
-//	{
-//		vec4.push_back(DOUBLE2FLOAT(item.get<double>()));
-//	}
-//	value.x = vec4[0];
-//	value.y = vec4[1];
-//	value.z = vec4[2];
-//	value.w = vec4[3];
-//	return value;
-//}
 
 template<class T = float, class GLM_TYPE = glm::vec4>
 GLM_TYPE GLMVec4(picojson::array& o_vec4_list, std::function<T(double)> converter = DOUBLE2FLOAT)
@@ -565,6 +553,13 @@ void LoadDirectionalLight(picojson::value& o_Lighting, UIObjectPtr pLightNode)
 		picojson::array o_vec3_list = o_Lighting.get(DIRECTIONAL_LIGHT_DIRECTION).get<picojson::array>();
 		pLightNode->AddProperty(DIRECTIONAL_LIGHT_DIRECTION, Property<glm::vec3>::create(DIRECTIONAL_LIGHT_DIRECTION, GLMVec3(o_vec3_list), GL_FLOAT_VEC3));
 	}
+
+	//<set light Position
+	if (snull != o_Lighting.get(DIRECTIONAL_LIGHT_POSITION))
+	{
+		picojson::array o_vec3_list = o_Lighting.get(DIRECTIONAL_LIGHT_POSITION).get<picojson::array>();
+		pLightNode->AddProperty(DIRECTIONAL_LIGHT_POSITION, Property<glm::vec3>::create(DIRECTIONAL_LIGHT_POSITION, GLMVec3(o_vec3_list), GL_FLOAT_VEC3));
+	}
 }
 
 void LoadSpotLight(picojson::value& o_Lighting, UIObjectPtr pLightNode)
@@ -641,9 +636,9 @@ void LoadLightingProperty(picojson::array& o_lighting_list, Node3DPtr pObject)
 	for (auto& o_Lighting : o_lighting_list)
 	{
 		//<set light type
-		if (snull != o_Lighting.get(TYPE))
+		if (snull != o_Lighting.get(LIGHTING_TYPE))
 		{
-			auto type = gLightMap.at(o_Lighting.get(TYPE).get<std::string>());
+			auto type = gLightMap.at(o_Lighting.get(LIGHTING_TYPE).get<std::string>());
 			UIObjectPtr pLightNode = nullptr;			
 			switch (type)
 			{
@@ -675,10 +670,19 @@ void LoadLightingProperty(picojson::array& o_lighting_list, Node3DPtr pObject)
 				LoadLayoutProperty(o_layout, pLightNode);
 			}
 			else {}
+
+			//<set light cast shadow
+			if (snull != o_Lighting.get(CAST_SHADOW))
+			{
+				bool cast = o_Lighting.get(CAST_SHADOW).get<bool>();
+				pLightNode->AddProperty(CAST_SHADOW, Property<bool>::create(CAST_SHADOW, std::move(cast), GL_BOOL));
+			}
+			else {}
+			
 		}
 	}
 
-	for (auto& node : pointLights)
+	/*for (auto& node : pointLights)
 	{
 		pObject->addChild(node);
 	}
@@ -691,11 +695,11 @@ void LoadLightingProperty(picojson::array& o_lighting_list, Node3DPtr pObject)
 	for (auto& node : directionalLights)
 	{
 		pObject->addChild(node);
-	}
+	}*/
 
-	//pObject->SetNodeLight<NodePointLight>(pointLights);
-	//pObject->SetNodeLight<NodeSpotLight>(spotLights);
-	//pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);
+	pObject->SetNodeLight<NodePointLight>(pointLights);
+	pObject->SetNodeLight<NodeSpotLight>(spotLights);
+	pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);
 }
 
 void LoadTextureList(picojson::value& json_value)
@@ -897,7 +901,7 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 
 		std::string resource_name = iter->get(RESOURCE_NAME).get<std::string>();
 		UIObjectPtr pObject = nullptr;
-		uint8_t type = std::stoi(iter->get(TYPE).get<std::string>()) & 0xFF;
+		uint8_t type = gMapNodeType.at(iter->get(TYPE).get<std::string>());
 		switch (type)
 		{
 		case NODE_2D_IMAGE_TYPE:
@@ -966,7 +970,6 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 
 		if (NODE_3D == type)
 		{
-
 			//<set model
 			if (snull != iter->get(MODEL))
 			{
@@ -977,38 +980,41 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 				}
 			}
 
-			//<set mesh material
-			if (snull != iter->get(MESH))
+			//<set mesh list
+			if (snull != iter->get(MESH_LIST))
 			{
-				picojson::array o_mesh_list = iter->get(MESH).get<picojson::array>();
+				picojson::array o_mesh_list = iter->get(MESH_LIST).get<picojson::array>();
+				std::vector<UIObjectPtr> meshes;
 				for (auto& o_mesh : o_mesh_list)
 				{
 					auto name = o_mesh.get(NAME).get<std::string>();
 					auto mesh = Library::GetInstance()->get<Mesh>(o_mesh.get(MESH).get<std::string>());
+
+					//create mesh node
 					auto node = pObject->getChild<NodeMesh>(name);
 					if (!node)
 					{
 						node = NodeMesh::create(name);
-						node->SetMesh(mesh);
-						pObject->addChild(node);
-					}
+						node->SetMesh(mesh);						
 
-					//set layout property
-					if (snull != o_mesh.get(LAYOUT))
-					{
-						picojson::object o_layout = o_mesh.get(LAYOUT).get<picojson::object>();
-						LoadLayoutProperty(o_layout, node);
-					}
-					else {}
+						//set layout property
+						if (snull != o_mesh.get(LAYOUT))
+						{
+							picojson::object o_layout = o_mesh.get(LAYOUT).get<picojson::object>();
+							LoadLayoutProperty(o_layout, node);
+						}
+						else {}
 
-					//set Material property
-					if (snull != o_mesh.get(MATERIAL_PROPERTY_LIST))
-					{
-						picojson::object o_material = o_mesh.get(MATERIAL_PROPERTY_LIST).get<picojson::object>();
-						LoadMaterialProperty(o_material, node);
+						//set Material property
+						if (snull != o_mesh.get(MATERIAL_PROPERTY_LIST))
+						{
+							picojson::object o_material = o_mesh.get(MATERIAL_PROPERTY_LIST).get<picojson::object>();
+							LoadMaterialProperty(o_material, node);
+						}
+						meshes.push_back(node);
 					}
-
 				}
+				std::dynamic_pointer_cast<Node3D>(pObject)->SetNodeMesh(meshes);
 			}
 
 			//set gl property
@@ -1033,26 +1039,26 @@ void LoadResourceList(UIObjectTableType& UIObjectTable, picojson::value& json_va
 				picojson::array o_lighting_list = iter->get(LIGHTING_LIST).get<picojson::array>();
 				LoadLightingProperty(o_lighting_list, std::dynamic_pointer_cast<Node3D>(pObject));
 			}
-		}
-#ifdef OPENGL_RENDERING
-		//set render pass
-		if (snull != iter->get(RENDER_PASS))
-		{
-			picojson::array o_render_pass = iter->get(RENDER_PASS).get<picojson::array>();
-			GLint render_pass = DEFAULT_RENDER_PASS;
-			for (auto& o_value : o_render_pass)
+
+			//set render pass
+			if (snull != iter->get(RENDER_PASS))
 			{
-				render_pass |= gRenderPassMap.at(o_value.get<std::string>());
+				picojson::array o_render_pass = iter->get(RENDER_PASS).get<picojson::array>();
+				GLint render_pass = DEFAULT_RENDER_PASS;
+				for (auto& o_value : o_render_pass)
+				{
+					render_pass |= gRenderPassMap.at(o_value.get<std::string>());
 
+				}
+				pObject->SetPropertyValue<GLint>(RENDER_PASS, render_pass);
 			}
-			pObject->SetPropertyValue<GLint>(RENDER_PASS, render_pass);
-		}
-		else
-		{
-			pObject->SetPropertyValue<GLint>(RENDER_PASS, DEFAULT_RENDER_PASS | MULTISAMPLE_RENDER_PASS);
+			else
+			{
+				pObject->SetPropertyValue<GLint>(RENDER_PASS, SHADOWN_MAP_RENDER_PASS | MULTISAMPLE_RENDER_PASS);
+			}
+
 		}
 
-#endif
 		//<add to ui object table
 		UIObjectTable[resource_name] = pObject;
 		LOG_DEBUG("Resource added[%s]", resource_name.c_str());
