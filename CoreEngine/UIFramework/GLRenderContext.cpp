@@ -10,8 +10,7 @@
 
 #include "DynamicShader.h"
 
-const std::string SHADOWN_PROGRAM = "shadown mapping";
-const std::string SHADOWN_MATERIAL = "shadown mapping";
+const std::string SHADOWN_PROGRAM = "DepthShader";
 
 const std::string INVERSION = "Inversion";
 const std::string GRAYSCALE = "Grayscale";
@@ -46,51 +45,52 @@ void IGLRenderContext::blitFrameBuffer(GLuint from_fbo, GLuint to_fbo)
 		GL_NEAREST);
 }
 
-GLRenderShadown::GLRenderShadown(std::string name)
+GLRenderDepthMap::GLRenderDepthMap(std::string name)
 {
-	auto pFBO = Library::GetInstance()->get<GLFrameBufferObject>(name);
-	if (pFBO)
+	name = "GLRenderDepthMap_" + name;
+	m_pFBO = Library::GetInstance()->get<GLFrameBufferObject>(name);
+	if (!m_pFBO)
 	{
-		m_pFBO = pFBO;
-	}
-	else
-	{
-		m_pFBO = GLFrameBufferObject::create(name, GLRenderViewPortManipulator::top());
-		m_pFBO->initTexture2D();
+		auto resolution = Configuration::GetInstance()->shadown_resolution;
+		m_pFBO = GLFrameBufferObject::create(name, resolution, resolution);
 		Library::GetInstance()->add<GLFrameBufferObject>(name, m_pFBO);
 	}
 }
 
-GLRenderShadown::~GLRenderShadown() {}
+GLRenderDepthMap::~GLRenderDepthMap() {}
 
-GLint GLRenderShadown::type()
+GLint GLRenderDepthMap::type()
 {
 	return SHADOWN_MAP_RENDER_PASS;
 }
 
-void GLRenderShadown::excute()
+void GLRenderDepthMap::excute()
 {
-	m_pFBO->initTexture2D();
-	GLRenderFBOManipulator::push(m_pFBO->getID());
-	GL_CLEAR_COLOR;
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//<Enable function
-	glEnable(GL_DEPTH_TEST);
+	m_pFBO->initDepthMap();
+	//<set view port to shadow resolution
+	auto resolution = Configuration::GetInstance()->shadown_resolution;
+	GLRenderViewPortManipulator::push((glm::i32vec4(0, 0, resolution, resolution)));
 
+	GLRenderFBOManipulator::push(m_pFBO->getID());
+	glClear(GL_DEPTH_BUFFER_BIT);
 }
 
-void GLRenderShadown::finish()
+void GLRenderDepthMap::finish()
 {
+	//pop viewport shadow
+	GLRenderViewPortManipulator::pop();
+
 	// pop fbo
 	GLRenderFBOManipulator::pop();
 
-	// blit to intermediate buffer
-	blitFrameBuffer(m_pFBO->getID(), GLRenderFBOManipulator::top());
+	// clear color + depth buffer before rendering scene
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 GLRenderDefault::GLRenderDefault(std::string name)
 {
-	auto m_pFBO = Library::GetInstance()->get<GLFrameBufferObject>(name);
+	name = "GLRenderDefault_" + name;
+	m_pFBO = Library::GetInstance()->get<GLFrameBufferObject>(name);
 	if (!m_pFBO)
 	{
 		m_pFBO = GLFrameBufferObject::create(name, GLRenderViewPortManipulator::top());
@@ -103,10 +103,11 @@ GLRenderDefault::~GLRenderDefault() {}
 void GLRenderDefault::excute()
 {
 	m_pFBO->initTexture2D();
+
+	// blit to intermediate buffer
+	blitFrameBuffer(GLRenderFBOManipulator::top(), m_pFBO->getID());
+	
 	GLRenderFBOManipulator::push(m_pFBO->getID());
-	GL_CLEAR_COLOR;
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
-	glEnable(GL_DEPTH_TEST);
 }
 
 void GLRenderDefault::finish()
@@ -125,6 +126,7 @@ GLint GLRenderDefault::type()
 
 GLRenderMultisample::GLRenderMultisample(std::string name)
 {
+	name = "GLRenderMultisample_" + name;
 	m_pFBO = Library::GetInstance()->get<GLFrameBufferObject>(name);
 	if (!m_pFBO)
 	{
@@ -138,12 +140,11 @@ GLRenderMultisample::~GLRenderMultisample() {}
 void GLRenderMultisample::excute()
 {
 	m_pFBO->initTexture2DMS();
-	GLRenderFBOManipulator::push(m_pFBO->getID());
-	GL_CLEAR_COLOR;
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-	//<Enable function
-	glEnable(GL_DEPTH_TEST | GL_STENCIL_TEST);
+	// blit to intermediate buffer
+	blitFrameBuffer(GLRenderFBOManipulator::top(), m_pFBO->getID());
+
+	GLRenderFBOManipulator::push(m_pFBO->getID());
 }
 
 void GLRenderMultisample::finish()
@@ -151,7 +152,7 @@ void GLRenderMultisample::finish()
 	// pop fbo
 	GLRenderFBOManipulator::pop();
 
-	// blit to intermediate buffer
+	// blit from intermediate buffer
 	blitFrameBuffer(m_pFBO->getID(), GLRenderFBOManipulator::top());
 }
 
@@ -163,6 +164,7 @@ GLint GLRenderMultisample::type()
 
 GLRenderEffect::GLRenderEffect(std::string name, std::initializer_list<IKernelPtr> list)
 {
+	name = "GLRenderEffect_" + name;
 	m_pFBO = Library::GetInstance()->get<GLFrameBufferObject>(name);
 	if (!m_pFBO)
 	{
