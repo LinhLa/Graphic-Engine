@@ -150,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\base_define.h" />
+    <ClInclude Include="inc\bezier.h" />
     <ClInclude Include="inc\component.h" />
     <ClInclude Include="inc\easing.h" />
     <ClInclude Include="inc\error_info.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="inc\LifeAndDeathBook.h" />
     <ClInclude Include="inc\map_protected.h" />
     <ClInclude Include="inc\message_struct.h" />
+    <ClInclude Include="inc\ObjectPool.h" />
     <ClInclude Include="inc\picojson.h" />
     <ClInclude Include="inc\queue_protected.h" />
     <ClInclude Include="inc\Signal.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="inc\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bezier.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="error_info.cpp" />
     <ClCompile Include="file_guard.cpp" />
