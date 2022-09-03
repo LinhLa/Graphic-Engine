@@ -96,22 +96,30 @@ void GLTexture::load()
 		LOG_DEBUG("Failed to load texture: %s", m_path.c_str());
 		_ASSERT(false);
 	}
-	if (4 == m_Channels)
+	
+	switch(m_Channels) 
 	{
-		m_iformat = GL_RGBA;
-	}
-	else if(3 == m_Channels)
-	{
-		m_iformat = GL_RGB;
-	}
-	else if (1 == m_Channels)
-	{
-		m_iformat = GL_RED;
-	}
-	else
-	{
-		LOG_DEBUG("Texture[%s] unknow format", m_path.c_str());
-		_ASSERT(false);
+		case 4:
+		{
+			m_iformat = GL_RGBA;
+			break;
+		}
+		case 3:
+		{
+			m_iformat = GL_RGB;
+			break;
+		}
+		case 1:
+		{
+			m_iformat = GL_RED;
+			break;
+		}
+		default:
+		{
+			LOG_DEBUG("Texture[%s] unknow format", m_path.c_str());
+			_ASSERT(false);
+			break;
+		}
 	}
 	glTexImage2D(m_target, 0, m_iformat, m_width, m_height, 0, m_iformat, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(m_target);
@@ -257,9 +265,9 @@ GLenum GLTexture::getTarget() const
 	return m_target;
 }
 
-void GLTexture::setLocation(GLenum location)
+void GLTexture::setTextureUnit(GLenum unit)
 {
-	m_location = location;
+	m_unit = unit;
 }
 
 /**
@@ -287,9 +295,9 @@ bool GLTexture::isLoadToGPU() const
  */
 void GLTexture::active()
 {
-	if ((0U != m_location) && (0U != m_textureID))
+	if ((0U != m_unit) && (0U != m_textureID))
 	{
-		glActiveTexture(m_location);
+		glActiveTexture(m_unit);
 		glBindTexture(m_target, m_textureID);
 	}
 }

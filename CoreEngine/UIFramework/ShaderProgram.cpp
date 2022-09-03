@@ -242,8 +242,9 @@ void ShaderProgram::setUniform(MaterialPtr pMaterial)
 	{
 		return;
 	}
-	GLenum textureLocation = GL_TEXTURE0;
-	GLenum location = 0;
+	GLint  textureLocation = 0;
+	GLenum textureUnit = GL_TEXTURE0;
+	GLenum location = -1;
 
 	glEnable(GL_TEXTURE_2D);
 	for(auto &pUniform: m_UniformList)
@@ -260,7 +261,7 @@ void ShaderProgram::setUniform(MaterialPtr pMaterial)
 
 
 		//<set uniform
-		location = glGetUniformLocation(m_ProgramID, pUniform->getName().c_str());
+		location = pUniform->getLocation();
 		if (-1 != location)
 		{
 			if (GL_SAMPLER_2D == pUniform->getType())
@@ -272,22 +273,22 @@ void ShaderProgram::setUniform(MaterialPtr pMaterial)
 					auto property = pMaterial->GetProperty(pUniform->getName());
 					if (property)
 					{
-						
-						auto textureUnit = property->GetValue<glm::u32>();
+						auto textureID = property->GetValue<glm::u32>();
+						glActiveTexture(textureUnit);
+						glBindTexture(GL_TEXTURE_2D, textureID);
 						pUniform->glUniform(location, (void*)&textureLocation);
-						glActiveTexture(textureLocation);
-						glBindTexture(GL_TEXTURE_2D, textureUnit);
 						textureLocation++;
+						textureUnit++;
 					}
 				}
 				else if (pMaterial->hasTextureMap(pUniform->getName()))//<querry texture from material
 				{
 					pTexture = pMaterial->GetTexture(pUniform->getName());
-					pUniform->glUniform(location, (void*)&textureLocation);
-					pTexture->setLocation(textureLocation);
+					pTexture->setTextureUnit(textureUnit);
 					pTexture->active();
+					pUniform->glUniform(location, (void*)&textureLocation);
 					textureLocation++;
-
+					textureUnit++;
 				}
 			}
 			else

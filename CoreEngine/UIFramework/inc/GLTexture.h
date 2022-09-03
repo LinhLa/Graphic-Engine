@@ -31,7 +31,7 @@ private:
 
 	GLuint 			m_textureID = 0U;
 	GLenum 			m_target = 0U;
-	GLenum			m_location = 0U;
+	GLenum			m_unit = 0U;
 
 	bool m_isLoadToGPU = true;
 
@@ -67,7 +67,7 @@ public:
 	GLint getFormat() const;
 	GLenum getTarget() const;
 
-	void setLocation(GLenum);
+	void setTextureUnit(GLenum);
 	void loadToGPU(bool flag = true);
 	bool isLoadToGPU() const;
 
