@@ -364,7 +364,7 @@ void ImGuiShader::Show()
 		if (pTexture)
 		{
 			auto textureID = pTexture->getID();
-			ImGui::Image((void*)(textureID), ImVec2(80.0f, 60.0f), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f));
+			ImGui::Image((void*)(textureID), ImVec2(160.0f, 120.0f), ImVec2(0.0f, 0.0f), ImVec2(1.0f, 1.0f));
 		}
 		ImGui::TreePop();
 	}
