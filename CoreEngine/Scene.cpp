@@ -15,6 +15,8 @@
 #include "OriginProperty.h"
 #include "LayoutProperty.h"
 
+#include "ScriptFunction.h"
+
 const int32_t INIT = (0x01);
 const int32_t RENDER = (0x02);
 
@@ -128,6 +130,7 @@ void Scene::LoadResource()
 	// check if the type of the value is "object"
 	_ASSERT(json_value.is<picojson::object>());
 
+	LoadScript();
 	LoadTextureList(json_value);
 	LoadPropertyTypeList(json_value);
 	

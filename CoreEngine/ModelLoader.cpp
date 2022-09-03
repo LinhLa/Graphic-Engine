@@ -219,7 +219,7 @@ void ModelLoader::processLight(const aiScene* scene)
 		}
 	}
 
-	for (auto& node : pointLights)
+	/*for (auto& node : pointLights)
 	{
 		pObject->addChild(node);
 	}
@@ -232,10 +232,10 @@ void ModelLoader::processLight(const aiScene* scene)
 	for (auto& node : directionalLights)
 	{
 		pObject->addChild(node);
-	}
-	/*pObject->SetNodeLight<NodePointLight>(pointLights);
+	}*/
+	pObject->SetNodeLight<NodePointLight>(pointLights);
 	pObject->SetNodeLight<NodeSpotLight>(spotLights);
-	pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);*/
+	pObject->SetNodeLight<NodeDirectionalLight>(directionalLights);
 }
 
 void ModelLoader::processNode(aiNode* node, const aiScene* scene)
@@ -474,16 +474,17 @@ void ModelLoader::LoadDirectionalLight(aiLight* light, UIObjectPtr pLightNode)
 	//<set light Specular
 	pLightNode->AddProperty(DIRECTIONAL_LIGHT_SPECULAR, Property<glm::vec4>::create(DIRECTIONAL_LIGHT_SPECULAR, GLMVec4(light->mColorSpecular), GL_FLOAT_VEC4));
 
-
 	//<set light Diffuse
 	pLightNode->AddProperty(DIRECTIONAL_LIGHT_DIFFUSE, Property<glm::vec4>::create(DIRECTIONAL_LIGHT_DIFFUSE, GLMVec4(light->mColorDiffuse), GL_FLOAT_VEC4));
 
 	//<set light Ambient
 	pLightNode->AddProperty(DIRECTIONAL_LIGHT_AMBIENT, Property<glm::vec4>::create(DIRECTIONAL_LIGHT_AMBIENT, GLMVec4(light->mColorAmbient), GL_FLOAT_VEC4));
 
-
 	//<set light Direction
 	pLightNode->AddProperty(DIRECTIONAL_LIGHT_DIRECTION, Property<glm::vec3>::create(DIRECTIONAL_LIGHT_DIRECTION, GLMVec3(light->mDirection), GL_FLOAT_VEC3));
+
+	//<set light Position
+	pLightNode->AddProperty(DIRECTIONAL_LIGHT_POSITION, Property<glm::vec3>::create(DIRECTIONAL_LIGHT_POSITION, GLMVec3(light->mPosition), GL_FLOAT_VEC3));
 }
 
 void ModelLoader::LoadSpotLight(aiLight* light, UIObjectPtr pLightNode)
