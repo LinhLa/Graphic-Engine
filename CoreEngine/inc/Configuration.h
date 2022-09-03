@@ -26,7 +26,8 @@ public:
 	int32_t width;
 
 	int32_t fps = 60;
-
+	int32_t shadown_resolution = 512;
+	
 	//<OpenGL config
 	int32_t major_verion = 3;
 	int32_t minor_version = 3;

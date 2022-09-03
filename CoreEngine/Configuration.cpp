@@ -67,6 +67,7 @@ void Configuration::loadConfig(const char* file)
 	inipp::extract(ini.sections["Graphic"]["width"], width);
 	inipp::extract(ini.sections["Graphic"]["vsync"], vsync);
 	inipp::extract(ini.sections["Graphic"]["msaa"], msaa);
+	inipp::extract(ini.sections["Graphic"]["shadown_resolution"], shadown_resolution);
 
 	inipp::extract(ini.sections["OpenGL"]["major_version"], major_verion);
 	inipp::extract(ini.sections["OpenGL"]["minor_version"], minor_version);
@@ -91,6 +92,7 @@ void Configuration::loadConfig(const char* file)
 	LOG_DEBUG("Shader binary path[%s]", shader_bin);
 	
 	LOG_DEBUG("Frame rate[%d]", fps);
+	LOG_DEBUG("Shadown resolution[%d]", shadown_resolution);
 
 	LOG_DEBUG("GL_verion[#%d.%d]", major_verion, minor_version);
 	LOG_DEBUG("MSAA[%s] Buffer[%d] Sample[%d]", msaa? "ON":"OFF", msaa_buffer, msaa_sample);
