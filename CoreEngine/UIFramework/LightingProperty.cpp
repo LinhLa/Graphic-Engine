@@ -4,6 +4,12 @@
 
 std::string parse_name(GLint index, std::string property_name)
 {
+	property_name.append("[" + std::to_string(index) + "]");
+	return property_name;
+}
+
+std::string parse_member_name(GLint index, std::string property_name)
+{
 	property_name.insert(property_name.find_first_of('.'), "[" + std::to_string(index) + "]");
 	return property_name;
 }
@@ -101,7 +107,7 @@ void PointLightProperty::SetProperty(MaterialPtr pMaterial, GLint count)
 	{
 		if (m_pPropertyTable->IsPropertyExist(light_property))
 		{
-			auto name = parse_name(count, light_property);
+			auto name = parse_member_name(count, light_property);
 			if (pMaterial->IsPropertyExist(name))
 			{
 				auto property = m_pPropertyTable->GetProperty(light_property);
@@ -195,7 +201,7 @@ void SpotLightProperty::SetProperty(MaterialPtr pMaterial, GLint count)
 	{
 		if (m_pPropertyTable->IsPropertyExist(light_property))
 		{
-			auto name = parse_name(count, light_property);
+			auto name = parse_member_name(count, light_property);
 			if (pMaterial->IsPropertyExist(name))
 			{
 				auto property = m_pPropertyTable->GetProperty(light_property);
@@ -275,14 +281,15 @@ void DirectionalLightProperty::SetProperty(MaterialPtr pMaterial, GLint count)
 		DIRECTIONAL_LIGHT_AMBIENT,
 		DIRECTIONAL_LIGHT_DIFFUSE,
 		DIRECTIONAL_LIGHT_SPECULAR,
-		DIRECTIONAL_LIGHT_DIRECTION
+		DIRECTIONAL_LIGHT_DIRECTION,
+		DIRECTIONAL_LIGHT_POSITION
 	};
 
 	for (auto& light_property : list)
 	{
 		if (m_pPropertyTable->IsPropertyExist(light_property))
 		{
-			auto name = parse_name(count, light_property);
+			auto name = parse_member_name(count, light_property);
 			if (pMaterial->IsPropertyExist(name))
 			{
 				auto property = m_pPropertyTable->GetProperty(light_property);

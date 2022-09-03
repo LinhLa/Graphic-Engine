@@ -9,6 +9,7 @@
 #include <Material.h>
 
 std::string parse_name(GLint index, std::string property_name);
+std::string parse_member_name(GLint index, std::string property_name);
 
 class PointLightProperty final : public IPropertyMethod, public creator<PointLightProperty>
 {
