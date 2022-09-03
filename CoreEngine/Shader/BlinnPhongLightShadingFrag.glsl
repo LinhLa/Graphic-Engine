@@ -5,6 +5,12 @@ in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
 
+
+#ifdef NR_SHADOWN_MAP
+in vec4 FragPosLightSpace[NR_SHADOWN_MAP];
+uniform sampler2D shadowMap[NR_SHADOWN_MAP];
+#endif
+
 struct Material
 {
     vec4 ambient;
@@ -69,7 +75,34 @@ uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 viewInverse;
 
-vec4 CalcPointLight(PointLight light, vec3 norm, vec3 viewDir)
+
+#ifdef NR_SHADOWN_MAP
+float ShadowCalculation()
+{
+    float shadowFinal = 0.0;
+    float bias = 0.005;
+    for(int i = 0; i < NR_SHADOWN_MAP; i++)
+    {
+        // perform perspective divide
+        vec3 projCoords = FragPosLightSpace[i].xyz / FragPosLightSpace[i].w;
+
+        // transform to [0,1] range
+        projCoords = projCoords * 0.5 + 0.5;
+
+        // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+        float closestDepth = texture(shadowMap[i], projCoords.xy).r;
+
+        // get depth of current fragment from light's perspective
+        float currentDepth = projCoords.z;
+
+        // check whether current frag pos is in shadow
+        shadowFinal = currentDepth - bias > closestDepth  ? 0.9 : 0.0;
+    }
+    return shadowFinal;
+}
+#endif
+
+vec4 CalcPointLight(PointLight light, vec3 norm, vec3 viewDir, float ShadowFactor)
 {
     vec3 lightPos = light.position;
     vec3 lightDir = normalize(lightPos - FragPos);
@@ -78,14 +111,8 @@ vec4 CalcPointLight(PointLight light, vec3 norm, vec3 viewDir)
     float diff = max(dot(norm, lightDir), 0.0);
     
     // specular
-#ifdef BLINN_PHONG_SHADING
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
-#else
-    vec3 reflectDir = reflect(-lightDir, norm);  
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-#endif
-    
         
     vec4 ambient  = light.ambient * material.ambient;
 
@@ -113,10 +140,10 @@ vec4 CalcPointLight(PointLight light, vec3 norm, vec3 viewDir)
     ambient  *= attenuation; 
     diffuse  *= attenuation;
     specular *= attenuation;  
-    return (ambient + diffuse + specular);
+    return (ambient + (1.0 - ShadowFactor) * (diffuse + specular));
 }
 
-vec4 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir)
+vec4 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir, float ShadowFactor)
 {
     vec3 lightDir = normalize(-light.direction);
 
@@ -124,13 +151,8 @@ vec4 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir)
     float diff = max(dot(norm, lightDir), 0.0);
 
     // specular factor
-#ifdef BLINN_PHONG_SHADING
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
-#else
-    vec3 reflectDir = reflect(-lightDir, norm);  
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-#endif
 
     // ambient factor
     vec4 ambient  = light.ambient * material.ambient;
@@ -147,10 +169,10 @@ vec4 CalcDirectionalLight(DirectionalLight light, vec3 norm, vec3 viewDir)
     vec4 specular = light.specular * spec * material.specular;
 #endif
     // combine results
-    return (ambient + diffuse + specular);
+    return (ambient + (1.0 - ShadowFactor) * (diffuse + specular));
 }
 
-vec4 CalcSpotLight(SpotLight light, vec3 norm, vec3 viewDir)
+vec4 CalcSpotLight(SpotLight light, vec3 norm, vec3 viewDir, float ShadowFactor)
 {
     vec4 color;
     vec3 lightPos = light.position;
@@ -167,13 +189,8 @@ vec4 CalcSpotLight(SpotLight light, vec3 norm, vec3 viewDir)
         float diff = max(dot(norm, lightDir), 0.0);
         
         // specular
-#ifdef BLINN_PHONG_SHADING
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
-#else
-    vec3 reflectDir = reflect(-lightDir, norm);  
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-#endif
+        vec3 halfwayDir = normalize(lightDir + viewDir);  
+        float spec = pow(max(dot(norm, halfwayDir), 0.0), material.shininess);
             
         vec4 ambient  = light.ambient * material.ambient;
  
@@ -192,7 +209,7 @@ vec4 CalcSpotLight(SpotLight light, vec3 norm, vec3 viewDir)
         diffuse  *= intensity;
         specular *= intensity;
 
-        color = ambient + diffuse + specular;
+        color = ambient + (1.0 - ShadowFactor) * (diffuse + specular);
     }
     else  // else, use ambient light so scene isn't completely dark outside the spotlight.
     {
@@ -218,19 +235,26 @@ void main()
 
     vec3 viewDir = normalize(viewPos - FragPos);
 
+    #ifdef NR_SHADOWN_MAP
+    // calculate shadow
+    float ShadowFactor = ShadowCalculation();   
+    #else
+    float ShadowFactor = 0.0;
+    #endif
+
     #ifdef NR_POINT_LIGHTS
         for(int i = 0; i < NR_POINT_LIGHTS; i++)
-            outcolor = CalcPointLight(pointlight[i], norm, viewDir);
+            outcolor = CalcPointLight(pointlight[i], norm, viewDir, ShadowFactor);
     #endif
 
     #ifdef NR_DIRECTIONAL_LIGHTS
         for(int i = 0; i < NR_DIRECTIONAL_LIGHTS; i++)
-            outcolor += CalcDirectionalLight(directionallight[i], norm, viewDir);
+            outcolor += CalcDirectionalLight(directionallight[i], norm, viewDir, ShadowFactor);
     #endif
 
     #ifdef NR_SPOT_LIGHTS
         for(int i = 0; i < NR_SPOT_LIGHTS; i++)
-            outcolor += CalcSpotLight(spotlight[i], norm, viewDir);
+            outcolor += CalcSpotLight(spotlight[i], norm, viewDir, ShadowFactor);
     #endif
 
     FragColor = vec4(outcolor.xyz, 1.0);
