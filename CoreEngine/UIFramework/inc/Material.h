@@ -15,6 +15,7 @@ extern const std::string SPOT_LIGHT_INNER_CUTOFF;
 extern const std::string SPOT_LIGHT_OUTER_CUTOFF;
 extern const std::string SPOT_LIGHT_DIRECTION;
 
+extern const std::string DIRECTIONAL_LIGHT_POSITION;
 extern const std::string DIRECTIONAL_LIGHT_COLOR;
 extern const std::string DIRECTIONAL_LIGHT_AMBIENT;
 extern const std::string DIRECTIONAL_LIGHT_DIFFUSE;
@@ -30,6 +31,9 @@ extern const std::string POINT_LIGHT_CONSTANT;
 extern const std::string POINT_LIGHT_LINEAR;
 extern const std::string POINT_LIGHT_QUADRATIC;
 
+extern const std::string CAST_SHADOW;
+extern const std::string LIGHT_DEPTH_MAP;
+extern const std::string LIGHT_SPACE_MAXTRIX;
 extern const std::string LIGHT_TYPE;
 
 extern const std::string MATERIAL_MODEL;
