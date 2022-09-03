@@ -1,5 +1,9 @@
 #pragma once
 #include <cstdint>
+double min(double x, double y);
+double max(double x, double y);
+double clamp(double x, double lowerlimit, double upperlimit);
+double smootherstep(double edge0, double edge1, double x);
 
 double linearTween(double t, double b, double c, double  d);
 double easeInQuad(double t, double b, double c, double   d);

@@ -33,6 +33,34 @@ b: start value
 c: change value
 d: duration
 Note: t and d could be frame per second/seconds/miliseconds*/
+double min(double x, double y)
+{
+	return x > y ? y : x;
+}
+
+double max(double x, double y)
+{
+	return x > y ? x : y;
+}
+
+double clamp(double x, double lowerlimit, double upperlimit)
+{
+    return min(max(x, lowerlimit), upperlimit);
+}
+
+double smootherstep(double edge0, double edge1, double x)
+{
+	if (x < edge0)
+		return 0.0;
+
+	if (x >= edge1)
+		return 1.0;
+
+	// Scale/bias into [0..1] range
+	x = (x - edge0) / (edge1 - edge0);
+
+	return x * x * (3 - 2 * x);
+}
 
 //simple linear tweening - no easing, no acceleration
 double linearTween(double t,double b, double c, double d)
